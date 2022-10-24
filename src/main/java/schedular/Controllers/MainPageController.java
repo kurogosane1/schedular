@@ -1,45 +1,65 @@
 package schedular.Controllers;
 
+import java.io.IOException;
+import java.net.URL;
+import java.util.ResourceBundle;
+
 import javafx.event.ActionEvent;
 import javafx.fxml.FXML;
+import javafx.fxml.FXMLLoader;
+import javafx.fxml.Initializable;
+import javafx.scene.Parent;
+import javafx.scene.Scene;
 import javafx.scene.control.Button;
 import javafx.scene.control.RadioButton;
+import javafx.scene.control.TableColumn;
 import javafx.scene.control.TableView;
 import javafx.scene.control.ToggleGroup;
+import javafx.stage.Stage;
 
-public class MainPageController {
+public class MainPageController implements Initializable{
+    
     @FXML
-    private Button addApptButton;
+    private Button addApptButton, deleteAppButton, logoutButton, modApptButton, reportButton;
+    @FXML
+    private RadioButton viewAllRadio, viewCustomerRadio, viewMonthRadio, viewWeeklyRadio;
+    @FXML
+    private ToggleGroup viewsToggle;
 
     @FXML
     private TableView<?> apptTable;
 
     @FXML
-    private Button deleteAppButton;
+    private TableColumn<?, ?> contactCol;
 
     @FXML
-    private Button logoutButton;
+    private TableColumn<?, ?> customerIDCol;
 
     @FXML
-    private Button modApptButton;
+    private TableColumn<?, ?> descriptionCol;
 
     @FXML
-    private Button reportButton;
+    private TableColumn<?, ?> endDateCol;
 
     @FXML
-    private RadioButton viewAllRadio;
+    private TableColumn<?, ?> endTimeCol;
 
     @FXML
-    private RadioButton viewCustomerRadio;
+    private TableColumn<?, ?> locationCol;
 
     @FXML
-    private RadioButton viewMonthRadio;
+    private TableColumn<?, ?> startTimeCol;
 
     @FXML
-    private RadioButton viewWeeklyRadio;
+    private TableColumn<?, ?> titleCol;
 
     @FXML
-    private ToggleGroup viewsToggle;
+    private TableColumn<?, ?> typeCol;
+
+    @FXML
+    private TableColumn<?, ?> userIDCol;
+
+  
 
     @FXML
     void addAppoint(ActionEvent event) {
@@ -52,8 +72,12 @@ public class MainPageController {
     }
 
     @FXML
-    void logOut(ActionEvent event) {
-
+    void logOut(ActionEvent event) throws IOException {
+        Parent root = FXMLLoader.load(getClass().getResource("/schedular/Login.fxml"));
+        Stage stage = (Stage) logoutButton.getScene().getWindow();
+        stage.setTitle("Main Screen");
+        stage.setScene(new Scene(root));
+        stage.show();
     }
 
     @FXML
@@ -84,5 +108,11 @@ public class MainPageController {
     @FXML
     void viewWeekly(ActionEvent event) {
 
+    }
+
+    @Override
+    public void initialize(URL arg0, ResourceBundle arg1) {
+       System.out.println("Main Page has been initialized");
+        
     }
 }

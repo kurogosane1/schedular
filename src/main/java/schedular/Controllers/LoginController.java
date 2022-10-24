@@ -1,5 +1,7 @@
 package schedular.Controllers;
 
+import java.io.IOException;
+
 /**
  * @author Syed Khurshid
  */
@@ -10,12 +12,16 @@ import java.util.ResourceBundle;
 import javafx.fxml.Initializable;
 import javafx.event.ActionEvent;
 import javafx.fxml.FXML;
+import javafx.fxml.FXMLLoader;
+import javafx.scene.Parent;
+import javafx.scene.Scene;
 import javafx.scene.control.Button;
 import javafx.scene.control.ChoiceBox;
 import javafx.scene.control.Label;
 import javafx.scene.control.PasswordField;
 import javafx.scene.control.TextField;
 import javafx.scene.text.Text;
+import javafx.stage.Stage;
 
 public class LoginController implements Initializable {
     /**
@@ -53,12 +59,16 @@ public class LoginController implements Initializable {
      * This is an action Button press 
      * @param event Button press action that would check User ID and Password
      * @throws text errors which is user has not entered password correctly
-     * 
+     * @throws IOException with error due to location not found
      * Future preference is to make sure that the checks happens while the user is entering the data
      */
     @FXML
-    void LogPress(ActionEvent event) {
-
+    void LogPress(ActionEvent event) throws IOException {
+        Parent root = FXMLLoader.load(getClass().getResource("/schedular/MainPage.fxml"));
+        Stage stage = (Stage) LoginButton.getScene().getWindow();
+        stage.setTitle("Add Product");
+        stage.setScene(new Scene(root));
+        stage.show();
     }
     
     /**
