@@ -29,13 +29,17 @@ public abstract class Database {
         }
     
         public static void closeConnection() {
-        try {
-            connection.close();
-            System.out.println("Connection Closed!");
-        } catch (Exception e) {
-           System.out.println("Error: "+e.getMessage());
+            try {
+                connection.close();
+                System.out.println("Connection Closed!");
+            } catch (Exception e) {
+                System.out.println("Error: " + e.getMessage());
+            }
         }
-    }
+     
+        public static Connection getConnection() {
+            return connection;
+        }
 
    
 }
