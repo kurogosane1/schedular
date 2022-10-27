@@ -1,0 +1,63 @@
+<?xml version="1.0" encoding="UTF-8"?>
+
+<?import javafx.scene.Group?>
+<?import javafx.scene.control.Button?>
+<?import javafx.scene.control.ChoiceBox?>
+<?import javafx.scene.control.Label?>
+<?import javafx.scene.control.TextField?>
+<?import javafx.scene.layout.AnchorPane?>
+<?import javafx.scene.text.Font?>
+
+<AnchorPane maxHeight="-Infinity" maxWidth="-Infinity" minHeight="-Infinity" minWidth="-Infinity" prefHeight="600.0" prefWidth="1200.0" xmlns="http://javafx.com/javafx/18" xmlns:fx="http://javafx.com/fxml/1" fx:controller="schedular.Controllers.AddCustomerController">
+   <children>
+      <Group layoutX="153.0" layoutY="94.0" AnchorPane.bottomAnchor="331.0" AnchorPane.leftAnchor="147.0" AnchorPane.rightAnchor="971.166015625" AnchorPane.topAnchor="94.0">
+         <children>
+            <Label fx:id="cusNameLabel" contentDisplay="CENTER" layoutY="60.0" text="Name" textAlignment="CENTER">
+               <font>
+                  <Font name="Arial" size="13.0" />
+               </font>
+            </Label>
+            <Label fx:id="cusAddressLabel" contentDisplay="CENTER" layoutY="100.0" text="Address" textAlignment="CENTER">
+               <font>
+                  <Font name="Arial" size="13.0" />
+               </font>
+            </Label>
+            <Label fx:id="cusPostalLabel" contentDisplay="CENTER" layoutY="140.0" text="Postal Code" textAlignment="CENTER">
+               <font>
+                  <Font name="Arial" size="13.0" />
+               </font>
+            </Label>
+            <Label fx:id="cusPhoneLabel" contentDisplay="CENTER" layoutY="180.0" text="Phone Number" textAlignment="CENTER">
+               <font>
+                  <Font name="Arial" size="13.0" />
+               </font>
+            </Label>
+            <Label fx:id="cusIDLabel" contentDisplay="CENTER" layoutY="20.0" text="Customer ID" textAlignment="CENTER">
+               <font>
+                  <Font name="Arial" size="13.0" />
+               </font>
+            </Label>
+            <Label layoutY="220.0" text="Division ID">
+               <font>
+                  <Font name="Arial" size="13.0" />
+               </font>
+            </Label>
+            <Label layoutY="260.0" text="Division Name" />
+         </children>
+      </Group>
+      <TextField fx:id="cusIDTextField" disable="true" layoutX="383.0" layoutY="94.0" prefHeight="25.0" prefWidth="276.0" promptText="Auto Generated ID" />
+      <TextField fx:id="cusNameTF" layoutX="383.0" layoutY="131.0" onAction="#cusNameAction" prefHeight="25.0" prefWidth="276.0" promptText="John Doe" />
+      <TextField fx:id="cusAddrTF" layoutX="383.0" layoutY="169.0" onAction="#cusAddressAction" prefHeight="25.0" prefWidth="276.0" promptText="123 ABC St, City, State if Any, Country" />
+      <TextField fx:id="cusPostalTF" layoutX="383.0" layoutY="210.0" onAction="#cusPostalAction" prefHeight="25.0" prefWidth="276.0" promptText="77777" />
+      <TextField layoutX="383.0" layoutY="247.0" prefHeight="25.0" prefWidth="276.0" promptText="888-888-8888" />
+      <ChoiceBox fx:id="divisionChoice" layoutX="383.0" layoutY="288.0" prefHeight="25.0" prefWidth="276.0" />
+      <TextField fx:id="divNameTF" disable="true" layoutX="383.0" layoutY="326.0" onAction="#divNameAction" prefHeight="25.0" prefWidth="276.0" promptText="Auto filled after selection of Diviison ID" />
+      <Button fx:id="saveCusButton" layoutX="383.0" layoutY="385.0" mnemonicParsing="false" onAction="#saveCusAction" prefHeight="25.0" prefWidth="120.0" text="Save" />
+      <Button fx:id="canceblButton" layoutX="540.0" layoutY="385.0" mnemonicParsing="false" onAction="#cancelAddCusAction" prefHeight="25.0" prefWidth="120.0" text="Cancel" />
+      <Label layoutX="147.0" layoutY="50.0" text="Add New Customer">
+         <font>
+            <Font name="Arial Bold" size="18.0" />
+         </font>
+      </Label>
+   </children>
+</AnchorPane>
