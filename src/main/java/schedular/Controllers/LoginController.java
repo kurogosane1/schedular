@@ -110,7 +110,7 @@ public class LoginController implements Initializable {
      * @param event which is a selection from a choice drop down
      */
      public void getLanguage(ActionEvent event) {
-          
+         
           String myChoice = languageChoice.getValue();
           locationText.setText(myChoice);
     }

@@ -1,0 +1,58 @@
+<?xml version="1.0" encoding="UTF-8"?>
+
+<?import javafx.scene.Group?>
+<?import javafx.scene.control.Button?>
+<?import javafx.scene.control.ChoiceBox?>
+<?import javafx.scene.control.DatePicker?>
+<?import javafx.scene.control.Label?>
+<?import javafx.scene.control.Spinner?>
+<?import javafx.scene.control.TextField?>
+<?import javafx.scene.layout.AnchorPane?>
+<?import javafx.scene.text.Text?>
+
+<AnchorPane maxHeight="-Infinity" maxWidth="-Infinity" minHeight="-Infinity" minWidth="-Infinity" prefHeight="600.0" prefWidth="1200.0" xmlns="http://javafx.com/javafx/18" xmlns:fx="http://javafx.com/fxml/1" fx:controller="schedular.Controllers.AddAppointmentController">
+   <children>
+      <Group layoutX="134.0" layoutY="131.0">
+         <children>
+            <Label fx:id="apptIDLabel" text="Appointment ID" />
+            <Label fx:id="titleLabel" layoutY="35.0" text="Title" />
+            <Label fx:id="descLabel" layoutY="70.0" text="Description" />
+            <Label fx:id="locationLabel" layoutY="105.0" text="Location" />
+            <Label fx:id="typeLabel" layoutY="140.0" text="Type" />
+            <Label layoutY="175.0" text="Contact ID" />
+            <Label fx:id="customerIDLabel" layoutY="210.0" text="Customer ID" />
+            <Label fx:id="userIDLabel" layoutY="245.0" text="User ID" />
+            <Label fx:id="startDLabel" layoutY="280.0" text="Start Date" />
+            <Label fx:id="startTimeLabel" layoutY="315.0" text="Start Time" />
+         </children>
+      </Group>
+      <Label fx:id="endDateLabel" layoutX="570.0" layoutY="412.0" text="End Date" />
+      <Label fx:id="endTimeLabel" layoutX="569.0" layoutY="446.0" text="End Time" />
+      <Button fx:id="saveButton" layoutX="339.0" layoutY="538.0" mnemonicParsing="false" onAction="#saveButtonPress" prefWidth="120.0" text="Save" />
+      <Button fx:id="cancelButton" layoutX="535.0" layoutY="538.0" mnemonicParsing="false" onAction="#cancellPressAct" prefWidth="120.0" text="Cancel" />
+      <TextField fx:id="apptIDTF" disable="true" layoutX="327.0" layoutY="131.0" onAction="#apptIDCheck" promptText="Auto generated" />
+      <TextField fx:id="titleTF" layoutX="327.0" layoutY="163.0" onAction="#titleTFCheck" />
+      <TextField fx:id="descTF" layoutX="327.0" layoutY="197.0" onAction="#descTFCheck" />
+      <TextField fx:id="locationTF" layoutX="327.0" layoutY="233.0" onAction="#locationTFCheck" />
+      <TextField fx:id="typeTF" layoutX="327.0" layoutY="266.0" onAction="#typeTFCheck" />
+      <ChoiceBox layoutX="327.0" layoutY="300.0" prefHeight="25.0" prefWidth="161.0" />
+      <ChoiceBox layoutX="327.0" layoutY="335.0" prefHeight="25.0" prefWidth="161.0" />
+      <ChoiceBox layoutX="327.0" layoutY="372.0" prefHeight="25.0" prefWidth="161.0" />
+      <DatePicker fx:id="StartDatePicker" layoutX="327.0" layoutY="408.0" onAction="#startDateCheck" prefHeight="25.0" prefWidth="161.0" />
+      <DatePicker fx:id="endDatePicker" layoutX="678.0" layoutY="408.0" onAction="#endDateCheck" prefHeight="25.0" prefWidth="161.0" />
+      <Spinner fx:id="startHourSpinner" layoutX="327.0" layoutY="442.0" prefHeight="25.0" prefWidth="62.0" />
+      <Spinner fx:id="endHourSpinner" layoutX="678.0" layoutY="442.0" prefHeight="25.0" prefWidth="62.0" />
+      <Spinner fx:id="startMinSpinner" layoutX="408.0" layoutY="442.0" prefHeight="25.0" prefWidth="62.0" />
+      <Spinner fx:id="endMinSpinner" layoutX="759.0" layoutY="442.0" prefHeight="25.0" prefWidth="62.0" />
+      <Text fx:id="apptIDET" layoutX="570.0" layoutY="148.0" strokeType="OUTSIDE" strokeWidth="0.0" text="Text" visible="false" />
+      <Text fx:id="titleET" layoutX="570.0" layoutY="180.0" strokeType="OUTSIDE" strokeWidth="0.0" text="Text" visible="false" />
+      <Text fx:id="descET" layoutX="570.0" layoutY="214.0" strokeType="OUTSIDE" strokeWidth="0.0" text="Text" visible="false" />
+      <Text fx:id="locET" layoutX="570.0" layoutY="250.0" strokeType="OUTSIDE" strokeWidth="0.0" text="Text" visible="false" />
+      <Text fx:id="typeET" layoutX="570.0" layoutY="283.0" strokeType="OUTSIDE" strokeWidth="0.0" text="Text" visible="false" />
+      <Text fx:id="contIDET" layoutX="570.0" layoutY="317.0" strokeType="OUTSIDE" strokeWidth="0.0" text="Text" visible="false" />
+      <Text fx:id="cusIDET" layoutX="570.0" layoutY="352.0" strokeType="OUTSIDE" strokeWidth="0.0" text="Text" visible="false" />
+      <Text fx:id="userIDET" layoutX="570.0" layoutY="389.0" strokeType="OUTSIDE" strokeWidth="0.0" text="Text" visible="false" />
+      <Text fx:id="dateET" layoutX="895.0" layoutY="425.0" strokeType="OUTSIDE" strokeWidth="0.0" text="Text" visible="false" />
+      <Text fx:id="timeET" layoutX="895.0" layoutY="459.0" strokeType="OUTSIDE" strokeWidth="0.0" text="Text" visible="false" />
+   </children>
+</AnchorPane>

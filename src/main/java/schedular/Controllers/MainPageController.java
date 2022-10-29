@@ -88,8 +88,12 @@ public class MainPageController implements Initializable{
     private ToggleGroup viewsToggle;
 
     @FXML
-    void addAppoint(ActionEvent event) {
-
+    void addAppoint(ActionEvent event) throws IOException {
+        Parent root = FXMLLoader.load(getClass().getResource("/schedular/AddAppointment.fxml"));
+        Stage stage = (Stage) addApptButton.getScene().getWindow();
+        stage.setTitle("Add Appointment");
+        stage.setScene(new Scene(root));
+        stage.show();
     }
 
     @FXML
@@ -114,8 +118,12 @@ public class MainPageController implements Initializable{
      * @param event
      */
     @FXML
-    void modifyAppt(ActionEvent event) {
-
+    void modifyAppt(ActionEvent event) throws IOException{
+        Parent root = FXMLLoader.load(getClass().getResource("/schedular/EditAppointment.fxml"));
+        Stage stage = (Stage) modApptButton.getScene().getWindow();
+        stage.setTitle("Modify Appointment");
+        stage.setScene(new Scene(root));
+        stage.show();
     }
     /**
      * 
