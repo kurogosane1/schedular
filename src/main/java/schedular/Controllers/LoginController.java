@@ -66,7 +66,7 @@ public class LoginController implements Initializable {
     void LogPress(ActionEvent event) throws IOException {
         Parent root = FXMLLoader.load(getClass().getResource("/schedular/MainPage.fxml"));
         Stage stage = (Stage) LoginButton.getScene().getWindow();
-        stage.setTitle("Add Product");
+        stage.setTitle("Main Appointment");
         stage.setScene(new Scene(root));
         stage.show();
     }

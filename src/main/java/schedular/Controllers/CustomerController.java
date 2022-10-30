@@ -56,8 +56,12 @@ public class CustomerController implements Initializable {
     private TableColumn<?, ?> postalColumn;
 
     @FXML
-    void addCustomerAction(ActionEvent event) {
-
+    void addCustomerAction(ActionEvent event) throws IOException {
+        Parent root = FXMLLoader.load(getClass().getResource("/schedular/AddCustomer.fxml"));
+        Stage stage = (Stage) addCustButton.getScene().getWindow();
+        stage.setTitle("Add Customer");
+        stage.setScene(new Scene(root));
+        stage.show();
     }
 
     @FXML
@@ -75,8 +79,12 @@ public class CustomerController implements Initializable {
     }
 
     @FXML
-    void modCustomerAction(ActionEvent event) {
-
+    void modCustomerAction(ActionEvent event) throws IOException{
+        Parent root = FXMLLoader.load(getClass().getResource("/schedular/ModifyCustomer.fxml"));
+        Stage stage = (Stage) addCustButton.getScene().getWindow();
+        stage.setTitle("Modify Customer Customer");
+        stage.setScene(new Scene(root));
+        stage.show();
     }
 
     @Override

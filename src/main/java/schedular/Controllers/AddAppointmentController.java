@@ -17,40 +17,64 @@ import javafx.scene.control.TextField;
 import javafx.scene.text.Text;
 import javafx.stage.Stage;
 public class AddAppointmentController implements Initializable{
-    
+    /**
+     * Date Start Date DatePicker
+     */
     @FXML
     private DatePicker StartDatePicker;
-
+    /**
+     * Appointment ID Error Message Text
+     */
     @FXML
     private Text apptIDET;
-
+    /**
+     * appointment ID Label
+     */
     @FXML
     private Label apptIDLabel;
-
+    /**
+     * Appointment ID Text Field
+     */
     @FXML
     private TextField apptIDTF;
-
+    /**
+     * Cancel Button for cancelling for adding any appointment
+     */
     @FXML
     private Button cancelButton;
-
+    /**
+     * Contact ID Error Text Field
+     */
     @FXML
     private Text contIDET;
-
+    /**
+     * Customer ID Error Text
+     */
     @FXML
     private Text cusIDET;
-
+    /**
+     * Customer ID Label
+     */
     @FXML
     private Label customerIDLabel;
-
+    /**
+     * Date Error Text
+     */
     @FXML
     private Text dateET;
-
+    /**
+     * Text Error for Description 
+     */
     @FXML
     private Text descET;
-
+    /**
+     * Description label field
+     */
     @FXML
     private Label descLabel;
-
+    /**
+     * 
+     */
     @FXML
     private TextField descTF;
 

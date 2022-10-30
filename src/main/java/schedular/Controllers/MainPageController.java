@@ -17,73 +17,121 @@ import javafx.scene.control.TableView;
 import javafx.scene.control.ToggleGroup;
 import javafx.stage.Stage;
 
-public class MainPageController implements Initializable{
-      @FXML
-    private Button addApptButton;
 
+public class MainPageController implements Initializable {
+    /**
+     * Add Appointment Button
+     */
+    @FXML
+    private Button addApptButton;
+    /**
+     * Appointment ID Table Column
+     */
     @FXML
     private TableColumn<?, ?> apptIDColumn;
-
+    /**
+     * Appointment Table View
+     */
     @FXML
     private TableView<?> apptTable;
-
+    /**
+     * Contact Column of the Table
+     */
     @FXML
     private TableColumn<?, ?> contactCol;
-
+    /**
+     * Customer Button to view Customers
+     */
     @FXML
     private Button customerButton;
-
+    /**
+     * Customer ID Table Column
+     */
     @FXML
     private TableColumn<?, ?> customerIDCol;
-
+    /**
+     * Delete Appointment Button
+     */
     @FXML
     private Button deleteAppButton;
-
+    /**
+     * Appointment Description Table Column
+     */
     @FXML
     private TableColumn<?, ?> descriptionCol;
-
+    /**
+     * Appointment End Date Table Column
+     */
     @FXML
     private TableColumn<?, ?> endDateCol;
-
+    /**
+     * Appointment End Time Table Column
+     */
     @FXML
     private TableColumn<?, ?> endTimeCol;
-
+    /**
+     * Location Table Column
+     */
     @FXML
     private TableColumn<?, ?> locationCol;
-
+    /**
+     * Log Out Button Column
+     */
     @FXML
     private Button logoutButton;
-
+    /**
+     * Modify Appointment Button for the table
+     */
     @FXML
     private Button modApptButton;
-
+    /**
+     * Report Button for the Apppointment
+     */
     @FXML
     private Button reportButton;
-
+    /**
+     * Start Time table Column
+     */
     @FXML
     private TableColumn<?, ?> startTimeCol;
-
+    /**
+     * Appointment Title Column
+     */
     @FXML
     private TableColumn<?, ?> titleCol;
-
+    /**
+     * Appointment Type TableColumn
+     */
     @FXML
     private TableColumn<?, ?> typeCol;
-
+    /**
+     * User ID Table Column
+     */
     @FXML
     private TableColumn<?, ?> userIDCol;
-
+    /**
+     * View All Appointments radio button for Table Column
+     */
     @FXML
     private RadioButton viewAllRadio;
-
+    /**
+     * View Customer RadioButton
+     */
     @FXML
     private RadioButton viewCustomerRadio;
-
+    /**
+     * View Monthly Radio Button
+     */
     @FXML
     private RadioButton viewMonthRadio;
-
+    /**
+     * View Weekly Radio Button
+     */
     @FXML
     private RadioButton viewWeeklyRadio;
-
+    /**
+     * Toggle Group for Radio Buttons
+     */
     @FXML
     private ToggleGroup viewsToggle;
 
@@ -183,105 +231,40 @@ public class MainPageController implements Initializable{
      */
     @Override
     public void initialize(URL arg0, ResourceBundle arg1) {
-       System.out.println("Main Page has been initialized");
-        
+        System.out.println("Main Page has been initialized");
     }
-
-}
-
-    // @FXML
-    // private Button addApptButton, deleteAppButton, logoutButton, modApptButton, reportButton;
-    // @FXML
-    // private RadioButton viewAllRadio, viewCustomerRadio, viewMonthRadio, viewWeeklyRadio;
-    // @FXML
-    // private ToggleGroup viewsToggle;
-
-    // @FXML
-    // private TableView<?> apptTable;
-
-    // @FXML
-    // private TableColumn<?, ?> contactCol;
-
-    // @FXML
-    // private TableColumn<?, ?> customerIDCol;
-
-    // @FXML
-    // private TableColumn<?, ?> descriptionCol;
-
-    // @FXML
-    // private TableColumn<?, ?> endDateCol;
-
-    // @FXML
-    // private TableColumn<?, ?> endTimeCol;
-
-    // @FXML
-    // private TableColumn<?, ?> locationCol;
-
-    // @FXML
-    // private TableColumn<?, ?> startTimeCol;
-
-    // @FXML
-    // private TableColumn<?, ?> titleCol;
-
-    // @FXML
-    // private TableColumn<?, ?> typeCol;
-
-    // @FXML
-    // private TableColumn<?, ?> userIDCol;
-
   
+}
+// updatingCountryTest();
+        // System.out.println("This ran");
+        // gettingCountriesTEst();
 
-    // @FXML
-    // void addAppoint(ActionEvent event) {
 
+  // public static void getCountry() throws SQLException {
+    //     CountriesDOA countDOA = new CountriesDOA();
+    //     ObservableList<Countries> count1 = countDOA.getAll();
+    //     for (Countries count : count1) {
+    //         System.out.println(count.getCountry());
+    //     }
     // }
-
-    // @FXML
-    // void deleteApptAction(ActionEvent event) {
-
+    // public static void updateCountry() throws SQLException {
+    //     CountriesDOA countDOA = new CountriesDOA();
+    //     Countries country = new Countries(2, "United Kingdom");
+    //     countDOA.update(country);
     // }
-
-    // @FXML
-    // void logOut(ActionEvent event) throws IOException {
-    //     Parent root = FXMLLoader.load(getClass().getResource("/schedular/Login.fxml"));
-    //     Stage stage = (Stage) logoutButton.getScene().getWindow();
-    //     stage.setTitle("Main Screen");
-    //     stage.setScene(new Scene(root));
-    //     stage.show();
-    // }
-
-    // @FXML
-    // void modifyAppt(ActionEvent event) {
-
-    // }
-
-    // @FXML
-    // void radioAll(ActionEvent event) {
-
-    // }
-
-    // @FXML
-    // void reportGen(ActionEvent event) {
-
-    // }
-
-    // @FXML
-    // void viewCustomer(ActionEvent event) {
-
-    // }
-
-    // @FXML
-    // void viewMonthly(ActionEvent event) {
-
-    // }
-
-    // @FXML
-    // void viewWeekly(ActionEvent event) {
-
-    // }
-
-    // @Override
-    // public void initialize(URL arg0, ResourceBundle arg1) {
-    //    System.out.println("Main Page has been initialized");
         
+    // public static void gettingCountriesTEst() {
+    //     try {
+    //         getCountry();
+    //     } catch (SQLException e) {
+    //         e.printStackTrace();
+    //     }
+    // }
+
+    // public static void updatingCountryTest() {
+    //     try {
+    //         updateCountry();          
+    //     } catch (SQLException e) {
+    //         e.printStackTrace();
+    //     }
     // }
