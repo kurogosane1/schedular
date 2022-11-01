@@ -11,7 +11,7 @@ public interface DOA<T> {
 
     ObservableList<T> getAll() throws SQLException;
 
-    int save(T t) throws SQLException;
+    // int save(T t) throws SQLException;
 
     int insert(T t) throws SQLException;
 

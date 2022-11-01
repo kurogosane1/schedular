@@ -99,13 +99,16 @@ public class CountriesDOA implements DOA<Countries>{
      */
     @Override
     public int delete(Countries t) throws SQLException {
-        
-        return 0;
+        Connection con = Database.getConnection();
+        String sql = "DELETE FROM COUNTRIES WHERE Country_ID=?";
+        PreparedStatement ps = con.prepareStatement(sql);
+        ps.setInt(1, t.getCountryID());
+        int result = ps.executeUpdate();
+        return result;
     }
-    @Override
-    public int save(Countries t) throws SQLException {
-        
-        return 0;
-    }
+    // @Override
+    // public int save(Countries t) throws SQLException {
+    //     return 0;
+    // };
     
 }
