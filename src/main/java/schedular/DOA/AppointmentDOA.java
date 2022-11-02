@@ -26,7 +26,7 @@ public class AppointmentDOA implements DOA<Appointments> {
         PreparedStatement ps = con.prepareStatement(sql);
         ps.setInt(1, id);
         ResultSet rs = ps.executeQuery();
-        if(rs.next(){
+        if(rs.next()){
             int Appointment_ID = rs.getInt("Appointment_ID");
             String Title = rs.getString("Title");
             String Description = rs.getString("Description");

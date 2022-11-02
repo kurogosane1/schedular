@@ -16,6 +16,7 @@ import javafx.scene.control.TableColumn;
 import javafx.scene.control.TableView;
 import javafx.scene.control.ToggleGroup;
 import javafx.stage.Stage;
+import schedular.Model.Customer;
 
 
 public class MainPageController implements Initializable {
@@ -33,7 +34,7 @@ public class MainPageController implements Initializable {
      * Appointment Table View
      */
     @FXML
-    private TableView<?> apptTable;
+    private TableView<Customer> apptTable;
     /**
      * Contact Column of the Table
      */

@@ -46,12 +46,12 @@
          </children>
       </Group>
       <TextField fx:id="cusIDTextField" disable="true" layoutX="383.0" layoutY="94.0" prefHeight="25.0" prefWidth="276.0" promptText="Auto Generated ID" />
-      <TextField fx:id="cusNameTF" layoutX="383.0" layoutY="131.0" onAction="#cusNameAction" prefHeight="25.0" prefWidth="276.0" promptText="John Doe" />
-      <TextField fx:id="cusAddrTF" layoutX="383.0" layoutY="169.0" onAction="#cusAddressAction" prefHeight="25.0" prefWidth="276.0" promptText="123 ABC St, City, State if Any, Country" />
-      <TextField fx:id="cusPostalTF" layoutX="383.0" layoutY="210.0" onAction="#cusPostalAction" prefHeight="25.0" prefWidth="276.0" promptText="77777" />
-      <TextField layoutX="383.0" layoutY="247.0" prefHeight="25.0" prefWidth="276.0" promptText="888-888-8888" />
+      <TextField fx:id="cusNameTF" layoutX="383.0" layoutY="131.0" prefHeight="25.0" prefWidth="276.0" promptText="John Doe" />
+      <TextField fx:id="cusAddrTF" layoutX="383.0" layoutY="169.0" prefHeight="25.0" prefWidth="276.0" promptText="123 ABC St, City, State if Any, Country" />
+      <TextField fx:id="cusPostalTF" layoutX="383.0" layoutY="210.0" prefHeight="25.0" prefWidth="276.0" promptText="77777" />
+      <TextField fx:id="phoneTF" layoutX="383.0" layoutY="247.0" prefHeight="25.0" prefWidth="276.0" promptText="888-888-8888" />
       <ChoiceBox fx:id="divisionChoice" layoutX="383.0" layoutY="288.0" prefHeight="25.0" prefWidth="276.0" />
-      <TextField fx:id="divNameTF" disable="true" layoutX="383.0" layoutY="326.0" onAction="#divNameAction" prefHeight="25.0" prefWidth="276.0" promptText="Auto filled after selection of Diviison ID" />
+      <TextField fx:id="divNameTF" disable="true" layoutX="383.0" layoutY="326.0" prefHeight="25.0" prefWidth="276.0" promptText="Auto filled after selection of Diviison ID" />
       <Button fx:id="saveCusButton" layoutX="383.0" layoutY="385.0" mnemonicParsing="false" onAction="#saveCusAction" prefHeight="25.0" prefWidth="120.0" text="Save" />
       <Button fx:id="canceblButton" layoutX="540.0" layoutY="385.0" mnemonicParsing="false" onAction="#cancelAddCusAction" prefHeight="25.0" prefWidth="120.0" text="Cancel" />
       <Label layoutX="147.0" layoutY="50.0" text="Add New Customer">
