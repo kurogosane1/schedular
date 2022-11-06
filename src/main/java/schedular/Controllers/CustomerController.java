@@ -5,6 +5,7 @@ import java.io.IOException;
  */
 import java.net.URL;
 import java.sql.SQLException;
+import java.util.Optional;
 import java.util.ResourceBundle;
 
 import javafx.collections.ObservableList;
@@ -16,6 +17,7 @@ import javafx.scene.Parent;
 import javafx.scene.Scene;
 import javafx.scene.control.Alert;
 import javafx.scene.control.Button;
+import javafx.scene.control.ButtonType;
 import javafx.scene.control.TableColumn;
 import javafx.scene.control.TableView;
 import javafx.scene.control.cell.PropertyValueFactory;
@@ -24,6 +26,7 @@ import schedular.DOA.CustomerDOA;
 import schedular.Model.Customer;
 
 public class CustomerController implements Initializable {
+    CustomerDOA cus = new CustomerDOA();
     /**
      * 
      */
@@ -97,8 +100,28 @@ public class CustomerController implements Initializable {
      * @param event Button press action
      */
     @FXML
-    void delCustomerAction(ActionEvent event) {
-
+    public void delCustomerAction(ActionEvent event) {
+        if (customerTableView.getSelectionModel().getSelectedItem() == null) {
+            Alert alert = new Alert(Alert.AlertType.WARNING);
+            alert.setTitle("Warning Dialog");
+            alert.setContentText("Please select Customer to remove from List");
+            alert.showAndWait();
+        } else {
+            Alert alert = new Alert(Alert.AlertType.CONFIRMATION,
+                    "This will permanently remove the customer selected \n Are you sure you want to Continue?");
+            Optional<ButtonType> result = alert.showAndWait();
+            if (result.isPresent() && result.get() == ButtonType.OK) {
+                Customer c = customerTableView.getSelectionModel().getSelectedItem();
+                try {
+                    cus.delete(c);
+                    ObservableList<Customer> customers = cus.getAll();
+                    customerTableView.setItems(customers);
+                } catch (SQLException e) {
+                    // TODO Auto-generated catch block
+                    e.printStackTrace();
+                }
+            }
+      }
     }
     /**
      * This is to take user out of the Customers page
@@ -106,7 +129,7 @@ public class CustomerController implements Initializable {
      * @throws IOException
      */
     @FXML
-    void goBackAction(ActionEvent event) throws IOException {
+    public void goBackAction(ActionEvent event) throws IOException {
         Parent root = FXMLLoader.load(getClass().getResource("/schedular/MainPage.fxml"));
         Stage stage = (Stage) goBackButton.getScene().getWindow();
         stage.setTitle("Main Screen");
@@ -119,7 +142,7 @@ public class CustomerController implements Initializable {
      * @throws IOException
      */
     @FXML
-    void modCustomerAction(ActionEvent event) throws IOException {
+    public void modCustomerAction(ActionEvent event) throws IOException {
         if(customerTableView.getSelectionModel().getSelectedItem()!=null)
         {
             FXMLLoader loader = new FXMLLoader(getClass().getResource("/schedular/ModifyCustomer.fxml"));

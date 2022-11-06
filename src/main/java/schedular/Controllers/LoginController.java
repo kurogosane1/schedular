@@ -24,6 +24,9 @@ import javafx.scene.text.Text;
 import javafx.stage.Stage;
 
 public class LoginController implements Initializable {
+      @FXML
+      private Button closeButton;
+    
     /**
      * This is the Login Button for Logging in user. Also includes the reset button to clear the textfields
      */
@@ -70,7 +73,15 @@ public class LoginController implements Initializable {
         stage.setScene(new Scene(root));
         stage.show();
     }
-    
+    /**
+     * Closing the Application itself now completely
+     * @param event which is a Button Press
+     */
+    @FXML
+    void closeApp(ActionEvent event) {
+        Stage stage = (Stage) closeButton.getScene().getWindow();
+        stage.close();
+    }
     /**
      * This is a password Check. It will verify the users password
      * @param event which is a input entry check

@@ -1,6 +1,7 @@
 package schedular.DOA;
 
 import java.sql.Connection;
+import java.sql.PreparedStatement;
 import java.sql.ResultSet;
 /**
  * @author Syed Khurshid
@@ -24,7 +25,20 @@ public class DivisionDOA implements DOA<FirstLevelDivision>{
  */
     @Override
     public FirstLevelDivision get(int id) throws SQLException {
-        return null;
+        Connection con = Database.getConnection();
+        FirstLevelDivision div = null;
+        String sql = "SELECT Division_ID, Division, Country_ID FROM FIRST_LEVEL_DIVISIONS WHERE Division_ID=?";
+        PreparedStatement ps = con.prepareStatement(sql);
+        ps.setInt(1, id);
+        ResultSet rs = ps.executeQuery();
+        if (rs.next()) {
+            int ids = rs.getInt("Division_ID");
+            String divname = rs.getString("Division");
+            int country_id = rs.getInt("Country_ID");
+            div = new FirstLevelDivision(ids, divname, country_id);
+
+        }
+        return div;
     }
     
     /**

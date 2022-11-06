@@ -3,6 +3,7 @@
  */
 package schedular.Model;
 
+import java.sql.Date;
 import java.sql.Timestamp;
 import java.time.LocalDateTime;
 
@@ -15,11 +16,12 @@ public class Appointments {
     private String Description;
     private String Location;
     private String Type;
-    private String Start;
-    private String End;
+    private Date Start;
+    private Date End;
     public int customer_id;
     public int user_id;
     public int contact_id;
+
     /**
      * Default Constructor
      * @param appointmentID
@@ -34,7 +36,8 @@ public class Appointments {
      * @param contact_id
      */
     public Appointments(int appointmentID, String title, String description, String location, String type,
-            String start, String end, int customer_id, int user_id, int contact_id) {
+            Date start, Date end, int customer_id, int user_id, int contact_id)
+            {
         AppointmentID = appointmentID;
         Title = title;
         Description = description;
@@ -119,28 +122,28 @@ public class Appointments {
      * This is to get the time of the start of the appointment
      * @return time is then input
      */
-    public String getStart() {
+    public Date getStart() {
         return Start;
     }
     /**
      * This is to set the start time into the database
      * @param start
      */
-    public void setStart(String start) {
+    public void setStart(Date start) {
         Start = start;
     }
     /**
      * This is to get the end time of the appointment
      * @return appointment end time is received from the database
      */
-    public String getEnd() {
+    public Date getEnd() {
         return End;
     }
     /**
      * This is to set the end time into the database
      * @param end is then pushed into the database
      */
-    public void setEnd(String end) {
+    public void setEnd(Date end) {
         End = end;
     }
     /**

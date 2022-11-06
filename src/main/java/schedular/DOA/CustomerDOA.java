@@ -92,7 +92,7 @@ public class CustomerDOA implements DOA<Customer> {
     @Override
     public int update(Customer t) throws SQLException {
         Connection con = Database.getConnection();
-        String sql = "UPDATE CUSTOMERS SET Customer_ID=?,Country_Name=?,Address=?,Postal_Code=?,Phone=?,Create_Date=?,Created_By=?,Last_Update=?,Last_Updated_By=?,Division_ID=?";
+        String sql = "UPDATE CUSTOMERS SET Customer_ID=?,Customer_Name=?,Address=?,Postal_Code=?,Phone=?,Create_Date=?,Created_By=?,Last_Update=?,Last_Updated_By=?,Division_ID=? WHERE Customer_ID=?";
         PreparedStatement ps = con.prepareStatement(sql);
         ps.setInt(1, t.getCustomerId());
         ps.setString(2, t.getCustomerName());
@@ -104,6 +104,7 @@ public class CustomerDOA implements DOA<Customer> {
         ps.setString(8, LocalDateTime.now().toString());
         ps.setString(9, "Saad");
         ps.setInt(10, t.getDivision_id());
+        ps.setInt(11, t.getCustomerId());
         int result = ps.executeUpdate();
         return result;
     }
@@ -116,6 +117,7 @@ public class CustomerDOA implements DOA<Customer> {
         Connection con = Database.getConnection();
         String sql = "DELETE FROM CUSTOMERS WHERE Customer_ID=?";
         PreparedStatement ps = con.prepareStatement(sql);
+        ps.setInt(1, t.getCustomerId());
         int result = ps.executeUpdate();
         return result;
     }
