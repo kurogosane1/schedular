@@ -34,7 +34,7 @@ public class App extends Application {
         stage.setScene(scene);
         stage.show();
     }
-    /**
+    /**  
      * This is the main starting apps
      * @param args Strings args 
      * @throws ClassNotFoundException any error of a class not found
@@ -47,4 +47,4 @@ public class App extends Application {
         
     }
 
-}
+}     

@@ -45,7 +45,7 @@ public class AppointmentDOA implements DOA<Appointments> {
         }
         return appointment;
     }
-    /**
+/**
      * Getting All the Countries List from the database
      * No parameter
      */
@@ -53,7 +53,7 @@ public class AppointmentDOA implements DOA<Appointments> {
     public ObservableList<Appointments> getAll() throws SQLException {
         Connection con = Database.getConnection();
         ObservableList<Appointments> appointments = FXCollections.observableArrayList();
-        String sql = "SELECT Appointment_ID, Title, Description, Location, Contact, Type, Start, End, Customer_ID, User_ID, Contact_ID FROM Appointments";
+        String sql = "SELECT Appointment_ID, Title, Description, Location, Type, Start, End, Customer_ID, User_ID, Contact_ID FROM Appointments";
         Statement stmt = con.createStatement();
         ResultSet rs = stmt.executeQuery(sql);
         while (rs.next()) {

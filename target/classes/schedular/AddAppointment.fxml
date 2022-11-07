@@ -29,15 +29,15 @@
       <Label fx:id="endDateLabel" layoutX="570.0" layoutY="412.0" text="End Date" />
       <Label fx:id="endTimeLabel" layoutX="569.0" layoutY="446.0" text="End Time" />
       <Button fx:id="saveButton" layoutX="339.0" layoutY="538.0" mnemonicParsing="false" onAction="#saveButtonPress" prefWidth="120.0" text="Save" />
-      <Button fx:id="cancelButton" layoutX="535.0" layoutY="538.0" mnemonicParsing="false" onAction="#cancellPressAct" prefWidth="120.0" text="Cancel" />
+      <Button fx:id="cancelButton" layoutX="535.0" layoutY="538.0" mnemonicParsing="false" onAction="#cancelPressAct" prefWidth="120.0" text="Cancel" />
       <TextField fx:id="apptIDTF" disable="true" layoutX="327.0" layoutY="131.0" onAction="#apptIDCheck" promptText="Auto generated" />
       <TextField fx:id="titleTF" layoutX="327.0" layoutY="163.0" onAction="#titleTFCheck" />
       <TextField fx:id="descTF" layoutX="327.0" layoutY="197.0" onAction="#descTFCheck" />
       <TextField fx:id="locationTF" layoutX="327.0" layoutY="233.0" onAction="#locationTFCheck" />
       <TextField fx:id="typeTF" layoutX="327.0" layoutY="266.0" onAction="#typeTFCheck" />
-      <ChoiceBox layoutX="327.0" layoutY="300.0" prefHeight="25.0" prefWidth="161.0" />
-      <ChoiceBox layoutX="327.0" layoutY="335.0" prefHeight="25.0" prefWidth="161.0" />
-      <ChoiceBox layoutX="327.0" layoutY="372.0" prefHeight="25.0" prefWidth="161.0" />
+      <ChoiceBox layoutX="327.0" layoutY="300.0" prefHeight="25.0" prefWidth="161.0" fx:id="contactIDChoice"/>
+      <ChoiceBox layoutX="327.0" layoutY="335.0" prefHeight="25.0" prefWidth="161.0" fx:id="custIDChoice"/>
+      <ChoiceBox layoutX="327.0" layoutY="372.0" prefHeight="25.0" prefWidth="161.0" fx:id="userIDChoice"/>
       <DatePicker fx:id="StartDatePicker" layoutX="327.0" layoutY="408.0" onAction="#startDateCheck" prefHeight="25.0" prefWidth="161.0" />
       <DatePicker fx:id="endDatePicker" layoutX="678.0" layoutY="408.0" onAction="#endDateCheck" prefHeight="25.0" prefWidth="161.0" />
       <Spinner fx:id="startHourSpinner" layoutX="327.0" layoutY="442.0" prefHeight="25.0" prefWidth="62.0" />
