@@ -16,8 +16,8 @@ public class Appointments {
     private String Description;
     private String Location;
     private String Type;
-    private Date Start;
-    private Date End;
+    private String Start;
+    private String End;
     public int customer_id;
     public int user_id;
     public int contact_id;
@@ -36,7 +36,7 @@ public class Appointments {
      * @param contact_id
      */
     public Appointments(int appointmentID, String title, String description, String location, String type,
-            Date start, Date end, int customer_id, int user_id, int contact_id)
+            String start, String end, int customer_id, int user_id, int contact_id)
             {
         AppointmentID = appointmentID;
         Title = title;
@@ -122,28 +122,28 @@ public class Appointments {
      * This is to get the time of the start of the appointment
      * @return time is then input
      */
-    public Date getStart() {
+    public String getStart() {
         return Start;
     }
     /**
      * This is to set the start time into the database
      * @param start
      */
-    public void setStart(Date start) {
+    public void setStart(String start) {
         Start = start;
     }
     /**
      * This is to get the end time of the appointment
      * @return appointment end time is received from the database
      */
-    public Date getEnd() {
+    public String getEnd() {
         return End;
     }
     /**
      * This is to set the end time into the database
      * @param end is then pushed into the database
      */
-    public void setEnd(Date end) {
+    public void setEnd(String end) {
         End = end;
     }
     /**

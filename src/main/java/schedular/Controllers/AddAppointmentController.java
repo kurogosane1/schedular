@@ -7,7 +7,10 @@ import java.net.URL;
 import java.sql.Date;
 import java.sql.SQLException;
 import java.time.format.DateTimeFormatter;
+import java.util.ArrayList;
 import java.util.ResourceBundle;
+
+import javafx.collections.ObservableList;
 import javafx.event.ActionEvent;
 import javafx.fxml.FXML;
 import javafx.fxml.FXMLLoader;
@@ -19,10 +22,19 @@ import javafx.scene.control.ChoiceBox;
 import javafx.scene.control.DatePicker;
 import javafx.scene.control.Label;
 import javafx.scene.control.Spinner;
+import javafx.scene.control.SpinnerValueFactory;
 import javafx.scene.control.TextField;
 import javafx.scene.text.Text;
 import javafx.stage.Stage;
 import schedular.DOA.AppointmentDOA;
+import schedular.DOA.CustomerDOA;
+import schedular.DOA.UsersDOA;
+import schedular.DOA.contactsDOA;
+import schedular.Model.Appointments;
+import schedular.Model.Contacts;
+import schedular.Model.Customer;
+import schedular.Model.User;
+
 import static schedular.timeUtil.convertTimeDateUTC;
 
 /**
@@ -103,12 +115,12 @@ public class AddAppointmentController implements Initializable{
      * This is the end Hour Spinner
      */
     @FXML
-    private Spinner<String> endHourSpinner;
+    private Spinner<Integer> endHourSpinner;
     /**
      * This is the minutes to get the end of time of appointment in Minutes
      */
     @FXML
-    private Spinner<String> endMinSpinner;
+    private Spinner<Integer> endMinSpinner;
     /**
      * This is the end of Time Label
      */
@@ -143,12 +155,12 @@ public class AddAppointmentController implements Initializable{
      * This is the Start Hour Spinner to get the Starting Meeting Spinner
      */
     @FXML
-    private Spinner<String> startHourSpinner;
+    private Spinner<Integer> startHourSpinner;
     /**
      * This is the Start Minute Spinner
      */
     @FXML
-    private Spinner<String> startMinSpinner;
+    private Spinner<Integer> startMinSpinner;
     /**
      * This is the Start Time Label
      */
@@ -206,15 +218,15 @@ public class AddAppointmentController implements Initializable{
     /**
      * This is the Appointments DOA
      */
-    AppointmentDOA appointmentDOA = new AppointmentDOA();
+    private AppointmentDOA appointmentDOA = new AppointmentDOA();
     /**
-     * This is the Appointment ID input check
-     * @param event on Action Button Press Event
+     * This is the Customer DOA
      */
-    @FXML
-    void apptIDCheck(ActionEvent event) {
-
-    }
+    private CustomerDOA customerDOA = new CustomerDOA();
+    /**
+     * This is the User DOA
+     */
+    private UsersDOA userDOA = new UsersDOA();
     /**
      * This is to cancel Button Function to return user
      */
@@ -238,17 +250,8 @@ public class AddAppointmentController implements Initializable{
     }
 
     @FXML
-    void endDateCheck(ActionEvent event) {
-
-    }
-
-    @FXML
-    void locationTFCheck(ActionEvent event) {
-
-    }
-
-    @FXML
-    void saveButtonPress(ActionEvent event) throws SQLException {
+    void saveButtonPress(ActionEvent event) throws SQLException, IOException {
+        AppointmentDOA appointmentDOA = new AppointmentDOA();
         // THis is automatically added later
         int id = appointmentDOA.getAll().size();
         String title = titleTF.getText();
@@ -256,26 +259,25 @@ public class AddAppointmentController implements Initializable{
         String location = locationTF.getText();
         String type = typeTF.getText();
         String startDate = StartDatePicker.getValue().format(DateTimeFormatter.ofPattern("yyyy-MM-dd"));
-        String startTime = startHourSpinner.getValue() + ":" + startMinSpinner.getValue();
-        String endDate = endDatePicker.getValue().format(DateTimeFormatter.ofPattern("yyyy-MM-dd"));
-        String endTime = endHourSpinner.getValue() + ":" + endMinSpinner.getValue();
+        String startTime = String.valueOf(startHourSpinner.getValue() + ":" + startMinSpinner.getValue());
+        String endDate = String.valueOf(endDatePicker.getValue().format(DateTimeFormatter.ofPattern("yyyy-MM-dd")));
+        String endTime = String.valueOf(endHourSpinner.getValue()) + ":" + String.valueOf(endMinSpinner.getValue());
         // This is then convert Time
-        Date startUTC = Date.valueOf(convertTimeDateUTC(startDate+" "+startTime+":00"));
-        Date endUTC = Date.valueOf(convertTimeDateUTC(endDate+" "+endTime+":00"));
+        String startUTC = convertTimeDateUTC(startDate + " " + startTime + ":00");
+        System.out.println(startUTC);
+        String endUTC = convertTimeDateUTC(endDate+" "+endTime+":00");
         int customer_id = contactIDChoice.getValue();
         int user_id = userIDChoice.getValue();
         int contact_id = contactIDChoice.getValue();
+        Appointments appointment = new Appointments(id, title, desc, location, type, startUTC, endUTC, customer_id,
+                user_id, contact_id);
+        appointmentDOA.insert(appointment);
+        goBackAfterSave();
     }
-
     @FXML
-    void startDateCheck(ActionEvent event) {
-
-    }
-
+    void startDateCheck(ActionEvent event) {}
     @FXML
-    void titleTFCheck(ActionEvent event) {
-
-    }
+    void titleTFCheck(ActionEvent event) {}
     /**
      * This is the Type Text Field Check. This is not being used
      * @param event
@@ -286,7 +288,84 @@ public class AddAppointmentController implements Initializable{
      * This is
      * @param alertNumber
      */
-    public void errorTextAction(int alertNumber) {}
+    public void errorTextAction(int alertNumber) {
+    }
+
+    public void goBackAfterSave() throws IOException {
+         Parent root = FXMLLoader.load(getClass().getResource("/schedular/MainPage.fxml"));
+         Stage stage = (Stage) saveButton.getScene().getWindow();
+         stage.setTitle("Main Appointment");
+         stage.setScene(new Scene(root));
+         stage.show();
+    }
+    /**
+     * This is to get Customer User ID choicebox filled
+     */
+    public void customerIDChoiceBox() {
+        ObservableList<Customer> customers;
+        ArrayList<Integer> customerID = new ArrayList<Integer>();
+        try {
+            customers = customerDOA.getAll();
+            for (Customer customer : customers) {
+                customerID.add(customer.getCustomerId());
+            }
+            custIDChoice.getItems().addAll(customerID);
+        } catch (SQLException e) {
+            e.printStackTrace();
+        }
+    }
+    /**
+     * This is to get the User ID choice box to be filled
+     */
+    public void userIDChoiceBox() {
+        ObservableList<User> users;
+        ArrayList<Integer> userIds = new ArrayList<Integer>();
+        try {
+            users = userDOA.getAllUsers();
+            for (User user : users) {
+                userIds.add(user.getUserId());
+            }
+            userIDChoice.getItems().addAll(userIds);
+        } catch (SQLException e) {
+            e.printStackTrace();
+        }
+    }
+    
+    /**
+     * This is to get the Contact ID choice box to be filled
+     */
+    public void contactIDChoiceBox() {
+        ObservableList<Contacts> contacts;
+        ArrayList<Integer> contactID = new ArrayList<Integer>();
+        try {
+            contacts = contactsDOA.getAllContacts();
+            if (contacts != null) {
+                for (Contacts contact : contacts) {
+                    contactID.add(contact.getContact_ID());
+                }
+                contactIDChoice.getItems().addAll(contactID);
+            } else {
+                return;
+            }
+
+        } catch (SQLException e) {
+            e.printStackTrace();
+        }
+    }
+
+    public void spinnerHourChoice() {
+        SpinnerValueFactory<Integer> valueFactory = new SpinnerValueFactory.IntegerSpinnerValueFactory(0, 24);
+        SpinnerValueFactory<Integer> endvalueFactory = new SpinnerValueFactory.IntegerSpinnerValueFactory(0, 24);
+        startHourSpinner.setValueFactory(valueFactory);
+        endHourSpinner.setValueFactory(endvalueFactory);
+    }
+
+    public void spinnerMinuteChoice() {
+        SpinnerValueFactory<Integer> startMinuteFactory = new SpinnerValueFactory.IntegerSpinnerValueFactory(00, 59);
+        SpinnerValueFactory<Integer> endMinuteFactory = new SpinnerValueFactory.IntegerSpinnerValueFactory(0, 59);
+        startMinSpinner.setValueFactory(startMinuteFactory);
+        endMinSpinner.setValueFactory(endMinuteFactory);
+    }
     /**
      * This is to initialize the page
      * @param arg0 which is from the URL
@@ -296,5 +375,10 @@ public class AddAppointmentController implements Initializable{
     public void initialize(URL arg0, ResourceBundle arg1) {
         System.out.println("This is the Add Appointments Controllers Page");
         descET.setText("");
+        customerIDChoiceBox();
+        userIDChoiceBox();
+        contactIDChoiceBox();
+        spinnerHourChoice();
+        spinnerMinuteChoice();
     }
 }

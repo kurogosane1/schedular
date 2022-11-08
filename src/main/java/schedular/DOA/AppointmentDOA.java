@@ -36,8 +36,8 @@ public class AppointmentDOA implements DOA<Appointments> {
             String Description = rs.getString("Description");
             String Location = rs.getString("Location");
             String Type = rs.getString("Type");
-            Date Start = rs.getDate("Start");
-            Date End = rs.getDate("End");
+            String Start = rs.getString("Start");
+            String End = rs.getString("End");
             int Customer_ID = rs.getInt("Customer_ID");
             int User_ID = rs.getInt("User_ID");
             int Contact_ID = rs.getInt("Contact_ID");
@@ -62,8 +62,8 @@ public class AppointmentDOA implements DOA<Appointments> {
             String Description = rs.getString("Description");
             String Location = rs.getString("Location");
             String Type = rs.getString("Type");
-            Date Start = rs.getDate("Start");
-            Date End = rs.getDate("End");
+            String Start = rs.getString("Start");
+            String End = rs.getString("End");
             int Customer_ID = rs.getInt("Customer_ID");
             int User_ID = rs.getInt("User_ID");
             int Contact_ID = rs.getInt("Contact_ID");
@@ -82,12 +82,12 @@ public class AppointmentDOA implements DOA<Appointments> {
         Connection con = Database.getConnection();
         String sql = "INSERT INTO Appointments (Title, Description,Location, Type, Start, End, Customer_ID, User_ID, Contact_ID) VALUES (?,?,?,?,?,?,?,?,?)";
         PreparedStatement ps = con.prepareStatement(sql);
-        ps.setInt(1, t.getAppointmentID());
+        ps.setString(1, t.getTitle());
         ps.setString(2, t.getDescription());
         ps.setString(3, t.getLocation());
         ps.setString(4, t.getType());
-        ps.setDate(5, t.getStart());
-        ps.setDate(6, t.getEnd());
+        ps.setString(5, t.getStart());
+        ps.setString(6, t.getEnd());
         ps.setInt(7, t.getCustomer_id());
         ps.setInt(8, t.getUser_id());
         ps.setInt(9, t.getContact_id());
@@ -109,8 +109,8 @@ public class AppointmentDOA implements DOA<Appointments> {
         ps.setString(3, t.getDescription());
         ps.setString(4, t.getLocation());
         ps.setString(5, t.getType());
-        ps.setDate(6, t.getStart());
-        ps.setDate(7, t.getEnd());
+        ps.setString(6, t.getStart());
+        ps.setString(7, t.getEnd());
         ps.setInt(8, t.getCustomer_id());
         ps.setInt(9, t.getUser_id());
         ps.setInt(10, t.getContact_id());

@@ -289,7 +289,7 @@ public class MainPageController implements Initializable {
                 locationCol.setCellValueFactory(new PropertyValueFactory<>("Location"));
                 typeCol.setCellValueFactory(new PropertyValueFactory<>("Type"));
                 startTimeCol.setCellValueFactory(new PropertyValueFactory<>("Start"));
-                endTimeCol.setCellValueFactory(new PropertyValueFactory<>("Emd"));
+                endTimeCol.setCellValueFactory(new PropertyValueFactory<>("End"));
                 customerIDCol.setCellValueFactory(new PropertyValueFactory<>("customer_id"));
                 userIDCol.setCellValueFactory(new PropertyValueFactory<>("user_id"));
                 contactCol.setCellValueFactory(new PropertyValueFactory<>("contact_id"));
