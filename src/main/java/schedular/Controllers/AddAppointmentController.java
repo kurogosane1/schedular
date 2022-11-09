@@ -248,7 +248,12 @@ public class AddAppointmentController implements Initializable{
             return;
         }
     }
-
+    /**
+     * This is to save the Appointment information to the database
+     * @param event button when the save button is clicked
+     * @throws SQLException 
+     * @throws IOException
+     */
     @FXML
     void saveButtonPress(ActionEvent event) throws SQLException, IOException {
         AppointmentDOA appointmentDOA = new AppointmentDOA();
@@ -266,7 +271,7 @@ public class AddAppointmentController implements Initializable{
         String startUTC = convertTimeDateUTC(startDate + " " + startTime + ":00");
         System.out.println(startUTC);
         String endUTC = convertTimeDateUTC(endDate+" "+endTime+":00");
-        int customer_id = contactIDChoice.getValue();
+        int customer_id = custIDChoice.getValue();
         int user_id = userIDChoice.getValue();
         int contact_id = contactIDChoice.getValue();
         Appointments appointment = new Appointments(id, title, desc, location, type, startUTC, endUTC, customer_id,
@@ -274,23 +279,10 @@ public class AddAppointmentController implements Initializable{
         appointmentDOA.insert(appointment);
         goBackAfterSave();
     }
-    @FXML
-    void startDateCheck(ActionEvent event) {}
-    @FXML
-    void titleTFCheck(ActionEvent event) {}
     /**
-     * This is the Type Text Field Check. This is not being used
-     * @param event
+     * This is to redirect user to the main page if the save goes through
+     * @throws IOException
      */
-    @FXML
-    void typeTFCheck(ActionEvent event) {}
-    /**
-     * This is
-     * @param alertNumber
-     */
-    public void errorTextAction(int alertNumber) {
-    }
-
     public void goBackAfterSave() throws IOException {
          Parent root = FXMLLoader.load(getClass().getResource("/schedular/MainPage.fxml"));
          Stage stage = (Stage) saveButton.getScene().getWindow();

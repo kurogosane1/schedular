@@ -34,7 +34,7 @@
       <TextField fx:id="titleTF" layoutX="327.0" layoutY="163.0" />
       <TextField fx:id="descTF" layoutX="327.0" layoutY="197.0" />
       <TextField fx:id="locationTF" layoutX="327.0" layoutY="233.0" />
-      <TextField fx:id="typeTF" layoutX="327.0" layoutY="266.0" onAction="#typeTFCheck" />
+      <TextField fx:id="typeTF" layoutX="327.0" layoutY="266.0" />
       <ChoiceBox layoutX="327.0" layoutY="300.0" prefHeight="25.0" prefWidth="161.0" fx:id="contactIDChoice"/>
       <ChoiceBox layoutX="327.0" layoutY="335.0" prefHeight="25.0" prefWidth="161.0" fx:id="custIDChoice"/>
       <ChoiceBox layoutX="327.0" layoutY="372.0" prefHeight="25.0" prefWidth="161.0" fx:id="userIDChoice"/>

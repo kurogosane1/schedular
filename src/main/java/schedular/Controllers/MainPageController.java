@@ -215,12 +215,24 @@ public class MainPageController implements Initializable {
      * @param event
      */
     @FXML
-    void modifyAppt(ActionEvent event) throws IOException{
-        Parent root = FXMLLoader.load(getClass().getResource("/schedular/EditAppointment.fxml"));
-        Stage stage = (Stage) modApptButton.getScene().getWindow();
-        stage.setTitle("Modify Appointment");
-        stage.setScene(new Scene(root));
-        stage.show();
+    void modifyAppt(ActionEvent event) throws IOException {
+        if (apptTable.getSelectionModel().getSelectedItem() != null) {
+            FXMLLoader loader = new FXMLLoader(getClass().getResource("/schedular/EditAppointment.fxml"));
+            Parent root = loader.load();
+            EditAppointmentController mod = loader.getController();
+            Appointments appointment = apptTable.getSelectionModel().getSelectedItem();
+            mod.modifyAppointment(appointment);
+            Stage stage = (Stage) modApptButton.getScene().getWindow();
+            stage.setTitle("Modify Appointment");
+            stage.setScene(new Scene(root));
+            stage.show();
+        }
+        else{
+            Alert alert = new Alert(Alert.AlertType.WARNING);
+            alert.setTitle("Warning Dialog");
+            alert.setContentText("Please select an Appointment to Modify from the list");
+            alert.showAndWait();   
+        }
     }
     /**
      * 

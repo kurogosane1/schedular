@@ -158,7 +158,7 @@ public class CustomerController implements Initializable {
         else {
             Alert alert = new Alert(Alert.AlertType.WARNING);
             alert.setTitle("Warning Dialog");
-            alert.setContentText("Please select a Product to Update from the list");
+            alert.setContentText("Please select a Customer to Update from the list");
             alert.showAndWait(); 
         }
     }
