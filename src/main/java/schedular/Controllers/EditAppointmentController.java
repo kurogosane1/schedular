@@ -14,6 +14,7 @@ import javafx.fxml.FXMLLoader;
 import javafx.fxml.Initializable;
 import javafx.scene.Parent;
 import javafx.scene.Scene;
+import javafx.scene.control.Alert;
 import javafx.scene.control.Button;
 import javafx.scene.control.ChoiceBox;
 import javafx.scene.control.DatePicker;
@@ -23,6 +24,7 @@ import javafx.scene.control.SpinnerValueFactory;
 import javafx.scene.control.TextField;
 import javafx.scene.text.Text;
 import javafx.stage.Stage;
+import schedular.DOA.AppointmentDOA;
 import schedular.DOA.CustomerDOA;
 import schedular.DOA.UsersDOA;
 import schedular.DOA.contactsDOA;
@@ -30,7 +32,7 @@ import schedular.Model.Appointments;
 import schedular.Model.Contacts;
 import schedular.Model.Customer;
 import schedular.Model.User;
-
+import static schedular.timeUtil.convertTimeDateUTC;
 
 public class EditAppointmentController implements Initializable {
     /**
@@ -88,15 +90,92 @@ public class EditAppointmentController implements Initializable {
         stage.setScene(new Scene(root));
         stage.show();
     }
-    
+    /**
+     * This is to save appointment information after they fill information
+     * @param event which is the Button press action
+     * @throws SQLException 
+     */
     @FXML
-    void saveButtonPress(ActionEvent event) {
+    void saveButtonPress(ActionEvent event) throws SQLException {
+        AppointmentDOA appointmentDOA = new AppointmentDOA();
+        // Validation of the data first
+        int appointmentID = Integer.parseInt(apptIDTF.getText()); // This is default and will not change
+        try {
+            String title = titleTF.getText();
+          try {
+              String description = descTF.getText();
+              try {
+                  String location = locationTF.getText();
+                    try {
+                        String type = typeTF.getText();
+                        try {
+                            String startDate = StartDatePicker.getValue().format(DateTimeFormatter.ofPattern("yyyy-MM-dd"));
+                            String startTime = String.valueOf(startHourSpinner.getValue() + ":" + startMinSpinner.getValue()+":00");
+                            String endDate = String.valueOf(endDatePicker.getValue().format(DateTimeFormatter.ofPattern("yyyy-MM-dd")));
+                            String endTime = String.valueOf(endHourSpinner.getValue()) + ":" + String.valueOf(endMinSpinner.getValue()+":00");
+                            // This is then convert Time
+                            String startUTC = convertTimeDateUTC(startDate + " " + startTime);
+                            String endUTC = convertTimeDateUTC(endDate + " " + endTime);
+                            // Now comparison of start and end date comparison
+                            LocalDate startDateComparison = LocalDate.parse(startDate); // This is temporary Comparison
+                            LocalDate endDateComparison = LocalDate.parse(endDate);// This is temporary Comparison
+                            if (startDateComparison.isAfter(endDateComparison)) {
+                                displayError(5);
+                                return;
+                            }
+                            // TODO Get the Date time parse error resolved. 
+                            LocalDateTime startTimeComparison = LocalDateTime.parse(startUTC); // This
+                            LocalDateTime endTimeComparison = LocalDateTime.parse(endUTC); // This
+                            if (startTimeComparison.isAfter(endTimeComparison)) {
+                                displayError(6);
+                                return;
+                            }
+                            try {
+                                int customerID = custIDChoice.getValue();
+                                int userID = userIDChoice.getValue();
+                                int contactID = contactIDChoice.getValue();
+
+                                Appointments appointments = new Appointments(appointmentID, title, description,
+                                        location, type, startUTC, endUTC, customerID, userID, contactID);
+                                
+                                appointmentDOA.update(appointments);
+
+                            } catch (NullPointerException e) {
+                                e.printStackTrace(); // This is for Customer ID, User ID and Contact ID
+                                displayError(8);
+                                return;
+                            } 
+                        } catch (NullPointerException e) {
+                            e.printStackTrace(); // This is for the Start Date and Timestamp
+                            displayError(7);
+                            return;
+                        }
+                    } catch (NullPointerException e) {
+                        e.printStackTrace(); // This is for type
+                        displayError(4);
+                        return;
+                    }
+              } catch (NullPointerException e) {
+                  e.printStackTrace();// This is for Location
+                  displayError(3);
+                  return;
+              }
+          } catch (NullPointerException e) {
+              e.printStackTrace(); // This is for Description
+              displayError(2);
+              return;
+          }  
+        } catch (NullPointerException e) {
+            e.printStackTrace(); // This is for Title
+            displayError(1);
+            return;
+        } 
     }
      /**
      * This is to redirect user to the main page if the save goes through
      * @throws IOException
      */
-     public void goBackAfterSave() throws IOException {
+    public void goBackAfterSave() throws IOException {
          Parent root = FXMLLoader.load(getClass().getResource("/schedular/MainPage.fxml"));
          Stage stage = (Stage) saveButton.getScene().getWindow();
          stage.setTitle("Main Appointment");
@@ -104,7 +183,7 @@ public class EditAppointmentController implements Initializable {
          stage.show();
      }
     /**
-     * This is to get Customer User ID choicebox filled
+     * This is to get Customer User ID choicebox filled at start
      */
     public void customerIDChoiceBox() {
         ObservableList<Customer> customers;
@@ -120,7 +199,7 @@ public class EditAppointmentController implements Initializable {
         }
     }
     /**
-     * This is to get the User ID choice box to be filled
+     * This is to get the User ID choice box to be filled at start
      */
     public void userIDChoiceBox() {
         ObservableList<User> users;
@@ -135,7 +214,6 @@ public class EditAppointmentController implements Initializable {
             e.printStackTrace();
         }
     }
-    
     /**
      * This is to get the Contact ID choice box to be filled
      */
@@ -167,8 +245,7 @@ public class EditAppointmentController implements Initializable {
         endvalueFactory.setValue(g);
         startHourSpinner.setValueFactory(valueFactory);
         endHourSpinner.setValueFactory(endvalueFactory);
-    }
-    
+    }   
     /**
      * This is to add the choices in a spinner
      */
@@ -180,27 +257,87 @@ public class EditAppointmentController implements Initializable {
         startMinSpinner.setValueFactory(startMinuteFactory);
         endMinSpinner.setValueFactory(endMinuteFactory);
     }
-
+    /**
+     * This is the Display Alert to show when a mistake is made
+     * @param alertNumber is the integer that is passed to run the alert
+     */ 
+    public void displayError(int alertNumber) {
+        Alert alert = new Alert(Alert.AlertType.WARNING);
+        switch (alertNumber) {
+            case 1: // This is when the 
+                 alert.setTitle("Empty Title");
+                 alert.setContentText("You have not entered a Title for The Appointment");
+                 alert.showAndWait();
+                 break;
+             case 2: // This is when the Description is empty
+                 alert.setTitle("Empty Description");
+                 alert.setContentText("You have not entered a Description");
+                 alert.showAndWait();
+                 break;
+             case 3: // This is when the the Location is empty
+                 alert.setTitle("Empty Location");
+                 alert.setContentText("You have not entered a Location");
+                 alert.showAndWait();
+                 break;
+             case 4: // This is when the the Type is empty
+                 alert.setTitle("Empty Type");
+                 alert.setContentText("You have not entered a Type");
+                 alert.showAndWait();
+                 break;
+             case 5: //This is when the Start Date is after the End Date
+                 alert.setTitle("Start Date invalid");
+                 alert.setContentText("Start Date should not be after the end date");
+                 alert.showAndWait();
+                 break;
+            case 6: // This is when the Start Time is after the End Time
+                alert.setTitle("Start time should not be after the end date");
+                alert.setContentText("Start time should not be after the end date");
+                alert.showAndWait();
+                break;
+            case 7: // This is when the date or time are empty
+                alert.setTitle("Date or time should not be empty");
+                alert.setContentText("Date or time should not be empty, please be sure to select the date and time");
+                alert.showAndWait();
+                break;
+            case 8: // This is if Customer ID, Contact ID or User ID is empty
+                alert.setTitle("Empty User ID, Contact ID, Customer ID");
+                alert.setContentText(
+                        "Please do not leave the Contact ID, or User ID or Customer ID or all of them empty");
+                alert.showAndWait();
+                break;
+            default:
+                alert.setTitle("Invalid information input");
+                alert.setContentText("Please check the data input and make sure the fields are not empty");
+                alert.showAndWait();
+                break;
+        }
+        
+    }
+    /**
+     * This function is used to carry the Appointment object to the modify page for editing
+     * @param t Appointment object
+     */
     public void modifyAppointment(Appointments t){
         apptIDTF.setText(String.valueOf(t.getAppointmentID()));
         titleTF.setText(t.getTitle());
         descTF.setText(t.getDescription());
         locationTF.setText(t.getLocation());
         typeTF.setText(t.getType());
-        // Get the date format corrected
-        DateTimeFormatter formatter = DateTimeFormatter.ofPattern("yyyy-MM-dd");
-        LocalDateTime localstart = LocalDateTime.parse(t.getStart(),formatter);
-        LocalDateTime ldtstart = LocalDateTime.parse(t.getStart());
-        LocalDateTime ldtend = LocalDateTime.parse(t.getEnd());
-        spinnerMinuteChoice(ldtstart.getMinute(), ldtend.getMinute());
-        spinnerHourChoice(ldtstart.getHour(), ldtend.getHour());
-        StartDatePicker.setValue(localstart);
-        LocalDate localend = LocalDate.parse(t.getEnd());
-        endDatePicker.setValue(localend);
+        // Getting the Local Date and Time
+        String str = t.getStart(); // Start Date and Time
+        String str2 = t.getEnd(); // End Date and time
+        DateTimeFormatter formatter = DateTimeFormatter.ofPattern("yyyy-MM-dd HH:mm:ss");
+        LocalDateTime startDateTime = LocalDateTime.parse(str, formatter);
+        LocalDateTime endDateTime = LocalDateTime.parse(str2, formatter);
+        spinnerHourChoice(startDateTime.getHour(), endDateTime.getHour());
+        spinnerMinuteChoice(startDateTime.getMinute(), endDateTime.getMinute());
+        // Setting the Date
+        StartDatePicker.setValue(startDateTime.toLocalDate());
+        endDatePicker.setValue(endDateTime.toLocalDate());
+        // Customer ID, User ID and Contact ID Choice
         custIDChoice.setValue(t.getCustomer_id());
         userIDChoice.setValue(t.getUser_id());
         contactIDChoice.setValue(t.getContact_id());
-
     }   
     /**
      * This is to initialize the page
@@ -212,7 +349,5 @@ public class EditAppointmentController implements Initializable {
         customerIDChoiceBox();
         userIDChoiceBox();
         contactIDChoiceBox();
-        // spinnerHourChoice();
-        // spinnerMinuteChoice();
     }
 }
