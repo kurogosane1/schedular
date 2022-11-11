@@ -17,12 +17,11 @@
           <TableColumn fx:id="descriptionCol" prefWidth="76.0" text="Description" />
             <TableColumn fx:id="locationCol" minWidth="0.0" prefWidth="99.0" text="Location" />
             <TableColumn fx:id="contactCol" prefWidth="79.0" text="Contact" />
-            <TableColumn fx:id="typeCol" prefWidth="77.0" text="Type" />
-            <TableColumn fx:id="startTimeCol" prefWidth="88.0" text="Start Time" />
-            <TableColumn fx:id="endTimeCol" prefWidth="70.0" text="End Time" />
-            <TableColumn fx:id="endDateCol" prefWidth="82.0" text="End Date" />
-            <TableColumn fx:id="customerIDCol" prefWidth="90.0" text="Customer ID" />
-            <TableColumn fx:id="userIDCol" prefWidth="115.0" text="User ID" />
+            <TableColumn fx:id="typeCol" prefWidth="110.0" text="Type" />
+            <TableColumn fx:id="startTimeCol" prefWidth="99.0" text="Start Time" />
+            <TableColumn fx:id="endTimeCol" prefWidth="99.0" text="End Time" />
+            <TableColumn fx:id="customerIDCol" prefWidth="87.0" text="Customer ID" />
+            <TableColumn fx:id="userIDCol" prefWidth="127.0" text="User ID" />
         </columns>
       </TableView>
       <RadioButton fx:id="viewCustomerRadio" layoutX="1045.0" layoutY="80.0" mnemonicParsing="false" onAction="#viewCustomer" text="View Customers">

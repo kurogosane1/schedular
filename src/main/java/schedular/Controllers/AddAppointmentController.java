@@ -264,9 +264,24 @@ public class AddAppointmentController implements Initializable{
         String location = locationTF.getText();
         String type = typeTF.getText();
         String startDate = StartDatePicker.getValue().format(DateTimeFormatter.ofPattern("yyyy-MM-dd"));
-        String startTime = String.valueOf(startHourSpinner.getValue() + ":" + startMinSpinner.getValue());
+        String test1;
+        String test2;
+        String str1 = String.valueOf(startMinSpinner.getValue());
+        String str2 = String.valueOf(endMinSpinner.getValue());
+        if (str1.length() == 1) {
+            test1 = "0" + str1;
+        } else {
+            test1 = str1;
+        }
+        if (str2.length() == 1) {
+            test2 = "0" + str2;
+        }
+        test2 = str2;
+        // String startTime = String.valueOf(startHourSpinner.getValue() + ":" + startMinSpinner.getValue());
+        String startTime = String.valueOf(startHourSpinner.getValue() + ":" + test1);
         String endDate = String.valueOf(endDatePicker.getValue().format(DateTimeFormatter.ofPattern("yyyy-MM-dd")));
-        String endTime = String.valueOf(endHourSpinner.getValue()) + ":" + String.valueOf(endMinSpinner.getValue());
+        // String endTime = String.valueOf(endHourSpinner.getValue()) + ":" + String.valueOf(endMinSpinner.getValue());
+         String endTime = String.valueOf(endHourSpinner.getValue()) + ":" + test2;
         // This is then convert Time
         String startUTC = convertTimeDateUTC(startDate + " " + startTime + ":00");
         System.out.println(startUTC);
@@ -354,7 +369,9 @@ public class AddAppointmentController implements Initializable{
 
     public void spinnerMinuteChoice() {
         SpinnerValueFactory<Integer> startMinuteFactory = new SpinnerValueFactory.IntegerSpinnerValueFactory(00, 59);
-        SpinnerValueFactory<Integer> endMinuteFactory = new SpinnerValueFactory.IntegerSpinnerValueFactory(0, 59);
+        startMinuteFactory.setValue(00);
+        SpinnerValueFactory<Integer> endMinuteFactory = new SpinnerValueFactory.IntegerSpinnerValueFactory(00, 59);
+        endMinuteFactory.setValue(00);
         startMinSpinner.setValueFactory(startMinuteFactory);
         endMinSpinner.setValueFactory(endMinuteFactory);
     }

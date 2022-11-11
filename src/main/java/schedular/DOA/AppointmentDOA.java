@@ -125,7 +125,7 @@ public class AppointmentDOA implements DOA<Appointments> {
     @Override
     public int delete(Appointments t) throws SQLException {
         Connection con = Database.getConnection();
-        String sql = "DELETE FROM Appointments WHERE Appointments Appointment_ID=?";
+        String sql = "DELETE FROM Appointments WHERE Appointment_ID=?";
         PreparedStatement ps = con.prepareStatement(sql);
         ps.setInt(1, t.getAppointmentID());
         int result = ps.executeUpdate();

@@ -4,6 +4,7 @@ import java.net.URL;
 import java.sql.SQLException;
 import java.time.LocalDate;
 import java.time.LocalDateTime;
+import java.time.LocalTime;
 import java.time.format.DateTimeFormatter;
 import java.util.ArrayList;
 import java.util.ResourceBundle;
@@ -94,9 +95,10 @@ public class EditAppointmentController implements Initializable {
      * This is to save appointment information after they fill information
      * @param event which is the Button press action
      * @throws SQLException 
+     * @throws IOException
      */
     @FXML
-    void saveButtonPress(ActionEvent event) throws SQLException {
+    void saveButtonPress(ActionEvent event) throws SQLException, IOException {
         AppointmentDOA appointmentDOA = new AppointmentDOA();
         // Validation of the data first
         int appointmentID = Integer.parseInt(apptIDTF.getText()); // This is default and will not change
@@ -109,23 +111,57 @@ public class EditAppointmentController implements Initializable {
                     try {
                         String type = typeTF.getText();
                         try {
-                            String startDate = StartDatePicker.getValue().format(DateTimeFormatter.ofPattern("yyyy-MM-dd"));
-                            String startTime = String.valueOf(startHourSpinner.getValue() + ":" + startMinSpinner.getValue()+":00");
+                            String startDate = StartDatePicker.getValue()
+                                    .format(DateTimeFormatter.ofPattern("yyyy-MM-dd"));
+                            String sminute = String.valueOf(startMinSpinner.getValue());
+                            String eminute =String.valueOf(endMinSpinner.getValue());
+                            String shour = String.valueOf(startHourSpinner.getValue());
+                            String ehour = String.valueOf(endHourSpinner.getValue());
+                            String startMinute;
+                            String endMinute;
+                            String sHour;
+                            String eHour;
+                            if (sminute.length() == 1) {
+                                startMinute = "0" + sminute;
+                            }
+                            else {
+                                startMinute = sminute;
+                            }
+                            if (shour.length() == 1) {
+                                sHour = "0" + shour;
+                            } else {
+                                sHour = shour;
+                            }
+                            if (ehour.length() == 1) {
+                                eHour = "0" + ehour;
+                            } else {
+                                eHour = ehour;
+                            }
+                            if (eminute.length() == 1) {
+                                endMinute = "0" + eminute;
+                            }
+                            else {
+                                endMinute = eminute;
+                            }
+                            String startTime = sHour + ":" + startMinute+":00";
                             String endDate = String.valueOf(endDatePicker.getValue().format(DateTimeFormatter.ofPattern("yyyy-MM-dd")));
-                            String endTime = String.valueOf(endHourSpinner.getValue()) + ":" + String.valueOf(endMinSpinner.getValue()+":00");
+                            String endTime = eHour + ":" + endMinute+":00";
                             // This is then convert Time
                             String startUTC = convertTimeDateUTC(startDate + " " + startTime);
                             String endUTC = convertTimeDateUTC(endDate + " " + endTime);
+                            DateTimeFormatter formatter = DateTimeFormatter.ofPattern("yyyy-MM-dd HH:mm:ss");
+                            DateTimeFormatter timeFormatter = DateTimeFormatter.ofPattern("HH:mm:ss");
                             // Now comparison of start and end date comparison
-                            LocalDate startDateComparison = LocalDate.parse(startDate); // This is temporary Comparison
-                            LocalDate endDateComparison = LocalDate.parse(endDate);// This is temporary Comparison
+                            LocalDate startDateComparison = LocalDate.parse(startUTC, formatter); // This is temporary Comparison
+                            LocalDate endDateComparison = LocalDate.parse(endUTC,formatter);// This is temporary Comparison
                             if (startDateComparison.isAfter(endDateComparison)) {
                                 displayError(5);
                                 return;
                             }
-                            // TODO Get the Date time parse error resolved. 
-                            LocalDateTime startTimeComparison = LocalDateTime.parse(startUTC); // This
-                            LocalDateTime endTimeComparison = LocalDateTime.parse(endUTC); // This
+                          
+                 
+                            LocalTime startTimeComparison = LocalTime.parse(startTime,timeFormatter); // This
+                            LocalTime endTimeComparison = LocalTime.parse(endTime,timeFormatter); // This
                             if (startTimeComparison.isAfter(endTimeComparison)) {
                                 displayError(6);
                                 return;
@@ -139,6 +175,7 @@ public class EditAppointmentController implements Initializable {
                                         location, type, startUTC, endUTC, customerID, userID, contactID);
                                 
                                 appointmentDOA.update(appointments);
+                                goBackAfterSave();
 
                             } catch (NullPointerException e) {
                                 e.printStackTrace(); // This is for Customer ID, User ID and Contact ID
@@ -239,9 +276,9 @@ public class EditAppointmentController implements Initializable {
      * This is to add the choices in a spinner
      */
     public void spinnerHourChoice(int t,int g) {
-        SpinnerValueFactory<Integer> valueFactory = new SpinnerValueFactory.IntegerSpinnerValueFactory(0, 24);
+        SpinnerValueFactory<Integer> valueFactory = new SpinnerValueFactory.IntegerSpinnerValueFactory(00, 24);
         valueFactory.setValue(t);
-        SpinnerValueFactory<Integer> endvalueFactory = new SpinnerValueFactory.IntegerSpinnerValueFactory(0, 24);
+        SpinnerValueFactory<Integer> endvalueFactory = new SpinnerValueFactory.IntegerSpinnerValueFactory(00, 24);
         endvalueFactory.setValue(g);
         startHourSpinner.setValueFactory(valueFactory);
         endHourSpinner.setValueFactory(endvalueFactory);
@@ -252,7 +289,7 @@ public class EditAppointmentController implements Initializable {
     public void spinnerMinuteChoice(int t, int g) {
         SpinnerValueFactory<Integer> startMinuteFactory = new SpinnerValueFactory.IntegerSpinnerValueFactory(00, 59);
         startMinuteFactory.setValue(t);
-        SpinnerValueFactory<Integer> endMinuteFactory = new SpinnerValueFactory.IntegerSpinnerValueFactory(0, 59);
+        SpinnerValueFactory<Integer> endMinuteFactory = new SpinnerValueFactory.IntegerSpinnerValueFactory(00, 59);
         endMinuteFactory.setValue(g);
         startMinSpinner.setValueFactory(startMinuteFactory);
         endMinSpinner.setValueFactory(endMinuteFactory);

@@ -78,8 +78,8 @@ public class MainPageController implements Initializable {
     /**
      * Appointment End Date Table Column
      */
-    @FXML
-    private TableColumn<Appointments, Date> endDateCol;
+    // @FXML
+    // private TableColumn<Appointments, Date> endDateCol;
     /**
      * Appointment End Time Table Column
      */
@@ -190,7 +190,9 @@ public class MainPageController implements Initializable {
             if (result.isPresent() && result.get() == ButtonType.OK) {
                 Appointments appointment = apptTable.getSelectionModel().getSelectedItem();
                 try {
+                    aptSchedule.remove(appointment);
                     appointments.delete(appointment);
+                    
                 } catch (SQLException e) {
                   e.printStackTrace();
                 }
@@ -291,9 +293,14 @@ public class MainPageController implements Initializable {
      * This is to help initialize the Table View
      */
     public void initializingTable() {
-        try{
-            aptSchedule = appointments.getAll();
-            if (aptSchedule.size() != 0) {
+ 
+            try {
+                    aptSchedule = appointments.getAll();
+                } catch (SQLException e) {
+                    // TODO Auto-generated catch block
+                    e.printStackTrace();
+                }
+          
                 apptTable.setItems(aptSchedule);
                 apptIDColumn.setCellValueFactory(new PropertyValueFactory<>("AppointmentID"));
                 titleCol.setCellValueFactory(new PropertyValueFactory<>("Title"));
@@ -304,17 +311,13 @@ public class MainPageController implements Initializable {
                 endTimeCol.setCellValueFactory(new PropertyValueFactory<>("End"));
                 customerIDCol.setCellValueFactory(new PropertyValueFactory<>("customer_id"));
                 userIDCol.setCellValueFactory(new PropertyValueFactory<>("user_id"));
-                contactCol.setCellValueFactory(new PropertyValueFactory<>("contact_id"));
-            }
-            else {
-                return;
-            }
-        } catch (SQLException e) {
-            e.printStackTrace();
-        }
+                contactCol.setCellValueFactory(new PropertyValueFactory<>("contact_id"));  
     }
+    
     /**
-     * 
+     * Main initializing page function
+     * @param arg0 is the URL
+     * @param arg1 is the resourceBundle
      */
     @Override
     public void initialize(URL arg0, ResourceBundle arg1) {
@@ -323,36 +326,3 @@ public class MainPageController implements Initializable {
     }
   
 }
-// updatingCountryTest();
-        // System.out.println("This ran");
-        // gettingCountriesTEst();
-
-
-  // public static void getCountry() throws SQLException {
-    //     CountriesDOA countDOA = new CountriesDOA();
-    //     ObservableList<Countries> count1 = countDOA.getAll();
-    //     for (Countries count : count1) {
-    //         System.out.println(count.getCountry());
-    //     }
-    // }
-    // public static void updateCountry() throws SQLException {
-    //     CountriesDOA countDOA = new CountriesDOA();
-    //     Countries country = new Countries(2, "United Kingdom");
-    //     countDOA.update(country);
-    // }
-        
-    // public static void gettingCountriesTEst() {
-    //     try {
-    //         getCountry();
-    //     } catch (SQLException e) {
-    //         e.printStackTrace();
-    //     }
-    // }
-
-    // public static void updatingCountryTest() {
-    //     try {
-    //         updateCountry();          
-    //     } catch (SQLException e) {
-    //         e.printStackTrace();
-    //     }
-    // }
