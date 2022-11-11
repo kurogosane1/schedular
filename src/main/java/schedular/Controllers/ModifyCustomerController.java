@@ -326,22 +326,3 @@ public class ModifyCustomerController implements Initializable {
         divisionChoice.setOnAction(this::changeDivision);
     } 
 }
-
-
-
-     // ObservableList<Customer> customers = customerDOA.getAll();
-        // int id = Integer.parseInt(cusIDTextField.getText());
-        // String customer_name = cusNameTF.getText();
-        // String customer_Address = cusAddrTF.getText();
-        // String postalCode = cusPostalTF.getText();
-        // String phone = cusPhoneTF.getText();
-        // int divisionID = divisionChoice.getValue();
-        // FirstLevelDivision d = div.get(customer.getDivision_id());
-        // divNameTF.setText(d.getDivision());
-        // Customer customer = new Customer(id, customer_name, customer_Address, postalCode, phone, divisionID);
-        // customerDOA.update(customer);
-        // try {
-        //     goBackAfterSave();
-        // } catch (IOException e) {
-        //     e.printStackTrace();
-        // }
