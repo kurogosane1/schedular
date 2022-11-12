@@ -269,10 +269,10 @@ public class MainPageController implements Initializable {
      * 
      * @param event
      */
-    @FXML
-    void viewCustomer(ActionEvent event) {
+    // @FXML
+    // void viewCustomer(ActionEvent event) {
 
-    }
+    // }
     /**
      * This is view the Schedule Monthly from the current Date
      * @param event is a radio button press
@@ -292,9 +292,18 @@ public class MainPageController implements Initializable {
         aptSchedule = appointments.getApptsWeekly();
         apptTable.setItems(aptSchedule);
     }
+    /**
+     * This is to go to the Contacts Page
+     * @param event This is the action from the Contacts Button press
+     * @throws IOException
+     */
     @FXML
-    void toContactsPage(ActionEvent event) {
-
+    void toContactsPage(ActionEvent event) throws IOException {
+        Parent root = FXMLLoader.load(getClass().getResource("/schedular/Contact.fxml"));
+         Stage stage = (Stage) contactsButton.getScene().getWindow();
+         stage.setTitle("Contacts");
+         stage.setScene(new Scene(root));
+         stage.show();
     }
     /**
      * This is to help initialize the Table View

@@ -123,3 +123,40 @@ public class CustomerDOA implements DOA<Customer> {
     }
     
 }
+
+
+ // public Contacts get(int id) throws SQLException {
+    //     Connection con = Database.getConnection();
+    //     Contacts contact = null;
+    //     String sql = "Select * WHERE Contact_ID =?";
+    //     PreparedStatement ps = con.prepareStatement(sql);
+    //     ps.setInt(1, id);
+    //     ResultSet rs = ps.executeQuery();
+    //     if(rs.next()) {
+    //         int customerId = rs.getInt("Contact_ID");
+    //         String customerName = rs.getString("Contact_Name");
+    //         String email = rs.getString("Email");
+    //         contact = new Contacts(customerId, customerName, email);
+    //     }
+    //     return contact;
+    // }
+
+    /**
+     * Retrieve all the Contacts from the database
+     */
+    // @Override
+    // public ObservableList<Contacts> getAll() throws SQLException {
+    //     Connection conn = Database.getConnection();
+    //     ObservableList<Contacts> contacts = FXCollections.observableArrayList();
+    //     String sql = "SELECT * FROM Contacts";
+    //     Statement ps = conn.createStatement();
+    //     ResultSet rs = ps.executeQuery(sql);
+    //     while (rs.next()) {
+    //         int contactID = rs.getInt("Contact_ID");
+    //         String contactName = rs.getString("Contact_Name");
+    //         String email = rs.getString("Email");
+    //         Contacts contact = new Contacts(contactID, contactName, email);
+    //         contacts.add(contact);
+    //     }
+    //     return contacts;
+    // }

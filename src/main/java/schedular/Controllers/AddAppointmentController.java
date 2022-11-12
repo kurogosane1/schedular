@@ -30,7 +30,7 @@ import javafx.stage.Stage;
 import schedular.DOA.AppointmentDOA;
 import schedular.DOA.CustomerDOA;
 import schedular.DOA.UsersDOA;
-import schedular.DOA.contactsDOA;
+import schedular.DOA.ContactsDOA;
 import schedular.Model.Appointments;
 import schedular.Model.Contacts;
 import schedular.Model.Customer;
@@ -430,9 +430,10 @@ public class AddAppointmentController implements Initializable{
      */
     public void contactIDChoiceBox() {
         ObservableList<Contacts> contacts;
+        ContactsDOA contactsDOA = new ContactsDOA();
         ArrayList<Integer> contactID = new ArrayList<Integer>();
         try {
-            contacts = contactsDOA.getAllContacts();
+            contacts = contactsDOA.getAll();
             if (contacts != null) {
                 for (Contacts contact : contacts) {
                     contactID.add(contact.getContact_ID());
