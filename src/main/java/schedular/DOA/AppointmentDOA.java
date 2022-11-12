@@ -8,6 +8,7 @@ import java.sql.PreparedStatement;
 import java.sql.ResultSet;
 import java.sql.SQLException;
 import java.sql.Statement;
+import java.time.LocalDate;
 import java.sql.Date;
 import javafx.collections.FXCollections;
 import javafx.collections.ObservableList;
@@ -130,6 +131,91 @@ public class AppointmentDOA implements DOA<Appointments> {
         ps.setInt(1, t.getAppointmentID());
         int result = ps.executeUpdate();
         return result;
+    }
+
+    
+    public ObservableList<Appointments> getApptsWeekly() throws SQLException {
+        Connection con = Database.getConnection();
+        ObservableList<Appointments> weeklyAppointments = FXCollections.observableArrayList();
+        LocalDate now = LocalDate.now();
+        LocalDate week = LocalDate.now().plusDays(7);
+
+        String sql = "SELECT * FROM Appointments WHERE Start>=? AND START <=? ORDER BY START";
+        PreparedStatement ps = con.prepareStatement(sql);
+        ps.setString(1, now.toString());
+        ps.setString(2, week.toString());
+        ResultSet rs = ps.executeQuery();
+        while (rs.next()) {
+            int Appointment_ID = rs.getInt("Appointment_ID");
+            String Title = rs.getString("Title");
+            String Description = rs.getString("Description");
+            String Location = rs.getString("Location");
+            String Type = rs.getString("Type");
+            String Start = rs.getString("Start");
+            String End = rs.getString("End");
+            int Customer_ID = rs.getInt("Customer_ID");
+            int User_ID = rs.getInt("User_ID");
+            int Contact_ID = rs.getInt("Contact_ID");
+            Appointments appointment = new Appointments(Appointment_ID, Title, Description, Location, Type, Start, End,
+                    Customer_ID, User_ID, Contact_ID);
+            weeklyAppointments.add(appointment);
+        }
+        return weeklyAppointments;
+    }
+    
+    public ObservableList<Appointments> getApptsMonthly() throws SQLException {
+        Connection con = Database.getConnection();
+        ObservableList<Appointments> weeklyAppointments = FXCollections.observableArrayList();
+        LocalDate now = LocalDate.now();
+        LocalDate week = LocalDate.now().plusMonths(1);
+
+        String sql = "SELECT * FROM Appointments WHERE Start>=? AND START <=? ORDER BY START";
+        PreparedStatement ps = con.prepareStatement(sql);
+        ps.setString(1, now.toString());
+        ps.setString(2, week.toString());
+        ResultSet rs = ps.executeQuery();
+        while (rs.next()) {
+            int Appointment_ID = rs.getInt("Appointment_ID");
+            String Title = rs.getString("Title");
+            String Description = rs.getString("Description");
+            String Location = rs.getString("Location");
+            String Type = rs.getString("Type");
+            String Start = rs.getString("Start");
+            String End = rs.getString("End");
+            int Customer_ID = rs.getInt("Customer_ID");
+            int User_ID = rs.getInt("User_ID");
+            int Contact_ID = rs.getInt("Contact_ID");
+            Appointments appointment = new Appointments(Appointment_ID, Title, Description, Location, Type, Start, End,
+                    Customer_ID, User_ID, Contact_ID);
+            weeklyAppointments.add(appointment);
+        }
+        return weeklyAppointments;
+    }
+
+    public ObservableList<Appointments> getByCustomerID(int id) throws SQLException {
+        Connection con = Database.getConnection();
+        ObservableList<Appointments> appointments = FXCollections.observableArrayList();
+        String sql = "SELECT Appointment_ID, Title, Description, Location, Type, Start, End, Customer_ID, User_ID, Contact_ID FROM Appointments WHERE Customer_ID =?";
+         PreparedStatement ps = con.prepareStatement(sql);
+         ps.setInt(1, id);
+         ResultSet rs = ps.executeQuery();
+         while (rs.next()) {
+            int Appointment_ID = rs.getInt("Appointment_ID");
+            String Title = rs.getString("Title");
+            String Description = rs.getString("Description");
+            String Location = rs.getString("Location");
+            String Type = rs.getString("Type");
+            String Start = rs.getString("Start");
+            String End = rs.getString("End");
+            int Customer_ID = rs.getInt("Customer_ID");
+            int User_ID = rs.getInt("User_ID");
+            int Contact_ID = rs.getInt("Contact_ID");
+            Appointments appointment = new Appointments(Appointment_ID, Title, Description, Location, Type, Start, End,
+                    Customer_ID, User_ID, Contact_ID);
+            appointments.add(appointment);
+         }
+
+        return appointments;
     }
     
 }

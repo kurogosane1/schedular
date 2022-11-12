@@ -76,11 +76,6 @@ public class MainPageController implements Initializable {
     @FXML
     private TableColumn<Appointments, String> descriptionCol;
     /**
-     * Appointment End Date Table Column
-     */
-    // @FXML
-    // private TableColumn<Appointments, Date> endDateCol;
-    /**
      * Appointment End Time Table Column
      */
     @FXML
@@ -131,11 +126,6 @@ public class MainPageController implements Initializable {
     @FXML
     private RadioButton viewAllRadio;
     /**
-     * View Customer RadioButton
-     */
-    @FXML
-    private RadioButton viewCustomerRadio;
-    /**
      * View Monthly Radio Button
      */
     @FXML
@@ -150,6 +140,11 @@ public class MainPageController implements Initializable {
      */
     @FXML
     private ToggleGroup viewsToggle;
+    /**
+     * This is the button for going to Contacts page
+     */
+    @FXML
+    private Button contactsButton;
     /**
      * This is the Appointments DOA
      */
@@ -213,8 +208,8 @@ public class MainPageController implements Initializable {
         stage.show();
     }
     /**
-     * 
-     * @param event
+     * This is to Modify Appointments 
+     * @param event with a button press
      */
     @FXML
     void modifyAppt(ActionEvent event) throws IOException {
@@ -237,20 +232,25 @@ public class MainPageController implements Initializable {
         }
     }
     /**
-     * 
+     * This is to get all the Appointments 
      * @param event is a Radio press event
      */
     @FXML
-    void radioAll(ActionEvent event) {
-
+    void radioAll(ActionEvent event) throws SQLException {
+            aptSchedule = appointments.getAll();
+            apptTable.setItems(aptSchedule);
     }
     /**
      * This is to redirect User to Report Page
      * @param event reporting button press
      */
     @FXML
-    void reportGen(ActionEvent event) {
-
+    void reportGen(ActionEvent event) throws IOException {
+        Parent root = FXMLLoader.load(getClass().getResource("/schedular/ReportsPage.fxml"));
+         Stage stage = (Stage) reportButton.getScene().getWindow();
+         stage.setTitle("Reports Page");
+         stage.setScene(new Scene(root));
+         stage.show();
     }
     /**
      * This is to redirect User to Customer Page
@@ -274,33 +274,37 @@ public class MainPageController implements Initializable {
 
     }
     /**
-     * 
-     * @param event
+     * This is view the Schedule Monthly from the current Date
+     * @param event is a radio button press
+     * @throws SQLException
      */
     @FXML
-    void viewMonthly(ActionEvent event) {
-
+    void viewMonthly(ActionEvent event) throws SQLException {
+        apptTable.setItems(appointments.getApptsMonthly());
     }
     /**
-     * 
-     * @param event
+     * This is to view the Schedule Weekly from the current Date
+     * @param event is a radio button press
+     * @throws SQLException
      */
     @FXML
-    void viewWeekly(ActionEvent event) {
+    void viewWeekly(ActionEvent event) throws SQLException {
+        aptSchedule = appointments.getApptsWeekly();
+        apptTable.setItems(aptSchedule);
+    }
+    @FXML
+    void toContactsPage(ActionEvent event) {
 
     }
     /**
      * This is to help initialize the Table View
      */
     public void initializingTable() {
- 
             try {
                     aptSchedule = appointments.getAll();
                 } catch (SQLException e) {
-                    // TODO Auto-generated catch block
                     e.printStackTrace();
                 }
-          
                 apptTable.setItems(aptSchedule);
                 apptIDColumn.setCellValueFactory(new PropertyValueFactory<>("AppointmentID"));
                 titleCol.setCellValueFactory(new PropertyValueFactory<>("Title"));
@@ -313,7 +317,6 @@ public class MainPageController implements Initializable {
                 userIDCol.setCellValueFactory(new PropertyValueFactory<>("user_id"));
                 contactCol.setCellValueFactory(new PropertyValueFactory<>("contact_id"));  
     }
-    
     /**
      * Main initializing page function
      * @param arg0 is the URL
