@@ -196,10 +196,10 @@ public class AppointmentDOA implements DOA<Appointments> {
         Connection con = Database.getConnection();
         ObservableList<Appointments> appointments = FXCollections.observableArrayList();
         String sql = "SELECT Appointment_ID, Title, Description, Location, Type, Start, End, Customer_ID, User_ID, Contact_ID FROM Appointments WHERE Customer_ID =?";
-         PreparedStatement ps = con.prepareStatement(sql);
-         ps.setInt(1, id);
-         ResultSet rs = ps.executeQuery();
-         while (rs.next()) {
+        PreparedStatement ps = con.prepareStatement(sql);
+        ps.setInt(1, id);
+        ResultSet rs = ps.executeQuery();
+        while (rs.next()) {
             int Appointment_ID = rs.getInt("Appointment_ID");
             String Title = rs.getString("Title");
             String Description = rs.getString("Description");
@@ -213,9 +213,18 @@ public class AppointmentDOA implements DOA<Appointments> {
             Appointments appointment = new Appointments(Appointment_ID, Title, Description, Location, Type, Start, End,
                     Customer_ID, User_ID, Contact_ID);
             appointments.add(appointment);
-         }
+        }
 
         return appointments;
+    }
+
+    public int deleteByCustomerID(int id) throws SQLException {
+        Connection con = Database.getConnection();
+        String sql = "DELETE FROM Appointments WHERE Customer_ID=?";
+        PreparedStatement ps = con.prepareStatement(sql);
+        ps.setInt(1, id);
+        int result = ps.executeUpdate();
+        return result;
     }
     
 }

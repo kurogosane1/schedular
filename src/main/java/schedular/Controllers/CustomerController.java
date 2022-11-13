@@ -22,13 +22,14 @@ import javafx.scene.control.TableColumn;
 import javafx.scene.control.TableView;
 import javafx.scene.control.cell.PropertyValueFactory;
 import javafx.stage.Stage;
+import schedular.DOA.AppointmentDOA;
 import schedular.DOA.CustomerDOA;
 import schedular.Model.Customer;
 
 public class CustomerController implements Initializable {
     CustomerDOA cus = new CustomerDOA();
     /**
-     * 
+     * This is the add Customer Button
      */
     @FXML
     private Button addCustButton;
@@ -101,6 +102,7 @@ public class CustomerController implements Initializable {
      */
     @FXML
     public void delCustomerAction(ActionEvent event) {
+        AppointmentDOA apptDOA = new AppointmentDOA();
         if (customerTableView.getSelectionModel().getSelectedItem() == null) {
             Alert alert = new Alert(Alert.AlertType.WARNING);
             alert.setTitle("Warning Dialog");
@@ -108,11 +110,12 @@ public class CustomerController implements Initializable {
             alert.showAndWait();
         } else {
             Alert alert = new Alert(Alert.AlertType.CONFIRMATION,
-                    "This will permanently remove the customer selected \n Are you sure you want to Continue?");
+                    "This will permanently remove the customer selected \n This will also result in any other appointments related to be deleted as well? \n Are you sure you want to Continue?");
             Optional<ButtonType> result = alert.showAndWait();
             if (result.isPresent() && result.get() == ButtonType.OK) {
                 Customer c = customerTableView.getSelectionModel().getSelectedItem();
                 try {
+                    apptDOA.deleteByCustomerID(c.getCustomerId());
                     cus.delete(c);
                     ObservableList<Customer> customers = cus.getAll();
                     customerTableView.setItems(customers);

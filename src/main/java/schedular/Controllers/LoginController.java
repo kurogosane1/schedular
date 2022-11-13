@@ -7,8 +7,10 @@ import java.io.IOException;
  */
 
 import java.net.URL;
+import java.time.ZoneId;
+import java.util.Locale;
+import java.util.Properties;
 import java.util.ResourceBundle;
-
 import javafx.fxml.Initializable;
 import javafx.event.ActionEvent;
 import javafx.fxml.FXML;
@@ -24,40 +26,39 @@ import javafx.scene.text.Text;
 import javafx.stage.Stage;
 
 public class LoginController implements Initializable {
-      @FXML
-      private Button closeButton;
-    
+    /**
+     * This is the close button
+     */
+    @FXML private Button closeButton;
     /**
      * This is the Login Button for Logging in user. Also includes the reset button to clear the textfields
      */
-    @FXML
-    private Button LoginButton, resetButton;
+    @FXML private Button LoginButton, resetButton;
     /**
      * Choice box for the language preference
      */
-    @FXML
-    private ChoiceBox<String> languageChoice;
+    @FXML private ChoiceBox<String> languageChoice;
     /**
      * This is the text that shows the user the location
      */
-    @FXML
-    private Text locationText;
+    @FXML private Text locationText;
     /**
      * These are the labels of the password and User ID Labels
      */
-    @FXML
-    private Label passwordLabel, userIdLabel;
+    @FXML private Label passwordLabel, userIdLabel, Login_Label,languageLabel;
     /**
      * This is the password field
      */
-    @FXML
-    private PasswordField passwordText;
+    @FXML private PasswordField passwordText;
     /**
      * This is the User ID Text Field
      */
     @FXML
     private TextField userIDText;
-    
+    Locale french = new Locale("fr", "FR");
+    Locale english = new Locale("en", "EN");
+    Properties p = new Properties();
+    private ResourceBundle rb = ResourceBundle.getBundle("schedular/langSelection/loginPage", Locale.getDefault()); 
     /**
      * This is an action Button press 
      * @param event Button press action that would check User ID and Password
@@ -69,7 +70,8 @@ public class LoginController implements Initializable {
     void LogPress(ActionEvent event) throws IOException {
         Parent root = FXMLLoader.load(getClass().getResource("/schedular/MainPage.fxml"));
         Stage stage = (Stage) LoginButton.getScene().getWindow();
-        stage.setTitle("Main Appointment");
+        // stage.setTitle(rb.getString("title"));
+        stage.setTitle("Main Appointments");
         stage.setScene(new Scene(root));
         stage.show();
     }
@@ -91,7 +93,6 @@ public class LoginController implements Initializable {
     void passwordCheck(ActionEvent event) {
 
     }
-    
     /**
      * This is a action event to clear the User ID and Password fields
      * @param event from button press to clear the fields
@@ -120,10 +121,33 @@ public class LoginController implements Initializable {
      * Selecting the choices of language
      * @param event which is a selection from a choice drop down
      */
-     public void getLanguage(ActionEvent event) {
-         
-          String myChoice = languageChoice.getValue();
-          locationText.setText(myChoice);
+    public void getLanguage(ActionEvent event) {
+
+        String myChoice = languageChoice.getValue();
+        System.out.println(myChoice);
+        if (myChoice.equals("French")) {
+            Locale.setDefault(french);
+            System.out.println(Locale.getDefault());
+            localizeLabels();
+            locationText.setText(myChoice + ": "+ZoneId.systemDefault());
+            System.out.println(rb.getString("useridlabel"));
+        }
+        else {
+            Locale.setDefault(english);
+        }
+        Locale.setDefault(french);
+        System.out.println(rb.getString("useridlabel"));
+    }
+
+    private void localizeLabels() {
+        userIdLabel.setText(rb.getString("useridlabel"));
+        passwordLabel.setText(rb.getString("passwordLabel"));
+        LoginButton.setText(rb.getString("LoginButton"));
+        resetButton.setText(rb.getString("clearButton"));
+        closeButton.setText(rb.getString("exitButton"));
+        Login_Label.setText(rb.getString("title"));
+        languageLabel.setText(rb.getString("languageLabel"));
+        // LoginButton.setText("Hello my ass");
     }
     /**
      * This is to initialize and login 
@@ -135,8 +159,9 @@ public class LoginController implements Initializable {
         System.out.println("This has been initialized");
         languageChoice.getItems().addAll(langauge);
         languageChoice.getSelectionModel().select(0);
-        locationText.setText(languageChoice.getValue());
+        locationText.setText(languageChoice.getValue()  + ": "+ZoneId.systemDefault());
         languageChoice.setOnAction(this::getLanguage);
+        localizeLabels();
 
     }
     

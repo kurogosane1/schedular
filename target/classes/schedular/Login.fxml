@@ -11,7 +11,7 @@
 
 <AnchorPane maxHeight="-Infinity" maxWidth="-Infinity" minHeight="-Infinity" minWidth="-Infinity" prefHeight="600.0" prefWidth="1200.0" xmlns="http://javafx.com/javafx/18" xmlns:fx="http://javafx.com/fxml/1" fx:controller="schedular.Controllers.LoginController">
    <children>
-      <Label layoutX="331.0" layoutY="118.0" text="Appointment Schedule Software">
+      <Label fx:id="Login_Label" layoutX="331.0" layoutY="118.0" text="Appointment Schedule Software">
          <font>
             <Font name="Arial Bold" size="35.0" />
          </font>
@@ -22,7 +22,7 @@
       <Button fx:id="LoginButton" layoutX="525.0" layoutY="338.0" mnemonicParsing="false" onAction="#LogPress" prefHeight="26.0" prefWidth="160.0" text="Login" />
       <Button fx:id="resetButton" layoutX="702.0" layoutY="338.0" mnemonicParsing="false" onAction="#resetPress" prefHeight="26.0" prefWidth="160.0" text="Reset" />
       <ChoiceBox fx:id="languageChoice" layoutX="530.0" layoutY="497.0" prefWidth="150.0" />
-      <Label layoutX="361.0" layoutY="502.0" text="Language" />
+      <Label layoutX="361.0" layoutY="502.0" text="Language" fx:id="languageLabel"/>
       <Text fx:id="locationText" layoutX="782.0" layoutY="515.0" strokeType="OUTSIDE" strokeWidth="0.0" text="Location" />
       <PasswordField fx:id="passwordText" layoutX="525.0" layoutY="288.0" onAction="#passwordCheck" promptText="Enter Password" />
       <Button fx:id="closeButton" layoutX="951.0" layoutY="498.0" mnemonicParsing="false" onAction="#closeApp" prefHeight="25.0" prefWidth="160.0" style="-fx-background-color: red;" text="Close App" textFill="WHITE">

@@ -6,8 +6,11 @@ module schedular {
     opens schedular.Controllers to javafx.fxml;
     opens schedular to javafx.fxml;
     opens schedular.Model to javafx.fxml;
+    opens schedular.langSelection to javafx.fxml;
 
     exports schedular;
     exports schedular.Controllers;
     exports schedular.Model;
+    // exports schedular.langSelection;
+    
 }
