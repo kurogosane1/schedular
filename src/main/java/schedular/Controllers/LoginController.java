@@ -1,11 +1,8 @@
 package schedular.Controllers;
-
-import java.io.IOException;
-
 /**
  * @author Syed Khurshid
  */
-
+import java.io.IOException;
 import java.net.URL;
 import java.time.ZoneId;
 import java.util.Locale;
@@ -25,6 +22,10 @@ import javafx.scene.control.TextField;
 import javafx.scene.text.Text;
 import javafx.stage.Stage;
 
+/**
+ * This is the Login Page
+ * @author Syed Khurshid
+ */
 public class LoginController implements Initializable {
     /**
      * This is the close button
@@ -80,7 +81,7 @@ public class LoginController implements Initializable {
      * @param event which is a Button Press
      */
     @FXML
-    void closeApp(ActionEvent event) {
+    public void closeApp(ActionEvent event) {
         Stage stage = (Stage) closeButton.getScene().getWindow();
         stage.close();
     }
@@ -90,39 +91,33 @@ public class LoginController implements Initializable {
      * Future preference is to check the regEx characters and no SQL injections
      */
     @FXML
-    void passwordCheck(ActionEvent event) {
-
-    }
+    public void passwordCheck(ActionEvent event) {}
     /**
      * This is a action event to clear the User ID and Password fields
      * @param event from button press to clear the fields
      * Future preference is that this might not be necessary later to reset
      */
     @FXML
-    void resetPress(ActionEvent event) {
+    public void resetPress(ActionEvent event) {
         userIDText.clear();
         passwordText.clear();
     }
-    
     /**
      * User ID check to see if it exists
      * @param event from key input to check if the user ID exists
      * Future preference is to add RegEx ccheck to see if their is no SQL injections
      */
     @FXML
-    void userIDCheck(ActionEvent event) {
-
-    }
+    public void userIDCheck(ActionEvent event) {}
     /**
      * An array of languageChoices for users to seelect
      */
-    private String[] langauge = { "English US", "French" };
+    private String[] langauge = { rb.getString("languageChoice1"), rb.getString("languageChoice2")};
     /**
      * Selecting the choices of language
      * @param event which is a selection from a choice drop down
      */
     public void getLanguage(ActionEvent event) {
-
         String myChoice = languageChoice.getValue();
         System.out.println(myChoice);
         if (myChoice.equals("French")) {
@@ -138,7 +133,9 @@ public class LoginController implements Initializable {
         Locale.setDefault(french);
         System.out.println(rb.getString("useridlabel"));
     }
-
+    /**
+     * This is to set the values based on the properties
+     */
     private void localizeLabels() {
         userIdLabel.setText(rb.getString("useridlabel"));
         passwordLabel.setText(rb.getString("passwordLabel"));
@@ -147,7 +144,6 @@ public class LoginController implements Initializable {
         closeButton.setText(rb.getString("exitButton"));
         Login_Label.setText(rb.getString("title"));
         languageLabel.setText(rb.getString("languageLabel"));
-        // LoginButton.setText("Hello my ass");
     }
     /**
      * This is to initialize and login 
@@ -159,7 +155,7 @@ public class LoginController implements Initializable {
         System.out.println("This has been initialized");
         languageChoice.getItems().addAll(langauge);
         languageChoice.getSelectionModel().select(0);
-        locationText.setText(languageChoice.getValue()  + ": "+ZoneId.systemDefault());
+        locationText.setText(languageChoice.getValue()  + " : "+ZoneId.systemDefault());
         languageChoice.setOnAction(this::getLanguage);
         localizeLabels();
 
