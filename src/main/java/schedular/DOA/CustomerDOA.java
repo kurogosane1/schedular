@@ -8,10 +8,10 @@ import java.sql.ResultSet;
 import java.sql.SQLException;
 import java.sql.Statement;
 import java.time.LocalDateTime;
-
 import javafx.collections.FXCollections;
 import javafx.collections.ObservableList;
 import schedular.Model.Customer;
+import schedular.Model.DivisionInfoTable;
 import schedular.connect.Database;
 /**
  * Customers DOA for SQL
@@ -121,42 +121,23 @@ public class CustomerDOA implements DOA<Customer> {
         int result = ps.executeUpdate();
         return result;
     }
-    
-}
-
-
- // public Contacts get(int id) throws SQLException {
-    //     Connection con = Database.getConnection();
-    //     Contacts contact = null;
-    //     String sql = "Select * WHERE Contact_ID =?";
-    //     PreparedStatement ps = con.prepareStatement(sql);
-    //     ps.setInt(1, id);
-    //     ResultSet rs = ps.executeQuery();
-    //     if(rs.next()) {
-    //         int customerId = rs.getInt("Contact_ID");
-    //         String customerName = rs.getString("Contact_Name");
-    //         String email = rs.getString("Email");
-    //         contact = new Contacts(customerId, customerName, email);
-    //     }
-    //     return contact;
-    // }
-
     /**
-     * Retrieve all the Contacts from the database
+     * This is to get the converted Table for helping into determining the number of Customers under a division
+     * @return DivisionInfoTable Object which shows the Divisions name and the total number of customers under the division
+     * @throws SQLException for SQLException when they occur
      */
-    // @Override
-    // public ObservableList<Contacts> getAll() throws SQLException {
-    //     Connection conn = Database.getConnection();
-    //     ObservableList<Contacts> contacts = FXCollections.observableArrayList();
-    //     String sql = "SELECT * FROM Contacts";
-    //     Statement ps = conn.createStatement();
-    //     ResultSet rs = ps.executeQuery(sql);
-    //     while (rs.next()) {
-    //         int contactID = rs.getInt("Contact_ID");
-    //         String contactName = rs.getString("Contact_Name");
-    //         String email = rs.getString("Email");
-    //         Contacts contact = new Contacts(contactID, contactName, email);
-    //         contacts.add(contact);
-    //     }
-    //     return contacts;
-    // }
+    public ObservableList<DivisionInfoTable> getDivisions() throws SQLException {
+        Connection con = Database.getConnection();
+        ObservableList<DivisionInfoTable> result = FXCollections.observableArrayList();
+        String sql = "SELECT FIRST_LEVEL_DIVISIONS.Division AS DIVNAME, COUNT(CUSTOMERS.Customer_Name) AS CUSTOMERTOTAL FROM CUSTOMERS INNER JOIN FIRST_LEVEL_DIVISIONS on CUSTOMERS.Division_ID=FIRST_LEVEL_DIVISIONS.Division_ID GROUP BY DIVNAME";
+        Statement stmt = con.createStatement();
+        ResultSet rs = stmt.executeQuery(sql);
+        while (rs.next()) {
+            String div = rs.getString("DIVNAME");
+            Integer total = rs.getInt("customerTotal");
+            DivisionInfoTable divs = new DivisionInfoTable(div, total);
+            result.add(divs);
+        }
+        return result;
+    } 
+}

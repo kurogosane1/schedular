@@ -9,10 +9,12 @@ import java.sql.ResultSet;
 import java.sql.SQLException;
 import java.sql.Statement;
 import java.time.LocalDate;
-import java.sql.Date;
+import java.time.LocalDateTime;
+import java.time.format.DateTimeFormatter;
 import javafx.collections.FXCollections;
 import javafx.collections.ObservableList;
 import schedular.Model.Appointments;
+import schedular.Model.Type;
 import schedular.connect.Database;
 
 /**
@@ -133,7 +135,11 @@ public class AppointmentDOA implements DOA<Appointments> {
         return result;
     }
 
-    
+    /**
+     * This is to get Weekly Appointments from the database
+     * @return Appointments where we get the appointments for the week
+     * @throws SQLException for an error
+     */
     public ObservableList<Appointments> getApptsWeekly() throws SQLException {
         Connection con = Database.getConnection();
         ObservableList<Appointments> weeklyAppointments = FXCollections.observableArrayList();
@@ -163,6 +169,10 @@ public class AppointmentDOA implements DOA<Appointments> {
         return weeklyAppointments;
     }
     
+    /**
+     * This to get the Monthly Appointments 
+     * @return Appointments observableArrayList
+     */
     public ObservableList<Appointments> getApptsMonthly() throws SQLException {
         Connection con = Database.getConnection();
         ObservableList<Appointments> weeklyAppointments = FXCollections.observableArrayList();
@@ -191,7 +201,12 @@ public class AppointmentDOA implements DOA<Appointments> {
         }
         return weeklyAppointments;
     }
-
+    
+    /**
+     * This is to get all the APpointments by Customer ID
+     * @param id which is the Customer ID
+     * @return Appointments which is the Observable List
+     */
     public ObservableList<Appointments> getByCustomerID(int id) throws SQLException {
         Connection con = Database.getConnection();
         ObservableList<Appointments> appointments = FXCollections.observableArrayList();
@@ -217,7 +232,12 @@ public class AppointmentDOA implements DOA<Appointments> {
 
         return appointments;
     }
-
+    /**
+     * This is to delete the customer by ID in the Appointments table
+     * @param id is the Customer ID
+     * @return an integer
+     * @throws SQLException for an error
+     */
     public int deleteByCustomerID(int id) throws SQLException {
         Connection con = Database.getConnection();
         String sql = "DELETE FROM Appointments WHERE Customer_ID=?";
@@ -226,5 +246,27 @@ public class AppointmentDOA implements DOA<Appointments> {
         int result = ps.executeUpdate();
         return result;
     }
-    
+    /**
+     * This is to get all the Apppintment Types and the Total Number of Appointments as well as the Month the appointments fall under
+     * @return Types observable list which is the customized version of the appointments table
+     * @throws SQLException for an error
+     */
+    public ObservableList<Type> getAllAppointmentTypes() throws SQLException {
+        Connection con = Database.getConnection();
+        ObservableList<Type> result = FXCollections.observableArrayList();
+        String sql = "SELECT Start as Months,Type, count(*) AS AppointmentTotal FROM APPOINTMENTS GROUP BY Start, Type";
+        Statement stmt = con.createStatement();
+        ResultSet rs = stmt.executeQuery(sql);
+        DateTimeFormatter formatter = DateTimeFormatter.ofPattern("yyyy-MM-dd HH:mm:ss");
+        
+        while (rs.next()) {
+            String month = rs.getString("Months");
+            LocalDateTime ldt = LocalDateTime.parse(month,formatter);
+            String type = rs.getString("Type");
+            Integer total = rs.getInt("AppointmentTotal");
+            Type apptType = new Type(ldt.getMonth().toString(), type, total);
+            result.add(apptType);
+        }
+        return result;
+    }
 }

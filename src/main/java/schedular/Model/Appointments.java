@@ -2,11 +2,6 @@
  * Preference would be to use a NoSQL database like MangoDB
  */
 package schedular.Model;
-
-import java.sql.Date;
-import java.sql.Timestamp;
-import java.time.LocalDateTime;
-
 /**
  * @author Syed Khurshid
  */

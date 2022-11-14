@@ -1,9 +1,9 @@
 package schedular.Controllers;
-import java.io.IOException;
-import java.net.URL;
 /**
  * @author Syed Khurshid
  */
+import java.io.IOException;
+import java.net.URL;
 import java.sql.Date;
 import java.sql.SQLException;
 import java.sql.Timestamp;
@@ -22,18 +22,52 @@ import javafx.scene.control.Label;
 import javafx.scene.control.RadioButton;
 import javafx.scene.control.TableColumn;
 import javafx.scene.control.TableView;
-import javafx.scene.control.ToggleGroup;
 import javafx.scene.control.cell.PropertyValueFactory;
 import javafx.stage.Stage;
 import schedular.DOA.AppointmentDOA;
 import schedular.DOA.CustomerDOA;
 import schedular.Model.Appointments;
 import schedular.Model.Customer;
+import schedular.Model.DivisionInfoTable;
+import schedular.Model.Type;
 
 /**
  * This is the Reports page for the Appointments
  */
 public class ReportsPageController implements Initializable {
+    // This is the Appointments month Column
+    @FXML
+    private TableColumn<Type, String> apptMonthCol;
+    /**
+     * This is the Appointments Total Column
+     */
+    @FXML
+    private TableColumn<Type, Integer> apptTotalCol;
+    /**
+     * This is appointments Type Table
+     */
+    @FXML
+    private TableView<Type> apptTypeTable;
+    /**
+     * This is the Appointment Type Column for the Appointments Table
+     */
+    @FXML
+    private TableColumn<Type, String> apptTypeCol;
+    /**
+     * This is the Divisions Customer Total Count of the Divisions Table
+     */
+    @FXML
+    private TableColumn<DivisionInfoTable, Integer> divCustomerColumn;
+    /**
+     * This is the Division name Column of the Divisions Table
+     */
+    @FXML
+    private TableColumn<DivisionInfoTable, String> divNameCol;
+    /**
+     * This is the Divisions Table that shows how Many Customers under a division
+     */
+    @FXML
+    private TableView<DivisionInfoTable> divisionTable;
     /**
      * This is the label for searching by Customer name
      */
@@ -79,17 +113,7 @@ public class ReportsPageController implements Initializable {
      */
     @FXML
     private TableColumn<Appointments, String> locationCol;
-    /**
-     * This is the radio button for selection of Monthly Appointments
-     */
-    @FXML
-    private RadioButton monthlyRadio;
-    /**
-     * This is the radio button toggle functions
-     */
-    @FXML
-    private ToggleGroup radioSelection;
-    /**
+     /**
      * This is the Starting Time of the Appointments
      */
     @FXML
@@ -100,7 +124,7 @@ public class ReportsPageController implements Initializable {
     @FXML
     private TableColumn<Appointments, String> titleCol;
     /**
-     * Thisis the type of the meeting for the Appointments Table
+     * This is the type of the meeting for the Appointments Table
      */
     @FXML
     private TableColumn<Appointments, String> typeCol;
@@ -119,12 +143,7 @@ public class ReportsPageController implements Initializable {
      */
     @FXML
     private RadioButton viewAllRadio;
-    /**
-     * This is the radio button that will show the appointments weekly
-     */
-    @FXML
-    private RadioButton weeklyRadio;
-    /**
+      /**
      * This is the Appointments DOA
      */
     private AppointmentDOA appointments = new AppointmentDOA();
@@ -132,35 +151,19 @@ public class ReportsPageController implements Initializable {
      * This is the appointment Schedule Observable List
      */
     private ObservableList<Appointments> aptSchedule = FXCollections.observableArrayList();
+    /**
+     * This is the Customers 
+     */
     private ObservableList<Customer> customers = FXCollections.observableArrayList();
     /**
-     * This is the Monthly Radio Selection function to select the monthly appointments
-     * @param event requires a radio button press
-     * @throws SQLException
+     * This is the types observableArrayList that is for the reports table
      */
-    @FXML
-    void monthlyRadioSelection(ActionEvent event) throws SQLException {
-        apptTable.setItems(appointments.getApptsMonthly());
-    }
+    private ObservableList<Type> types = FXCollections.observableArrayList();
     /**
-     * This is the view all the appointments
-     * @param event requires a radio button press
-     * @throws SQLException
+     * This is the For the Divisions table information
      */
-    @FXML
-    void viewAllSelection(ActionEvent event) throws SQLException {
-        apptTable.setItems(appointments.getAll());
-    }
-    /**
-     * This is to view the Appointments weekly
-     * @param event requires a radio button press
-     * @throws SQLException
-     */
-    @FXML
-    void weeklyRadioSelection(ActionEvent event) throws SQLException {
-        apptTable.setItems(appointments.getApptsWeekly());
-    }
-    /**
+    private ObservableList<DivisionInfoTable> divVal = FXCollections.observableArrayList();
+     /**
      * This is to get the Appointments by Customer Name
      * @param event is a selection of customer from the Choicebox
      */
@@ -202,13 +205,50 @@ public class ReportsPageController implements Initializable {
         cus.add("All");
         customerChoice.getItems().addAll(cus);
     }
+    /**
+     * This is to go back to the main page
+     * @param event Button click press
+     * @throws IOException 
+     */
     @FXML
     void gobacktoMainPage(ActionEvent event) throws IOException {
         Parent root = FXMLLoader.load(getClass().getResource("/schedular/MainPage.fxml"));
-         Stage stage = (Stage) goBackButton.getScene().getWindow();
-         stage.setTitle("Main Appointment");
-         stage.setScene(new Scene(root));
-         stage.show();
+        Stage stage = (Stage) goBackButton.getScene().getWindow();
+        stage.setTitle("Main Appointment");
+        stage.setScene(new Scene(root));
+        stage.show();
+    }
+    
+    /**
+     * This is to initialize the Division Table
+     */
+    public void initializeDivTab() {
+        CustomerDOA customerDOA = new CustomerDOA();
+        try{
+            divVal = customerDOA.getDivisions();
+
+        } catch (SQLException e) {
+            e.printStackTrace();
+        }
+        divisionTable.setItems(divVal);
+        divNameCol.setCellValueFactory(new PropertyValueFactory<>("division"));
+        divCustomerColumn.setCellValueFactory(new PropertyValueFactory<>("customerTotal"));
+
+    }
+    /**
+     * This is to initialize all the appointments type in reports table
+     */
+    public void initializingAptTab() {
+        try{
+            types = appointments.getAllAppointmentTypes();
+        }
+        catch (SQLException e) {
+            e.printStackTrace();
+        }
+        apptTypeTable.setItems(types);
+        apptMonthCol.setCellValueFactory(new PropertyValueFactory<>("Months"));
+        apptTotalCol.setCellValueFactory(new PropertyValueFactory<>("Types"));
+        apptTypeCol.setCellValueFactory(new PropertyValueFactory<>("count"));
     }
      /**
      * This is to help initialize the Table View
@@ -241,6 +281,8 @@ public class ReportsPageController implements Initializable {
         initializingTable();
         choiceBoxSelection();
         customerChoice.setOnAction(this::getAppointmentsByCustomer);
+        initializingAptTab();
+        initializeDivTab();
         
     }
 }

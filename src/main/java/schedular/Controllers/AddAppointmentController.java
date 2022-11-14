@@ -5,10 +5,9 @@ package schedular.Controllers;
 import java.io.IOException;
 import java.net.URL;
 import java.sql.SQLException;
-import java.time.LocalDate;
-import java.time.LocalTime;
-import java.time.format.DateTimeFormatter;
+import java.time.LocalDateTime;
 import java.util.ArrayList;
+import java.util.Optional;
 import java.util.ResourceBundle;
 import javafx.collections.ObservableList;
 import javafx.event.ActionEvent;
@@ -19,6 +18,7 @@ import javafx.scene.Parent;
 import javafx.scene.Scene;
 import javafx.scene.control.Alert;
 import javafx.scene.control.Button;
+import javafx.scene.control.ButtonType;
 import javafx.scene.control.ChoiceBox;
 import javafx.scene.control.DatePicker;
 import javafx.scene.control.Label;
@@ -35,7 +35,8 @@ import schedular.Model.Appointments;
 import schedular.Model.Contacts;
 import schedular.Model.Customer;
 import schedular.Model.User;
-import static schedular.timeUtil.convertTimeDateUTC;
+import schedular.utilities.TimeConversion;
+
 
 /**
  * This is the Appointments Adding Controllers
@@ -124,68 +125,55 @@ public class AddAppointmentController implements Initializable{
     /**
      * This is the end of Time Label
      */
-    @FXML
-    private Label endTimeLabel;
+    @FXML private Label endTimeLabel;
     /**
      * This is the location error Text
      */
-    @FXML
-    private Text locET;
+    @FXML private Text locET;
     /**
      * This is the Location Label
      */
-    @FXML
-    private Label locationLabel;
+    @FXML private Label locationLabel;
     /**
      * This is the Location Text Field
      */
-    @FXML
-    private TextField locationTF;
+    @FXML private TextField locationTF;
     /**
      * This is the save button 
      */
-    @FXML
-    private Button saveButton;  
+    @FXML private Button saveButton;  
     /**
      * This is the Start Date Label
      */
-    @FXML
-    private Label startDLabel;
+    @FXML private Label startDLabel;
     /**
      * This is the Start Hour Spinner to get the Starting Meeting Spinner
      */
-    @FXML
-    private Spinner<Integer> startHourSpinner;
+    @FXML private Spinner<Integer> startHourSpinner;
     /**
      * This is the Start Minute Spinner
      */
-    @FXML
-    private Spinner<Integer> startMinSpinner;
+    @FXML private Spinner<Integer> startMinSpinner;
     /**
      * This is the Start Time Label
      */
-    @FXML
-    private Label startTimeLabel;
+    @FXML private Label startTimeLabel;
     /**
      * This is the Time Error Text
      */
-    @FXML
-    private Text timeET;
+    @FXML private Text timeET;
     /**
      * This is the Appointment Title Error Text
      */
-    @FXML
-    private Text titleET;
+    @FXML private Text titleET;
     /**
      * This is the Title Label Field
      */
-    @FXML
-    private Label titleLabel;
+    @FXML private Label titleLabel;
     /**
      * This is the Title Text Field
      */
-    @FXML
-    private TextField titleTF;
+    @FXML private TextField titleTF;
     /**
      * This is the Choicebox for User ID, contact ID and Customer ID
      */
@@ -193,28 +181,23 @@ public class AddAppointmentController implements Initializable{
     /**
      * This is the Type error Text 
      */
-    @FXML
-    private Text typeET;
+    @FXML private Text typeET;
     /**
      * This is the Type Label 
      */
-    @FXML
-    private Label typeLabel;
+    @FXML private Label typeLabel;
     /**
      * This is the Type Text Field
      */
-    @FXML
-    private TextField typeTF;
+    @FXML  private TextField typeTF;
     /**
      * This is the User ID Error Text
      */
-    @FXML
-    private Text userIDET;
+    @FXML private Text userIDET;
     /**
      * This is the User ID Label
      */
-    @FXML
-    private Label userIDLabel;
+    @FXML private Label userIDLabel;
     /**
      * This is the Appointments DOA
      */
@@ -227,6 +210,7 @@ public class AddAppointmentController implements Initializable{
      * This is the User DOA
      */
     private UsersDOA userDOA = new UsersDOA();
+    private TimeConversion timeTools = new TimeConversion();
     /**
      * This is to cancel Button Function to return user
      */
@@ -238,7 +222,10 @@ public class AddAppointmentController implements Initializable{
         stage.setScene(new Scene(root));
         stage.show();
     }
-
+    /**
+     * This is the Description TF Check. Not Being used
+     * @param event This is the Description Check 
+     */
     @FXML
     void descTFCheck(ActionEvent event) {
         String desc = descTF.getText();
@@ -257,18 +244,7 @@ public class AddAppointmentController implements Initializable{
     @FXML
     void saveButtonPress(ActionEvent event) throws SQLException, IOException {
          // Getting the Appointment ID which will be automatically added
-        String minuteSelectionStart;
-        String minuteSelectionEnd;
-        String hourSelectionStart;
-        String hourSelectionEnd;
-        String startResultHour;
-        String endResultHour;
-        String startResultMinute;
-        String endResultMinute;
-        DateTimeFormatter formatter = DateTimeFormatter.ofPattern("yyyy-MM-dd HH:mm:ss");
-        DateTimeFormatter timeFormatter = DateTimeFormatter.ofPattern("HH:mm:ss");    
-
-        int appointmentID = appointmentDOA.getAll().size();
+       int appointmentID = appointmentDOA.getAll().size();
         try {
             String title = titleTF.getText();
              try {
@@ -278,82 +254,64 @@ public class AddAppointmentController implements Initializable{
                     try {
                         String type = typeTF.getText();
                         try {
-                            minuteSelectionStart = String.valueOf(startMinSpinner.getValue());
-                            minuteSelectionEnd = String.valueOf(endMinSpinner.getValue());
-                            hourSelectionStart = String.valueOf(startHourSpinner.getValue());
-                            hourSelectionEnd = String.valueOf(endHourSpinner.getValue());
-                            // Getting the minutes corrected
-                            if (minuteSelectionStart.length() == 1) {
-                                startResultMinute = "0" + minuteSelectionStart;
-                            }
-                            else {
-                                startResultMinute = minuteSelectionStart;
-                            }
-                            if (minuteSelectionEnd.length() == 1) {
-                                endResultMinute = "0" + minuteSelectionEnd;
-                            }
-                            else {
-                                endResultMinute = minuteSelectionEnd;
-                            }
-                            if (hourSelectionStart.length() == 1) {
-                                startResultHour = "0" + hourSelectionStart;
-                            }
-                            else {
-                                startResultHour = hourSelectionStart;
-                            }
-                            if (hourSelectionEnd.length() == 1) {
-                                endResultHour = "0" + hourSelectionEnd;
-                            }
-                            else {
-                                endResultHour = hourSelectionEnd;
-                            }
-
-                            String strTime = startResultHour + ":" + startResultMinute + ":00";
-                            String strTimeend = endResultHour + ":" + endResultMinute + ":00";
-                            String strDate = String.valueOf(StartDatePicker.getValue());
-                            String strDateEnd = String.valueOf(endDatePicker.getValue());
-                            String startUTC = convertTimeDateUTC(strDate + " " + strTime);
-                            String endUTC = convertTimeDateUTC(strDateEnd + " " + strTimeend);
-                            LocalDate startDateComparison = LocalDate.parse(startUTC, formatter);
-                            LocalDate endDateComparison = LocalDate.parse(endUTC, formatter);
-                            
-                            if (startDateComparison.isAfter(endDateComparison)) {
-                                displayError(5);
+                            // First Getting the start and End Datetime
+                            String startTime = TimeConversion.timeStringConversion(startHourSpinner.getValue(),
+                                    startMinSpinner.getValue());
+                            String endTime = TimeConversion.timeStringConversion(endHourSpinner.getValue(),
+                                    endMinSpinner.getValue());
+                            String startDateTime = TimeConversion.convertDateTime(StartDatePicker.getValue(),startTime);
+                            String endDateTime = TimeConversion.convertDateTime(endDatePicker.getValue(),endTime);
+                            LocalDateTime startD = TimeConversion.convertToLocalDateTime(startDateTime);  
+                            LocalDateTime endD =TimeConversion.convertToLocalDateTime(endDateTime); 
+                            Boolean validBusinessHour = timeTools.compareTimeZomes(startD, endD, startD.toLocalDate(),
+                                    endD.toLocalDate());
+                            Boolean noOverlap = TimeConversion.appointmentOverlapCheck(startDateTime, endDateTime);
+                            Integer errorCheck = TimeConversion.compareDates(startDateTime, endDateTime);
+                            Boolean timeCheck = TimeConversion.compareTimes(startDateTime, endDateTime);
+                            if (errorCheck == 1 && errorCheck!=0) {
+                                displayError(6);
                                 return;
                             }
-                            if (startDateComparison.isBefore(LocalDate.now())) {
+                            if (errorCheck == 2&& errorCheck!=0) {
                                 displayError(9);
                                 return;
                             }
-                            if (endDateComparison.isBefore(LocalDate.now())
-                                    || endDateComparison.isBefore(startDateComparison)) {
+                            if (errorCheck == 3 && errorCheck != 0) {
                                 displayError(10);
                                 return;
                             }
-                            
-                            LocalTime startTimeComparison = LocalTime.parse(strTime, timeFormatter);
-                            LocalTime endTimeComparison = LocalTime.parse(strTimeend, timeFormatter);
-                            if (startTimeComparison.isAfter(endTimeComparison)
-                                    || endTimeComparison.isBefore(startTimeComparison)) {
+                            if (!timeCheck) {
                                 displayError(11);
                                 return;
                             }
-                            
-
-                            try {
-                                 int customerID = custIDChoice.getValue();
+                            if (!validBusinessHour) {
+                                displayError(12);
+                                return;
+                            }    
+                            else {
+                                if (!noOverlap) {
+                                    displayError(13);
+                                    return;
+                                }
+                                else {
+                                    try {
+                                int customerID = custIDChoice.getValue();
                                 int userID = userIDChoice.getValue();
                                 int contactID = contactIDChoice.getValue();
-
+                                String startUTC = TimeConversion.convertTimeToUTC(startDateTime);
+                                String endUTC = TimeConversion.convertTimeToUTC(endDateTime);     
                                 Appointments appointment = new Appointments(appointmentID, title, description, location,
                                         type, startUTC, endUTC, customerID, userID, contactID);
                                 appointmentDOA.insert(appointment);
+                                displayError(14);        
                                 goBackAfterSave();
                             } catch (Exception e) {
                                 e.printStackTrace(); // This is for Customer ID, User ID and Contact ID
                                 displayError(8);
                                 return;
                             }
+                                }
+                            }                           
                             // String startTime = convertTimeDateUTC()
                         } catch (Exception e) {
                             e.printStackTrace(); // This is for Date
@@ -447,18 +405,24 @@ public class AddAppointmentController implements Initializable{
             e.printStackTrace();
         }
     }
-
+    
+    /**
+     * This is for the Hours selection
+     */
     public void spinnerHourChoice() {
-        SpinnerValueFactory<Integer> valueFactory = new SpinnerValueFactory.IntegerSpinnerValueFactory(0, 24);
-        SpinnerValueFactory<Integer> endvalueFactory = new SpinnerValueFactory.IntegerSpinnerValueFactory(0, 24);
+        SpinnerValueFactory<Integer> valueFactory = new SpinnerValueFactory.IntegerSpinnerValueFactory(8, 22);
+        SpinnerValueFactory<Integer> endvalueFactory = new SpinnerValueFactory.IntegerSpinnerValueFactory(8, 22);
         startHourSpinner.setValueFactory(valueFactory);
         endHourSpinner.setValueFactory(endvalueFactory);
     }
 
+    /**
+     * This is for the Minute for the spinner choices
+     */
     public void spinnerMinuteChoice() {
         SpinnerValueFactory<Integer> startMinuteFactory = new SpinnerValueFactory.IntegerSpinnerValueFactory(00, 59);
         startMinuteFactory.setValue(00);
-        SpinnerValueFactory<Integer> endMinuteFactory = new SpinnerValueFactory.IntegerSpinnerValueFactory(00, 59);
+        SpinnerValueFactory<Integer> endMinuteFactory = new SpinnerValueFactory.IntegerSpinnerValueFactory(0, 59);
         endMinuteFactory.setValue(00);
         startMinSpinner.setValueFactory(startMinuteFactory);
         endMinSpinner.setValueFactory(endMinuteFactory);
@@ -526,6 +490,25 @@ public class AddAppointmentController implements Initializable{
                 alert.setContentText(
                         "Please correctly select the time. Start time cannot be equal, or after end time or endtime cannot be before start time");
                 alert.showAndWait();
+                break;
+            case 12: // This is when the date or time is not at a valid business hour
+                alert.setTitle("Incorrect Business Hour");
+                alert.setContentText("Please select a valid business hour from 8am EST to 10pm EST");
+                alert.showAndWait();
+                break;
+            case 13: //This is when the appointments overlap
+                alert.setTitle("Overlapping Appointments");
+                alert.setContentText(
+                        "Apppointment date or time are overlapping existing appointments. \n Please select another date or time");
+                alert.showAndWait();
+                break;
+            case 14: // This is for successfully adding a new appointment
+                Alert sAlert = new Alert(Alert.AlertType.CONFIRMATION,"Successfully added new appointment");
+                Optional<ButtonType> result = sAlert.showAndWait();
+                if (result.isPresent() && result.get() == ButtonType.OK) {
+                    return;
+                }
+
             default:
                 alert.setTitle("Invalid information input");
                 alert.setContentText("Please check the data input and make sure the fields are not empty");

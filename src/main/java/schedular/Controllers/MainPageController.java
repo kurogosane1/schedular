@@ -1,5 +1,4 @@
 package schedular.Controllers;
-
 /**
  * @author Syed Khurshid
  */
@@ -8,6 +7,8 @@ import java.net.URL;
 import java.sql.Date;
 import java.sql.SQLException;
 import java.sql.Timestamp;
+import java.time.LocalDateTime;
+import java.time.format.DateTimeFormatter;
 import java.util.Optional;
 import java.util.ResourceBundle;
 import javafx.collections.FXCollections;
@@ -29,7 +30,6 @@ import javafx.scene.control.cell.PropertyValueFactory;
 import javafx.stage.Stage;
 import schedular.DOA.AppointmentDOA;
 import schedular.Model.Appointments;
-
 
 /**
  * This is the main page point of entry that displays all the appointments as well viewing the appointments by week, month and all.
@@ -153,6 +153,10 @@ public class MainPageController implements Initializable {
      * This is the appointment Schedule Observable List
      */
     private ObservableList<Appointments> aptSchedule = FXCollections.observableArrayList();
+    // /**
+    //  * 
+    //  */
+    // private ObservableList<Appointments> LocalTimeSchedule = FXCollections.observableArrayList();
     /**
      * This is the button to add a new appointment
      * @param event which is the add appointment button
@@ -266,14 +270,6 @@ public class MainPageController implements Initializable {
         stage.show();
     }
     /**
-     * 
-     * @param event
-     */
-    // @FXML
-    // void viewCustomer(ActionEvent event) {
-
-    // }
-    /**
      * This is view the Schedule Monthly from the current Date
      * @param event is a radio button press
      * @throws SQLException
@@ -300,10 +296,30 @@ public class MainPageController implements Initializable {
     @FXML
     void toContactsPage(ActionEvent event) throws IOException {
         Parent root = FXMLLoader.load(getClass().getResource("/schedular/Contact.fxml"));
-         Stage stage = (Stage) contactsButton.getScene().getWindow();
-         stage.setTitle("Contacts");
-         stage.setScene(new Scene(root));
-         stage.show();
+        Stage stage = (Stage) contactsButton.getScene().getWindow();
+        stage.setTitle("Contacts");
+        stage.setScene(new Scene(root));
+        stage.show();
+    }
+    
+    /**
+     * This is to validate if the Appointments are falling within 15minutes of the current time
+     */
+    public void AppointmentCheck() {
+        DateTimeFormatter formatter = DateTimeFormatter.ofPattern("yyyy-MM-dd HH:mm:ss"); 
+        for (Appointments appointment : aptSchedule) {
+
+            LocalDateTime ldt = LocalDateTime.parse(appointment.getStart(), formatter).plusMinutes(15);
+            LocalDateTime ldtNow = LocalDateTime.now();
+            if (ldtNow.equals(ldt)) {
+                Alert alert = new Alert(Alert.AlertType.INFORMATION);
+                alert.setHeaderText(null);
+                alert.setContentText("Your Appointment is in 15minutes");
+                alert.showAndWait();
+            }
+            
+            
+        }
     }
     /**
      * This is to help initialize the Table View
@@ -314,6 +330,7 @@ public class MainPageController implements Initializable {
                 } catch (SQLException e) {
                     e.printStackTrace();
                 }
+                
                 apptTable.setItems(aptSchedule);
                 apptIDColumn.setCellValueFactory(new PropertyValueFactory<>("AppointmentID"));
                 titleCol.setCellValueFactory(new PropertyValueFactory<>("Title"));
@@ -335,6 +352,7 @@ public class MainPageController implements Initializable {
     public void initialize(URL arg0, ResourceBundle arg1) {
         System.out.println("Main Page has been initialized");
         initializingTable();
+        AppointmentCheck();
     }
   
 }
