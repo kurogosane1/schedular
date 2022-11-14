@@ -4,6 +4,7 @@ package schedular.Controllers;
  */
 import java.io.IOException;
 import java.net.URL;
+import java.sql.SQLException;
 import java.time.ZoneId;
 import java.util.Locale;
 import java.util.Properties;
@@ -14,6 +15,7 @@ import javafx.fxml.FXML;
 import javafx.fxml.FXMLLoader;
 import javafx.scene.Parent;
 import javafx.scene.Scene;
+import javafx.scene.control.Alert;
 import javafx.scene.control.Button;
 import javafx.scene.control.ChoiceBox;
 import javafx.scene.control.Label;
@@ -21,6 +23,8 @@ import javafx.scene.control.PasswordField;
 import javafx.scene.control.TextField;
 import javafx.scene.text.Text;
 import javafx.stage.Stage;
+import schedular.DOA.UsersDOA;
+import schedular.Model.User;
 
 /**
  * This is the Login Page
@@ -54,10 +58,16 @@ public class LoginController implements Initializable {
     /**
      * This is the User ID Text Field
      */
-    @FXML
-    private TextField userIDText;
+    @FXML private TextField userIDText;
+    /**
+     * This is for the French Call to language
+     */
     Locale french = new Locale("fr", "FR");
+    /**
+     * This is the english language
+     */
     Locale english = new Locale("en", "EN");
+
     Properties p = new Properties();
     private ResourceBundle rb = ResourceBundle.getBundle("schedular/langSelection/loginPage", Locale.getDefault()); 
     /**
@@ -66,16 +76,37 @@ public class LoginController implements Initializable {
      * @throws text errors which is user has not entered password correctly
      * @throws IOException with error due to location not found
      * Future preference is to make sure that the checks happens while the user is entering the data
+     * @throws SQLException
      */
     @FXML
-    void LogPress(ActionEvent event) throws IOException {
-        Parent root = FXMLLoader.load(getClass().getResource("/schedular/MainPage.fxml"));
-        Stage stage = (Stage) LoginButton.getScene().getWindow();
-        // stage.setTitle(rb.getString("title"));
-        stage.setTitle("Main Appointments");
-        stage.setScene(new Scene(root));
-        stage.show();
+    void LogPress(ActionEvent event) throws IOException, SQLException {
+        if (userIDText.getText() == null || passwordText.getText() == null) {
+            Alert alert = new Alert(Alert.AlertType.WARNING);
+            alert.setTitle(rb.getString("errorTitle"));
+            alert.setContentText(rb.getString("errorMessage"));
+            alert.showAndWait();
+        }
+        else {
+            UsersDOA userDOA = new UsersDOA();
+            Boolean success = userDOA.checkUser(userIDText.getText(), passwordText.getText());
+            if (!success) {
+                Alert alert = new Alert(Alert.AlertType.WARNING);
+                alert.setTitle(rb.getString("errorTitle2"));
+                alert.setContentText(rb.getString("errorMessage2"));
+                alert.showAndWait();
+            }
+            else {
+                
+                Parent root = FXMLLoader.load(getClass().getResource("/schedular/MainPage.fxml"));
+                Stage stage = (Stage) LoginButton.getScene().getWindow();
+                // stage.setTitle(rb.getString("title"));
+                stage.setTitle("Main Appointments");
+                stage.setScene(new Scene(root));
+                stage.show();
+            }
+        }
     }
+    
     /**
      * Closing the Application itself now completely
      * @param event which is a Button Press

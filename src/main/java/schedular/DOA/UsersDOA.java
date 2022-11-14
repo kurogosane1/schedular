@@ -50,4 +50,24 @@ public class UsersDOA {
         }
         return users;
     }
+
+    public Boolean checkUser(String username, String password) throws SQLException {
+        Connection con = Database.getConnection();
+        User user = null;
+        String sql = "SELECT User_ID,User_Name, Password FROM USERS WHERE USER_NAME=? AND PASSWORD=?";
+        PreparedStatement ps = con.prepareStatement(sql);
+        ps.setString(1, username);
+        ps.setString(2, password);
+        ResultSet rs = ps.executeQuery();
+        if (rs.next()) {
+            int userId = rs.getInt("User_ID");
+            String userName = rs.getString("User_Name");
+            String passwords = rs.getString("Password");
+            user = new User(userId, userName, passwords);
+            return true;
+        }
+        else {
+            return false;
+        }
+    }
 }
