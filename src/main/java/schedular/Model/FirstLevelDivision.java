@@ -1,5 +1,10 @@
 package schedular.Model;
-
+/**
+ * @author Syed Khurshid
+ */
+/**
+ * This is the First Level Division Object
+ */
 public class FirstLevelDivision {
     private int divisionID;
     private String Division;
@@ -15,7 +20,6 @@ public class FirstLevelDivision {
         Division = division;
         this.countryID = countryID;
     }
-    
     /**
      * Returns the Division iD
      */

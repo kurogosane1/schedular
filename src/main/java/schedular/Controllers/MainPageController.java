@@ -314,7 +314,7 @@ public class MainPageController implements Initializable {
             if (ldtNow.equals(ldt)) {
                 Alert alert = new Alert(Alert.AlertType.INFORMATION);
                 alert.setHeaderText(null);
-                alert.setContentText("Your Appointment is in 15minutes");
+                alert.setContentText("Your Appointment is in 15 minutes");
                 alert.showAndWait();
             }
             

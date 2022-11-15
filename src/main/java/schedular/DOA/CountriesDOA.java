@@ -106,9 +106,4 @@ public class CountriesDOA implements DOA<Countries>{
         int result = ps.executeUpdate();
         return result;
     }
-    // @Override
-    // public int save(Countries t) throws SQLException {
-    //     return 0;
-    // };
-    
 }

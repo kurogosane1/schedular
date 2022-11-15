@@ -253,7 +253,7 @@ public class ReportsPageController implements Initializable {
      /**
      * This is to help initialize the Table View
      */
-    public void initializingTable() {
+    public void initializingTable(){
             try {
                 aptSchedule = appointments.getAll();
                 } catch (SQLException e) {

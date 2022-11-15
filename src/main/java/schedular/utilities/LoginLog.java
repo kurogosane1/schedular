@@ -19,15 +19,15 @@ public class LoginLog {
     /**
      * This is the file name
      */
-    public final static String LOGIN_LOG = "login_activity.txt";
+    public final static String LoginFile = "login_activity.txt";
     /**
      * This is the Local Date Formatter
      */
-    public static final DateTimeFormatter DATE_FORMAT = DateTimeFormatter.ISO_LOCAL_DATE;
+    public static final DateTimeFormatter dateFormat = DateTimeFormatter.ISO_LOCAL_DATE;
     /**
      * Date formatting pattern
      */
-    public static final DateTimeFormatter TIME_FORMAT = DateTimeFormatter.ofPattern("HH:mm");
+    public static final DateTimeFormatter timeFormats = DateTimeFormatter.ofPattern("HH:mm:ss a");
 
     /**
      * Appends a record for a login to be recorded to a log file
@@ -36,12 +36,12 @@ public class LoginLog {
      * @throws IOException on failure to append to log file
      */
     public static void append(String username, boolean success) throws IOException {
-        var now = LocalDateTime.now();
-        var logLine = "Login on " + now.format(DATE_FORMAT) + " at " + now.format(TIME_FORMAT)
+        var currentDate = LocalDateTime.now();
+        var logginActivity = "Login on " + currentDate.format(dateFormat) + " at " + currentDate.format(timeFormats)
                 + " by user with username " + username + " - " + (success ? "succeeded" : "failed");
-        var bufferWritter = Files.newBufferedWriter(Paths.get(LOGIN_LOG), StandardCharsets.UTF_8,
+        var writing = Files.newBufferedWriter(Paths.get(LoginFile), StandardCharsets.UTF_8,
                 StandardOpenOption.WRITE, StandardOpenOption.APPEND, StandardOpenOption.CREATE);
-        var printer = new PrintWriter(bufferWritter, true);
-        printer.println(logLine);
+        var printer = new PrintWriter(writing, true);
+        printer.println(logginActivity);
     }
 }

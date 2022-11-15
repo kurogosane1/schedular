@@ -24,7 +24,7 @@ import javafx.scene.control.TextField;
 import javafx.scene.text.Text;
 import javafx.stage.Stage;
 import schedular.DOA.UsersDOA;
-import schedular.Model.User;
+import schedular.utilities.LoginLog;
 
 /**
  * This is the Login Page
@@ -85,6 +85,7 @@ public class LoginController implements Initializable {
             alert.setTitle(rb.getString("errorTitle"));
             alert.setContentText(rb.getString("errorMessage"));
             alert.showAndWait();
+            LoginLog.append(null, false);
         }
         else {
             UsersDOA userDOA = new UsersDOA();
@@ -94,9 +95,10 @@ public class LoginController implements Initializable {
                 alert.setTitle(rb.getString("errorTitle2"));
                 alert.setContentText(rb.getString("errorMessage2"));
                 alert.showAndWait();
+                LoginLog.append(userIDText.getText(), false);
             }
             else {
-                
+                LoginLog.append(userIDText.getText(), true);
                 Parent root = FXMLLoader.load(getClass().getResource("/schedular/MainPage.fxml"));
                 Stage stage = (Stage) LoginButton.getScene().getWindow();
                 // stage.setTitle(rb.getString("title"));
@@ -105,8 +107,7 @@ public class LoginController implements Initializable {
                 stage.show();
             }
         }
-    }
-    
+    }  
     /**
      * Closing the Application itself now completely
      * @param event which is a Button Press

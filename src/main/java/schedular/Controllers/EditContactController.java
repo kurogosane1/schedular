@@ -1,5 +1,8 @@
 package schedular.Controllers;
 
+/**
+ * @author Syed Khurshid
+ */
 import java.io.IOException;
 import java.net.URL;
 import java.util.ResourceBundle;
@@ -16,21 +19,35 @@ import javafx.stage.Stage;
 import schedular.DOA.ContactsDOA;
 import schedular.Model.Contacts;
 
+/**
+ * This is to edit the Contacts Page
+ */
 public class EditContactController implements Initializable{
-
-    @FXML
-    private Button cancelButton;
-
-    @FXML
-    private TextField emailTF;
-
-    @FXML
-    private TextField nameTF;
-
-    @FXML
-    private Button saveButton;
-    
-    private Contacts contact;    
+    /**
+     * This is the Cancel button 
+     */
+    @FXML private Button cancelButton;
+    /**
+     * This is the Email Text Field
+     */
+    @FXML private TextField emailTF;
+    /**
+     * This is the name Text Field
+     */
+    @FXML private TextField nameTF;
+    /**
+     * This is the save button Text Field
+     */
+    @FXML private Button saveButton;
+    /**
+     * This is the Contacts Class Object
+     */
+    private Contacts contact;
+    /** 
+     * This is the function to handle the Cancel button Action
+     * @param event This is the cancel Button Press Action
+     * @throws IOException if an error occurs
+     */
     @FXML
     void handleCancelAction(ActionEvent event) throws IOException {
         Parent root = FXMLLoader.load(getClass().getResource("/schedular/Contact.fxml"));
