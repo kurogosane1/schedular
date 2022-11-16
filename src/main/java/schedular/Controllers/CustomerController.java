@@ -1,13 +1,14 @@
-package schedular.Controllers;
-import java.io.IOException;
 /**
+ * Possibly better customization of code can be done. Placing more object orientated format of the code where we can reutilize the code
  * @author Syed Khurshid
  */
+package schedular.Controllers;
+
+import java.io.IOException;
 import java.net.URL;
 import java.sql.SQLException;
 import java.util.Optional;
 import java.util.ResourceBundle;
-
 import javafx.collections.ObservableList;
 import javafx.event.ActionEvent;
 import javafx.fxml.FXML;
@@ -26,6 +27,9 @@ import schedular.DOA.AppointmentDOA;
 import schedular.DOA.CustomerDOA;
 import schedular.Model.Customer;
 
+/**
+ * This is the Customer Controller for the Customer controller page to be developed
+ */
 public class CustomerController implements Initializable {
     CustomerDOA cus = new CustomerDOA();
     /**

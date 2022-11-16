@@ -1,10 +1,8 @@
 /**
- * Other database's like noSQL can be used to connect
- */
-package schedular.Model;
-/**
  * @author Syed Khurshid
  */
+package schedular.Model;
+
 // class is user to store the current countries in the database
 public class Countries {
     private int countryID;

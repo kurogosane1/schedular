@@ -1,3 +1,6 @@
+/**
+ * This is the Module of Java config
+ */
 module schedular {
     requires javafx.controls;
     requires javafx.fxml;

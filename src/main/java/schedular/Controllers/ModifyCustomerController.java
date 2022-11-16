@@ -29,6 +29,9 @@ import schedular.Model.FirstLevelDivision;
  * This is to modify the Customers information form
  */
 public class ModifyCustomerController implements Initializable {
+    /**
+     * This is the Customers Object to store Customer information
+     */
     public Customer customer;
     /**
      * THis is the Cancel button

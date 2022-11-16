@@ -1,15 +1,15 @@
-package schedular.connect;
-
 /**
+ * This is to connect to SQL Database
  * @author Syed Khurshid
  */
+package schedular.connect;
+
 import java.sql.Connection;
 import java.sql.DriverManager;
 import java.sql.PreparedStatement;
 import java.sql.ResultSet;
 import java.sql.SQLException;
 import java.sql.Statement;
-
 
 /**
  * This is to establish a connection to a database
@@ -62,7 +62,7 @@ public abstract class Database {
         /**
          * This is the closing statement to close the connection
          * @param statement This is to get the current state of the connection
-         * @throws SQLException
+         * @throws SQLException in case of an error
          */
         public static void closeStatement(Statement statement) throws SQLException {
             statement.close();

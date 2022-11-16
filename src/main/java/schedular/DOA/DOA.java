@@ -1,8 +1,10 @@
-package schedular.DOA;
-import java.sql.SQLException;
 /**
+ * Refactoring code that is being used again and again into a better form
  * @author Syed Khurshid
  */
+package schedular.DOA;
+
+import java.sql.SQLException;
 import javafx.collections.ObservableList;
 
 /**

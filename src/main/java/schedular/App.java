@@ -38,7 +38,6 @@ public class App extends Application {
      * This is the main starting apps
      * @param args Strings args 
      * @throws ClassNotFoundException any error of a class not found
-     * @throws SQLException
      */
     public static void main(String[] args) throws ClassNotFoundException {     
         Database.openConnection(); // Opening the connection

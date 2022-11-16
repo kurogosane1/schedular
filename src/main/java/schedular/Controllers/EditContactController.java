@@ -121,7 +121,7 @@ public class EditContactController implements Initializable{
     }
     /**
      * This is to get the Contact Object from the Contacts Page
-     * @param contact this is the Contact Object
+     * @param t this is the Contact Object
      */
     public void modContact(Contacts t) {
         nameTF.setText(t.getContactName());

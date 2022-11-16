@@ -1,3 +1,7 @@
+/**
+ * Refactoring code to reduce the number of code lines
+ * @author Syed Khurshid
+ */
 package schedular.DOA;
 
 import java.sql.Connection;
@@ -5,20 +9,24 @@ import java.sql.PreparedStatement;
 import java.sql.ResultSet;
 import java.sql.SQLException;
 import java.sql.Statement;
-
 import javafx.collections.FXCollections;
 import javafx.collections.ObservableList;
 import schedular.Model.User;
 import schedular.connect.Database;
 
+/**
+ * This is the User Data Object to interact with the database
+ */
 public class UsersDOA {
-    
+    /**
+     * This is the SQL String to create the User
+     * Will move to the functions
+     */
     private static final String CREATE_USER = "INSERT INTO Users (User_Name, Password) VALUES (?,?)"; 
     /**
      * This is to Create Users
      * @param user value is then placed into the database
      * @return null
-     * @throws SQLException any error from the connection
      */
     public User create(User user) {
         try (PreparedStatement ps = Database.getConnection().prepareStatement(CREATE_USER)) {
@@ -50,7 +58,13 @@ public class UsersDOA {
         }
         return users;
     }
-
+    /**
+     * This is to check the User if the user exists or not
+     * @param username which is received from the form
+     * @param password which is received from the form
+     * @return boolean which is true if the user exists
+     * @throws SQLException if an error occurs
+     */
     public Boolean checkUser(String username, String password) throws SQLException {
         Connection con = Database.getConnection();
         User user = null;

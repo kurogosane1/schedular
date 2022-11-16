@@ -1,3 +1,8 @@
+/**
+ * This is the Countries Database Object Module
+ * Refactoring code especially that are being reused again and again
+ * @author Syed Khurshid
+ */
 package schedular.DOA;
 
 import java.sql.Connection;
@@ -6,12 +11,14 @@ import java.sql.ResultSet;
 import java.sql.SQLException;
 import java.sql.Statement;
 import java.time.LocalDateTime;
-
 import javafx.collections.FXCollections;
 import javafx.collections.ObservableList;
 import schedular.Model.Countries;
 import schedular.connect.Database;
 
+/**
+ * This is the Countries Data Base Object interface to get all the Countries from the Database
+ */
 public class CountriesDOA implements DOA<Countries>{
     
     /** 
@@ -40,6 +47,7 @@ public class CountriesDOA implements DOA<Countries>{
     /**
      * Getting all the countries list from the database.
      * No parameter
+     * @throws SQLException if an error occurs
      */
     @Override
     public ObservableList<Countries> getAll() throws SQLException {
@@ -60,7 +68,8 @@ public class CountriesDOA implements DOA<Countries>{
     }
     /**
      * Inserting a new Country into the database
-     * @param Countries Object 
+     * @param t which is the Countries Object
+     * @throws SQLException which in case of a SQL Error
      */
     @Override
     public int insert(Countries t) throws SQLException {
@@ -80,7 +89,8 @@ public class CountriesDOA implements DOA<Countries>{
     
     /**
      * Updating a Country value in the Countries Database
-     * @param Countries which is then selected to be updated in the database
+     * @param t which is the Countries t then selected to be updated in the database
+     * @throws SQLException which in case of SQL error
      */
     @Override
     public int update(Countries t) throws SQLException {
@@ -95,7 +105,8 @@ public class CountriesDOA implements DOA<Countries>{
     }
     /**
      * Deleting a value in a database
-     * @param Country_id which is then used to delete the country value from the database
+     * @param t Countries Object which is then used to delete the country value from the database
+     * @throws SQLException which in case of SQL error
      */
     @Override
     public int delete(Countries t) throws SQLException {

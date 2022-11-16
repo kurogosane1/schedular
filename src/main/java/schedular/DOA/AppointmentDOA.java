@@ -1,8 +1,10 @@
-package schedular.DOA;
-
 /**
+ * This is the Appointments Data Object Module. 
+ * Preference is to reduce the lines of code and move to noSQL database
  * @author Syed Khurshid
  */
+package schedular.DOA;
+
 import java.sql.Connection;
 import java.sql.PreparedStatement;
 import java.sql.ResultSet;

@@ -1,13 +1,23 @@
-package schedular.Model;
 /**
  * @author Syed Khurshid
  */
+package schedular.Model;
+
 /**
  * This is the First Level Division Object
  */
 public class FirstLevelDivision {
+    /**
+     * This is the Division Unique ID
+     */
     private int divisionID;
+    /**
+     * This is the Division name 
+     */
     private String Division;
+    /**
+     * This is the Country ID that its related
+     */
     public int countryID;
     /**
      * Default Constructor
@@ -21,7 +31,7 @@ public class FirstLevelDivision {
         this.countryID = countryID;
     }
     /**
-     * Returns the Division iD
+     * @return DivisioniD which is the Division ID
      */
     public int getDivisionID() {
         return divisionID;
@@ -35,8 +45,8 @@ public class FirstLevelDivision {
     }
     /**
      * 
-     * @param integer
-     * @return returns the Devision from the database
+     * This will return the Division
+     * @return Division the Division from the database
      */
     public String getDivision() {
         return Division;
@@ -50,6 +60,7 @@ public class FirstLevelDivision {
     }
     /**
      * This returns the Country ID that is connected to the Country class
+     * @return countryID which is the Country ID
      */
     public int getCountryID() {
         return countryID;

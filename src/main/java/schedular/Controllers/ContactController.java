@@ -1,7 +1,9 @@
-package schedular.Controllers;
 /**
+ * Refactoring code to be used separately especially that are being used again and again
  * @author Syed Khurshid
  */
+package schedular.Controllers;
+
 import java.io.IOException;
 import java.net.URL;
 import java.sql.SQLException;

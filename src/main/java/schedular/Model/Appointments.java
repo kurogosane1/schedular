@@ -1,9 +1,10 @@
 /**
+ * @author Syed Khurshid
  * Preference would be to use a NoSQL database like MangoDB
  */
 package schedular.Model;
 /**
- * @author Syed Khurshid
+ * This is the Appointments User Object
  */
 public class Appointments {
     private int AppointmentID;

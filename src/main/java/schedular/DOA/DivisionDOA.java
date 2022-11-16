@@ -1,14 +1,13 @@
+/**
+ * @author Syed Khurshid
+ */
 package schedular.DOA;
 
 import java.sql.Connection;
 import java.sql.PreparedStatement;
 import java.sql.ResultSet;
-/**
- * @author Syed Khurshid
- */
 import java.sql.SQLException;
 import java.sql.Statement;
-
 import javafx.collections.FXCollections;
 import javafx.collections.ObservableList;
 import schedular.Model.FirstLevelDivision;
@@ -21,7 +20,7 @@ public class DivisionDOA implements DOA<FirstLevelDivision>{
 /**
  * Get the Division based on ID
  * @param id which is from the Divisions Object
- * Since we are not going to get the Division by default then we are not going to use them
+ * @throws SQLException if an error occurs
  */
     @Override
     public FirstLevelDivision get(int id) throws SQLException {
@@ -44,6 +43,7 @@ public class DivisionDOA implements DOA<FirstLevelDivision>{
     /**
      * Getting all the Divisions from the database
      * We will be using this to get the Customer information
+     * @throws SQLException if an error occurs
      */
     @Override
     public ObservableList<FirstLevelDivision> getAll() throws SQLException {

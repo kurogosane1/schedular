@@ -1,12 +1,12 @@
 /**
- * To change this template file, choose other flexible databases like no SQL
+ * @author Syed Khurshid
+ * This is the User class for creating the User Object
  */
 package schedular.Model;
-/**
- * @author Syed Khurshid
- * 
- */
 
+/**
+ * This is the User Object for Creating User Objects
+ */
 public class User {
     private int userId;
     private String userName;
@@ -54,7 +54,7 @@ public class User {
 
     /**
      * This is to set the Username
-     * @param userName
+     * @param userName which is the user name in a string format
      */
     public void setUserName(String userName) {
         this.userName = userName;

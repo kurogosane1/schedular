@@ -1,7 +1,9 @@
-package schedular.Controllers;
 /**
+ * Refactoring code and moving to a noSQL database
  * @author Syed Khurshid
  */
+package schedular.Controllers;
+
 import java.io.IOException;
 import java.net.URL;
 import java.sql.SQLException;
@@ -212,9 +214,14 @@ public class AddAppointmentController implements Initializable{
      * This is the User DOA
      */
     private UsersDOA userDOA = new UsersDOA();
+    /**
+     * This is a tool to convert time but moved to another class since its being reused over and over again
+     */
     private TimeConversion timeTools = new TimeConversion();
+    
     /**
      * This is to cancel Button Function to return user
+     * @throws IOException if an error occurs 
      */
     @FXML
     void cancelPressAct(ActionEvent event) throws IOException {
@@ -240,8 +247,8 @@ public class AddAppointmentController implements Initializable{
     /**
      * This is to save the Appointment information to the database
      * @param event button when the save button is clicked
-     * @throws SQLException 
-     * @throws IOException
+     * @throws SQLException in case of a SQL error
+     * @throws IOException in case of a screen change error
      */
     @FXML
     void saveButtonPress(ActionEvent event) throws SQLException, IOException {
@@ -349,6 +356,7 @@ public class AddAppointmentController implements Initializable{
     /**
      * Lambda expression to go switch screens.
      * Reason for using Lambda is still not quite the same
+     * @param s which is the String
      */
     GoBack switchScreens =(s)->{
         Parent root = FXMLLoader.load(getClass().getResource(s));
@@ -359,17 +367,26 @@ public class AddAppointmentController implements Initializable{
     };
     /**
      * Using lambda expression to push to database. With this I can reduce the number of code lines in a function
+     * By placing these outside is helping to reduce the line of codes in a function
+     * @param id this is the appointment id
+     * @param title this is the name of the appointment
+     * @param description this is the description of the appointment
+     * @param location this is the location of the appointment
+     * @param type this is the type of appointment
+     * @param start this is the start date of the appointment
+     * @param end this is the end date of the appointment
+     * @param cusID this is is the customer id of the appointment
+     * @param useID this is the User ID of the appointment
+     * @param contactID this is the Contact ID of the appointment
      */
     AddObject pushToDatabase = (id, title, description, location, type, start, end, cusID, useID, contactID) -> {
-    AppointmentDOA apptDOA = new AppointmentDOA();
-    Appointments appointment = new Appointments(id, title, description,
-                                                location,
-                                                type, start, end, cusID, useID, contactID);
-     try {
-        apptDOA.insert(appointment);
-    } catch (SQLException e) {
-        e.printStackTrace();
-    }
+                AppointmentDOA apptDOA = new AppointmentDOA();
+                Appointments appointment = new Appointments(id, title, description, location, type, start, end, cusID, useID, contactID);                               
+                try {
+                    apptDOA.insert(appointment);
+                } catch (SQLException e) {
+                    e.printStackTrace();
+            }
     };
     /**
      * This is to get Customer User ID choicebox filled

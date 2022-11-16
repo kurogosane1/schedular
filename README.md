@@ -17,15 +17,16 @@ Java version 18
 JavaFX-SDK-19
 mysql connector: mysql-connector-java-8.0.31
 
-
 ### Directions to Run the App
+
 Go to connect folder under src->main->java->connect
 Input the user name, password and Database name.
 
-#### NOTE: Sometimes IntelliJ creates a properties bunder. DO NOT DELETE IT. Instead right click on the resource bundle and select "Dissociate Resource Bundle 'loginPage'" and refresh the project or reopen the project if the error is still there. 
+#### NOTE: Sometimes IntelliJ creates a properties bunder. DO NOT DELETE IT. Instead right click on the resource bundle and select "Dissociate Resource Bundle 'loginPage'" and refresh the project or reopen the project if the error is still there.
 
+Go ahead and press run app and it shall launch the application
 
 ### How to run the program
 
-As the program starts, a login is presented. The user be required to have a valid username and password that matches information in a mysql database. 
+As the program starts, a login is presented. The user be required to have a valid username and password that matches information in a mysql database.
 This programs requires java version 18

@@ -1,9 +1,12 @@
+/**
+ * Code refactoring to refactor code that is being re-used as much as possible
+ * @author Syed Khurshid
+ */
 package schedular.Controllers;
 import java.io.IOException;
 import java.net.URL;
 import java.sql.SQLException;
 import java.time.LocalDateTime;
-import java.time.ZonedDateTime;
 import java.time.format.DateTimeFormatter;
 import java.util.ArrayList;
 import java.util.Optional;
@@ -35,8 +38,6 @@ import schedular.Model.Contacts;
 import schedular.Model.Customer;
 import schedular.Model.User;
 import schedular.utilities.TimeConversion;
-
-
 /**
  * This is to Edit the Appointment Page
  */
@@ -83,11 +84,14 @@ public class EditAppointmentController implements Initializable {
      * This is the User DOA
      */
     private UsersDOA userDOA = new UsersDOA();
+    /**
+     * This is the Time Conversion object that is used to convert times and others which process is being reused
+     */
     private TimeConversion timeTools = new TimeConversion();
     /**
      * This is the Cancel Button for exiting from correcting an appointments
      * @param event which is the Button press action
-     * @throws IOException
+     * @throws IOException from screen transfer error
      */
     @FXML
     void cancellPressAct(ActionEvent event) throws IOException {
@@ -100,8 +104,8 @@ public class EditAppointmentController implements Initializable {
     /**
      * This is to save appointment information after they fill information
      * @param event which is the Button press action
-     * @throws SQLException 
-     * @throws IOException
+     * @throws SQLException in case of SQL error
+     * @throws IOException in screen transfer
      */
     @FXML
     void saveButtonPress(ActionEvent event) throws SQLException, IOException {
@@ -213,7 +217,7 @@ public class EditAppointmentController implements Initializable {
     }
      /**
      * This is to redirect user to the main page if the save goes through
-     * @throws IOException
+     * @throws IOException if an error occurs
      */
     public void goBackAfterSave() throws IOException {
          Parent root = FXMLLoader.load(getClass().getResource("/schedular/MainPage.fxml"));
@@ -278,6 +282,8 @@ public class EditAppointmentController implements Initializable {
     }
     /**
      * This is to add the choices in a spinner
+     * @param t which is the starting hour selected form the spinner
+     * @param g which is the ending hour selected from the spinner
      */
     public void spinnerHourChoice(int t,int g) {
         SpinnerValueFactory<Integer> valueFactory = new SpinnerValueFactory.IntegerSpinnerValueFactory(8, 22);
@@ -289,6 +295,8 @@ public class EditAppointmentController implements Initializable {
     }   
     /**
      * This is to add the choices in a spinner
+     * @param t integer for minutes
+     * @param g integer for end minutes selected
      */
     public void spinnerMinuteChoice(int t, int g) {
         SpinnerValueFactory<Integer> startMinuteFactory = new SpinnerValueFactory.IntegerSpinnerValueFactory(00, 59);

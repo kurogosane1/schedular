@@ -1,6 +1,10 @@
+/**
+ *
+ * @author Syed Khurshid
+ */
 package schedular.Model;
 /**
- * @author Syed Khurshid
+ * This is the Customers Object class for creating Customers
  */
 public class Customer {
     private int customerId;

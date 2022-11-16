@@ -1,9 +1,10 @@
 /**
+ * @author Syed Khurshid
  * Preference would be to use NoSQL tools like MangoDB which will reduce the relationship links
  */
 package schedular.Model;
 /**
- * @author Syed Khurshid
+ * This is the Contacts Object
  */
 public class Contacts {
     private int contact_ID;

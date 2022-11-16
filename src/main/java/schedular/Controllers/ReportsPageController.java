@@ -32,10 +32,10 @@ import schedular.Model.DivisionInfoTable;
 import schedular.Model.Type;
 
 /**
- * This is the Reports page for the Appointments
+ * This is the Report's page for the Appointments
  */
 public class ReportsPageController implements Initializable {
-    // This is the Appointments month Column
+    // This is the Appointment's month Column
     @FXML
     private TableColumn<Type, String> apptMonthCol;
     /**

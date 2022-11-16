@@ -22,9 +22,9 @@ package schedular.Model;
     private Integer count;
     /**
      * Default Constructor
-     * @param months
-     * @param types
-     * @param count
+     * @param months which is the month that the user has selected
+     * @param types which is the string type of the meeting the user selects
+     * @param count count is the total number of appointments that fall under that type
      */
     public Type(String months, String types, Integer count) {
         Months = months;

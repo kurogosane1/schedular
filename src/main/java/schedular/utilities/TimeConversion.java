@@ -1,8 +1,10 @@
-package schedular.utilities;
-
 /**
+ * Time conversion on this class can be better refactored to reduce the number of code lines and memory
  * @author Syed Khurshid
  */
+package schedular.utilities;
+
+
 import java.sql.SQLException;
 import java.sql.Timestamp;
 import java.time.LocalDate;
@@ -22,6 +24,10 @@ import schedular.Model.Appointments;
  */
 public class TimeConversion {
     /**
+     * THis is the default constructor
+     */
+    public TimeConversion(){}
+    /**
      * This is the Local User Zone ID
      */
     static ZoneId userTimeZone = ZoneId.systemDefault();
@@ -31,6 +37,9 @@ public class TimeConversion {
     static String defaultTimeZone = TimeZone.getDefault().getID();
     /**
      * This is to convert the data from the Spinners to a String Format
+     * @param date which is the LocalDate
+     * @param time which is the string time format
+     * @return str which is a string
      */
     public static String convertDateTime(LocalDate date, String time) {
         DateTimeFormatter formatter = DateTimeFormatter.ofPattern("yyyy-MM-dd HH:mm:ss");
@@ -50,9 +59,9 @@ public class TimeConversion {
     }
     /**
      * This is to convert the time to String format from the Spinner
-     * @param hour This is the Ingteger Format Spinner Hour Selected
+     * @param hour This is the Integer Format Spinner Hour Selected
      * @param minute This is the Integer format minute Selected
-     * @return
+     * @return str which is the string of the hour and minutes
      */
     public static String timeStringConversion(Integer hour, Integer minute) {
         String hourCheck = hour.toString();
@@ -64,7 +73,8 @@ public class TimeConversion {
          minuteCheck = "0" + minuteCheck;
      }
      System.out.println(hourCheck + " " + minuteCheck);
-     return hourCheck + ":" + minuteCheck + ":" + "00";
+     String str = hourCheck + ":" + minuteCheck + ":" + "00";
+     return  str;
         
     };
     /**
@@ -161,8 +171,10 @@ public class TimeConversion {
     }
     /**
      * This is to check if the Appointment selected falls anywhere in the existing appointments
-     * @param startDateTime, endDateTime which are the appointment start times the user has selected
-     * @returns Boolean indicating if the Appointment is not conflicting or it is
+     * @param startDateTime,  which are the appointment start times the user has selected
+     * @param endDateTime which is the end time of the appointment that the user has selected
+     * @throws SQLException which is in case an error in SQL occurs
+     * @return Boolean indicating if the Appointment is not conflicting or it is
      */
     public static Boolean appointmentOverlapCheck(String startDateTime, String endDateTime) throws SQLException {
         AppointmentDOA aptDOA = new AppointmentDOA();

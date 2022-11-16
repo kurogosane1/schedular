@@ -1,7 +1,9 @@
-package schedular.DOA;
 /**
+ * refactoring code that is being used again and again
  * @author Syed Khurshid
  */
+package schedular.DOA;
+
 import java.sql.Connection;
 import java.sql.PreparedStatement;
 import java.sql.ResultSet;
@@ -20,6 +22,7 @@ public class CustomerDOA implements DOA<Customer> {
     /**
      * Retrieve individual customers
      * @param id which is from the Customers Object
+     * @throws SQLException if an error occurs
      */
     @Override
     public Customer get(int id) throws SQLException {
@@ -41,8 +44,10 @@ public class CustomerDOA implements DOA<Customer> {
         }
         return customer;
     }
+    
     /**
      * Retrieve all the Customers from the database
+     * @throws SQLException if an error occurs
      */
     @Override
     public ObservableList<Customer> getAll() throws SQLException {
@@ -66,6 +71,7 @@ public class CustomerDOA implements DOA<Customer> {
     
     /**This is to add a Customer to the database
      * @param t which is a Customer Object
+     * @throws SQLException if an error occurs
      */
     @Override
     public int insert(Customer t) throws SQLException {
@@ -88,6 +94,7 @@ public class CustomerDOA implements DOA<Customer> {
     /**
      * This is to update Customer in the Customer Database
      * @param t which is the Customer Object
+     * @throws SQLException if an error occurs
      */
     @Override
     public int update(Customer t) throws SQLException {
@@ -108,9 +115,11 @@ public class CustomerDOA implements DOA<Customer> {
         int result = ps.executeUpdate();
         return result;
     }
+    
     /**
      * Deleting the Customer Data from the database
      * @param t which is the Customer Object
+     * @throws SQLException if an error occurs
      */
     @Override
     public int delete(Customer t) throws SQLException {
@@ -123,7 +132,7 @@ public class CustomerDOA implements DOA<Customer> {
     }
     /**
      * This is to get the converted Table for helping into determining the number of Customers under a division
-     * @return DivisionInfoTable Object which shows the Divisions name and the total number of customers under the division
+     * @return DivisionInfoTable ObservableList Array Object which shows the Divisions name and the total number of customers under the division
      * @throws SQLException for SQLException when they occur
      */
     public ObservableList<DivisionInfoTable> getDivisions() throws SQLException {
