@@ -22,7 +22,7 @@ mysql connector: mysql-connector-java-8.0.31
 Go to connect folder under src->main->java->connect
 Input the user name, password and Database name.
 
-#### NOTE: Sometimes IntelliJ creates a properties bunder. DO NOT DELETE IT. Instead remove the resource bundle and refresh the project or reopen the project if the error is still there. 
+#### NOTE: Sometimes IntelliJ creates a properties bunder. DO NOT DELETE IT. Instead right click on the resource bundle and select "Dissociate Resource Bundle 'loginPage'" and refresh the project or reopen the project if the error is still there. 
 
 
 ### How to run the program

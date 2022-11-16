@@ -11,6 +11,7 @@ import java.sql.Statement;
 import java.time.LocalDate;
 import java.time.LocalDateTime;
 import java.time.ZoneId;
+import java.time.ZoneOffset;
 import java.time.ZonedDateTime;
 import java.time.format.DateTimeFormatter;
 import javafx.collections.FXCollections;
@@ -51,7 +52,7 @@ public class AppointmentDOA implements DOA<Appointments> {
             String Start = zdt.format(DateTimeFormatter.ofPattern("yyyy-MM-dd HH:mm:ss"));
             LocalDateTime ldt2 = LocalDateTime.parse(rs.getString("End"), formatter);
             ZonedDateTime zdt2 = ZonedDateTime.of(ldt2, zoneID);
-            String End = zdt2.format(DateTimeFormatter.ofPattern("yy-MM-dd HH:mm:ss"));
+            String End = zdt2.format(DateTimeFormatter.ofPattern("yyyy-MM-dd HH:mm:ss"));
             int Customer_ID = rs.getInt("Customer_ID");
             int User_ID = rs.getInt("User_ID");
             int Contact_ID = rs.getInt("Contact_ID");
@@ -81,7 +82,7 @@ public class AppointmentDOA implements DOA<Appointments> {
             String Start = zdt.format(DateTimeFormatter.ofPattern("yyyy-MM-dd HH:mm:ss"));
             LocalDateTime ldt2 = LocalDateTime.parse(rs.getString("End"), formatter);
             ZonedDateTime zdt2 = ZonedDateTime.of(ldt2, zoneID);
-            String End = zdt2.format(DateTimeFormatter.ofPattern("yy-MM-dd HH:mm:ss"));
+            String End = zdt2.format(DateTimeFormatter.ofPattern("yyyy-MM-dd HH:mm:ss"));
             int Customer_ID = rs.getInt("Customer_ID");
             int User_ID = rs.getInt("User_ID");
             int Contact_ID = rs.getInt("Contact_ID");
@@ -98,7 +99,7 @@ public class AppointmentDOA implements DOA<Appointments> {
     @Override
     public int insert(Appointments t) throws SQLException {
         Connection con = Database.getConnection();
-        String sql = "INSERT INTO Appointments (Title, Description,Location, Type, Start, End, Customer_ID, User_ID, Contact_ID) VALUES (?,?,?,?,?,?,?,?,?)";
+        String sql = "INSERT INTO Appointments (Title, Description,Location, Type, Start, End, Customer_ID, User_ID, Contact_ID,Create_Date, Created_By, Last_Update, Last_Updated_By) VALUES (?,?,?,?,?,?,?,?,?,?,?,?,?)";
         PreparedStatement ps = con.prepareStatement(sql);
         ps.setString(1, t.getTitle());
         ps.setString(2, t.getDescription());
@@ -109,6 +110,10 @@ public class AppointmentDOA implements DOA<Appointments> {
         ps.setInt(7, t.getCustomer_id());
         ps.setInt(8, t.getUser_id());
         ps.setInt(9, t.getContact_id());
+        ps.setString(10, ZonedDateTime.now(ZoneOffset.UTC).format(formatter).toString()); // Create_Date
+        ps.setString(11, "test");// Created_By
+        ps.setString(12, ZonedDateTime.now(ZoneOffset.UTC).format(formatter).toString());
+        ps.setString(13, "test");
         int result = ps.executeUpdate();
         return result;
     }
@@ -120,7 +125,7 @@ public class AppointmentDOA implements DOA<Appointments> {
     @Override
     public int update(Appointments t) throws SQLException {
         Connection con = Database.getConnection();
-        String sql = "UPDATE Appointments SET Appointment_ID=?,Title=?,Description=?,Location=?,Type=?,Start=?,End=?,Customer_ID=?,User_ID=?,Contact_ID=? WHERE Appointment_ID=?";
+        String sql = "UPDATE Appointments SET Appointment_ID=?,Title=?,Description=?,Location=?,Type=?,Start=?,End=?,Customer_ID=?,User_ID=?,Contact_ID=?,Create_Date=?, Created_By=?, Last_Update=?, Last_Updated_By=? WHERE Appointment_ID=?";
         PreparedStatement ps = con.prepareStatement(sql);
         ps.setInt(1, t.getAppointmentID());
         ps.setString(2, t.getTitle());
@@ -132,7 +137,11 @@ public class AppointmentDOA implements DOA<Appointments> {
         ps.setInt(8, t.getCustomer_id());
         ps.setInt(9, t.getUser_id());
         ps.setInt(10, t.getContact_id());
-        ps.setInt(11, t.getAppointmentID());
+        ps.setString(11, ZonedDateTime.now(ZoneOffset.UTC).format(formatter).toString()); // Create_Date
+        ps.setString(12, "test");// Created_By
+        ps.setString(13, ZonedDateTime.now(ZoneOffset.UTC).format(formatter).toString());
+        ps.setString(14, "test");
+        ps.setInt(15, t.getAppointmentID());
         int result = ps.executeUpdate();
         return result;
     }

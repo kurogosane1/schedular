@@ -153,22 +153,25 @@ public class LoginController implements Initializable {
         String myChoice = languageChoice.getValue();
         System.out.println(myChoice);
         if (myChoice.equals("French")) {
-            Locale.setDefault(french);
-            System.out.println(Locale.getDefault());
+            Locale.setDefault(new Locale("fr", "FR"));
             localizeLabels();
             locationText.setText(myChoice + ": "+ZoneId.systemDefault());
-            System.out.println(rb.getString("useridlabel"));
+
         }
         else {
             Locale.setDefault(english);
+            localizeLabels();
+            locationText.setText(myChoice + ": "+ZoneId.systemDefault());
         }
-        Locale.setDefault(french);
+        // Locale.setDefault(french);
         System.out.println(rb.getString("useridlabel"));
     }
     /**
      * This is to set the values based on the properties
      */
     private void localizeLabels() {
+        Locale lang = Locale.getDefault();
+        rb = ResourceBundle.getBundle("schedular/langSelection/loginPage", lang);
         userIdLabel.setText(rb.getString("useridlabel"));
         passwordLabel.setText(rb.getString("passwordLabel"));
         LoginButton.setText(rb.getString("LoginButton"));

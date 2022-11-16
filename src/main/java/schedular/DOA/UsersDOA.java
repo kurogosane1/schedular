@@ -12,7 +12,7 @@ import schedular.Model.User;
 import schedular.connect.Database;
 
 public class UsersDOA {
-
+    
     private static final String CREATE_USER = "INSERT INTO Users (User_Name, Password) VALUES (?,?)"; 
     /**
      * This is to Create Users

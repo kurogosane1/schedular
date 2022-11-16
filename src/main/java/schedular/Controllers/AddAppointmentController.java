@@ -302,7 +302,7 @@ public class AddAppointmentController implements Initializable{
                                         String startUTC = TimeConversion.convertTimeToUTC(startDateTime);
                                         String endUTC = TimeConversion.convertTimeToUTC(endDateTime);
                                         // Lambda Express to add all of them
-                                        pushToDatabase.pushToDatabase(appointmentID, title, description, location, type, startUTC, endUTC, errorCheck, errorCheck, errorCheck); 
+                                        pushToDatabase.pushToDatabase(appointmentID, title, description, location, type, startUTC, endUTC, customerID,userID,contactID); 
                                         
                                         // Appointments appointment = new Appointments(appointmentID, title, description,
                                         //         location,
