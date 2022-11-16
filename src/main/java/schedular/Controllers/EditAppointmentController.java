@@ -373,7 +373,10 @@ public class EditAppointmentController implements Initializable {
                 alert.showAndWait();
                 break;
             case 14: // This is for successfully adding a new appointment
-                Alert sAlert = new Alert(Alert.AlertType.CONFIRMATION,"Successfully added new appointment");
+                Alert sAlert = new Alert(Alert.AlertType.INFORMATION);
+                sAlert.setTitle("Successfully created");
+                sAlert.setContentText("Appointment has been successfully created");
+                sAlert.setHeaderText(null);
                 Optional<ButtonType> result = sAlert.showAndWait();
                 if (result.isPresent() && result.get() == ButtonType.OK) {
                     return;

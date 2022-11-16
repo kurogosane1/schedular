@@ -7,7 +7,7 @@ import java.net.URL;
 import java.sql.Date;
 import java.sql.SQLException;
 import java.sql.Timestamp;
-import java.time.LocalDateTime;
+import java.time.*;
 import java.time.format.DateTimeFormatter;
 import java.util.Optional;
 import java.util.ResourceBundle;
@@ -306,19 +306,20 @@ public class MainPageController implements Initializable {
      * This is to validate if the Appointments are falling within 15minutes of the current time
      */
     public void AppointmentCheck() {
-        DateTimeFormatter formatter = DateTimeFormatter.ofPattern("yyyy-MM-dd HH:mm:ss"); 
+        DateTimeFormatter formatter = DateTimeFormatter.ofPattern("yyyy-MM-dd HH:mm:ss");
+        ZoneId zoneId = ZoneId.systemDefault();
         for (Appointments appointment : aptSchedule) {
 
             LocalDateTime ldt = LocalDateTime.parse(appointment.getStart(), formatter).plusMinutes(15);
+            ZonedDateTime zdt = ZonedDateTime.of(ldt, zoneId);
             LocalDateTime ldtNow = LocalDateTime.now();
-            if (ldtNow.equals(ldt)) {
+            ZonedDateTime zdtnow = ZonedDateTime.of(ldtNow, zoneId);
+            if (zdtnow.equals(zdt)) {
                 Alert alert = new Alert(Alert.AlertType.INFORMATION);
                 alert.setHeaderText(null);
                 alert.setContentText("Your Appointment is in 15 minutes");
                 alert.showAndWait();
-            }
-            
-            
+            } 
         }
     }
     /**
@@ -353,6 +354,9 @@ public class MainPageController implements Initializable {
         System.out.println("Main Page has been initialized");
         initializingTable();
         AppointmentCheck();
+        String zId = ZoneId.systemDefault().toString();
+        System.out.println(zId);
+
     }
   
 }

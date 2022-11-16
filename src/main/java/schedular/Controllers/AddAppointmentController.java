@@ -35,6 +35,8 @@ import schedular.Model.Appointments;
 import schedular.Model.Contacts;
 import schedular.Model.Customer;
 import schedular.Model.User;
+import schedular.utilities.AddObject;
+import schedular.utilities.GoBack;
 import schedular.utilities.TimeConversion;
 
 
@@ -243,12 +245,12 @@ public class AddAppointmentController implements Initializable{
      */
     @FXML
     void saveButtonPress(ActionEvent event) throws SQLException, IOException {
-         // Getting the Appointment ID which will be automatically added
-       int appointmentID = appointmentDOA.getAll().size();
+        // Getting the Appointment ID which will be automatically added
+        int appointmentID = appointmentDOA.getAll().size();
         try {
             String title = titleTF.getText();
-             try {
-                 String description = descTF.getText();
+            try {
+                String description = descTF.getText();
                 try {
                     String location = locationTF.getText();
                     try {
@@ -259,20 +261,21 @@ public class AddAppointmentController implements Initializable{
                                     startMinSpinner.getValue());
                             String endTime = TimeConversion.timeStringConversion(endHourSpinner.getValue(),
                                     endMinSpinner.getValue());
-                            String startDateTime = TimeConversion.convertDateTime(StartDatePicker.getValue(),startTime);
-                            String endDateTime = TimeConversion.convertDateTime(endDatePicker.getValue(),endTime);
-                            LocalDateTime startD = TimeConversion.convertToLocalDateTime(startDateTime);  
-                            LocalDateTime endD =TimeConversion.convertToLocalDateTime(endDateTime); 
+                            String startDateTime = TimeConversion.convertDateTime(StartDatePicker.getValue(),
+                                    startTime);
+                            String endDateTime = TimeConversion.convertDateTime(endDatePicker.getValue(), endTime);
+                            LocalDateTime startD = TimeConversion.convertToLocalDateTime(startDateTime);
+                            LocalDateTime endD = TimeConversion.convertToLocalDateTime(endDateTime);
                             Boolean validBusinessHour = timeTools.compareTimeZomes(startD, endD, startD.toLocalDate(),
                                     endD.toLocalDate());
                             Boolean noOverlap = TimeConversion.appointmentOverlapCheck(startDateTime, endDateTime);
                             Integer errorCheck = TimeConversion.compareDates(startDateTime, endDateTime);
                             Boolean timeCheck = TimeConversion.compareTimes(startDateTime, endDateTime);
-                            if (errorCheck == 1 && errorCheck!=0) {
+                            if (errorCheck == 1 && errorCheck != 0) {
                                 displayError(6);
                                 return;
                             }
-                            if (errorCheck == 2&& errorCheck!=0) {
+                            if (errorCheck == 2 && errorCheck != 0) {
                                 displayError(9);
                                 return;
                             }
@@ -287,31 +290,33 @@ public class AddAppointmentController implements Initializable{
                             if (!validBusinessHour) {
                                 displayError(12);
                                 return;
-                            }    
-                            else {
+                            } else {
                                 if (!noOverlap) {
                                     displayError(13);
                                     return;
-                                }
-                                else {
+                                } else {
                                     try {
-                                int customerID = custIDChoice.getValue();
-                                int userID = userIDChoice.getValue();
-                                int contactID = contactIDChoice.getValue();
-                                String startUTC = TimeConversion.convertTimeToUTC(startDateTime);
-                                String endUTC = TimeConversion.convertTimeToUTC(endDateTime);     
-                                Appointments appointment = new Appointments(appointmentID, title, description, location,
-                                        type, startUTC, endUTC, customerID, userID, contactID);
-                                appointmentDOA.insert(appointment);
-                                displayError(14);        
-                                goBackAfterSave();
-                            } catch (Exception e) {
-                                e.printStackTrace(); // This is for Customer ID, User ID and Contact ID
-                                displayError(8);
-                                return;
-                            }
+                                        int customerID = custIDChoice.getValue();
+                                        int userID = userIDChoice.getValue();
+                                        int contactID = contactIDChoice.getValue();
+                                        String startUTC = TimeConversion.convertTimeToUTC(startDateTime);
+                                        String endUTC = TimeConversion.convertTimeToUTC(endDateTime);
+                                        // Lambda Express to add all of them
+                                        pushToDatabase.pushToDatabase(appointmentID, title, description, location, type, startUTC, endUTC, errorCheck, errorCheck, errorCheck); 
+                                        
+                                        // Appointments appointment = new Appointments(appointmentID, title, description,
+                                        //         location,
+                                        //         type, startUTC, endUTC, customerID, userID, contactID);
+                                        // appointmentDOA.insert(appointment);
+                                        displayError(14);
+                                        switchScreens.switchScreens("/schedular/MainPage.fxml");
+                                    } catch (Exception e) {
+                                        e.printStackTrace(); // This is for Customer ID, User ID and Contact ID
+                                        displayError(8);
+                                        return;
+                                    }
                                 }
-                            }                           
+                            }
                             // String startTime = convertTimeDateUTC()
                         } catch (Exception e) {
                             e.printStackTrace(); // This is for Date
@@ -328,29 +333,44 @@ public class AddAppointmentController implements Initializable{
                     displayError(3);
                     return;
                 }
-             } catch (Exception e) {
-                 e.printStackTrace();// This is for Description
-                 displayError(2);
-                 return;
-             }
+            } catch (Exception e) {
+                e.printStackTrace();// This is for Description
+                displayError(2);
+                return;
+            }
         } catch (Exception e) {
             e.printStackTrace(); // This is for Title
             displayError(1);
             return;
-        }    
-        
+        }
+
     }
+
     /**
-     * This is to redirect user to the main page if the save goes through
-     * @throws IOException
+     * Lambda expression to go switch screens.
+     * Reason for using Lambda is still not quite the same
      */
-    public void goBackAfterSave() throws IOException {
-         Parent root = FXMLLoader.load(getClass().getResource("/schedular/MainPage.fxml"));
+    GoBack switchScreens =(s)->{
+        Parent root = FXMLLoader.load(getClass().getResource(s));
          Stage stage = (Stage) saveButton.getScene().getWindow();
          stage.setTitle("Main Appointment");
          stage.setScene(new Scene(root));
          stage.show();
+    };
+    /**
+     * Using lambda expression to push to database. With this I can reduce the number of code lines in a function
+     */
+    AddObject pushToDatabase = (id, title, description, location, type, start, end, cusID, useID, contactID) -> {
+    AppointmentDOA apptDOA = new AppointmentDOA();
+    Appointments appointment = new Appointments(id, title, description,
+                                                location,
+                                                type, start, end, cusID, useID, contactID);
+     try {
+        apptDOA.insert(appointment);
+    } catch (SQLException e) {
+        e.printStackTrace();
     }
+    };
     /**
      * This is to get Customer User ID choicebox filled
      */
@@ -410,8 +430,8 @@ public class AddAppointmentController implements Initializable{
      * This is for the Hours selection
      */
     public void spinnerHourChoice() {
-        SpinnerValueFactory<Integer> valueFactory = new SpinnerValueFactory.IntegerSpinnerValueFactory(8, 22);
-        SpinnerValueFactory<Integer> endvalueFactory = new SpinnerValueFactory.IntegerSpinnerValueFactory(8, 22);
+        SpinnerValueFactory<Integer> valueFactory = new SpinnerValueFactory.IntegerSpinnerValueFactory(0, 23);
+        SpinnerValueFactory<Integer> endvalueFactory = new SpinnerValueFactory.IntegerSpinnerValueFactory(0, 23);
         startHourSpinner.setValueFactory(valueFactory);
         endHourSpinner.setValueFactory(endvalueFactory);
     }
@@ -435,30 +455,30 @@ public class AddAppointmentController implements Initializable{
         Alert alert = new Alert(Alert.AlertType.WARNING);
         switch (alertNumber) {
             case 1: // This is when the 
-                 alert.setTitle("Empty Title");
-                 alert.setContentText("You have not entered a Title for The Appointment");
-                 alert.showAndWait();
-                 break;
-             case 2: // This is when the Description is empty
-                 alert.setTitle("Empty Description");
-                 alert.setContentText("You have not entered a Description");
-                 alert.showAndWait();
-                 break;
-             case 3: // This is when the the Location is empty
-                 alert.setTitle("Empty Location");
-                 alert.setContentText("You have not entered a Location");
-                 alert.showAndWait();
-                 break;
-             case 4: // This is when the the Type is empty
-                 alert.setTitle("Empty Type");
-                 alert.setContentText("You have not entered a Type");
-                 alert.showAndWait();
-                 break;
-             case 5: //This is when the Start Date is after the End Date
-                 alert.setTitle("Start Date invalid");
-                 alert.setContentText("Start Date should not be after the end date");
-                 alert.showAndWait();
-                 break;
+                alert.setTitle("Empty Title");
+                alert.setContentText("You have not entered a Title for The Appointment");
+                alert.showAndWait();
+                break;
+            case 2: // This is when the Description is empty
+                alert.setTitle("Empty Description");
+                alert.setContentText("You have not entered a Description");
+                alert.showAndWait();
+                break;
+            case 3: // This is when the the Location is empty
+                alert.setTitle("Empty Location");
+                alert.setContentText("You have not entered a Location");
+                alert.showAndWait();
+                break;
+            case 4: // This is when the the Type is empty
+                alert.setTitle("Empty Type");
+                alert.setContentText("You have not entered a Type");
+                alert.showAndWait();
+                break;
+            case 5: //This is when the Start Date is after the End Date
+                alert.setTitle("Start Date invalid");
+                alert.setContentText("Start Date should not be after the end date");
+                alert.showAndWait();
+                break;
             case 6: // This is when the Start Time is after the End Time
                 alert.setTitle("Start time should not be after the end date");
                 alert.setContentText("Start time should not be after the end date");
@@ -478,12 +498,12 @@ public class AddAppointmentController implements Initializable{
             case 9: // This is if the start date is before the current date
                 alert.setTitle("Start Date cannot be before the current date");
                 alert.setContentText(
-                       "Start Date Cannot be before the current date and should be in the current date or after current Date");
+                        "Start Date Cannot be before the current date and should be in the current date or after current Date");
                 alert.showAndWait();
             case 10: // This is if the end date is before the current date or start date
                 alert.setTitle("Incorrect End Date");
                 alert.setContentText(
-                       "End Date cannot be before start Date or the current date. \n Please enter the end date either the same as the start date or after start date.");
+                        "End Date cannot be before start Date or the current date. \n Please enter the end date either the same as the start date or after start date.");
                 alert.showAndWait();
             case 11: // This is is the start time is after end time or end time is before start time
                 alert.setTitle("Incorrect Time");
@@ -503,12 +523,15 @@ public class AddAppointmentController implements Initializable{
                 alert.showAndWait();
                 break;
             case 14: // This is for successfully adding a new appointment
-                Alert sAlert = new Alert(Alert.AlertType.CONFIRMATION,"Successfully added new appointment");
+                Alert sAlert = new Alert(Alert.AlertType.INFORMATION);
+                sAlert.setTitle("Successfully created");
+                sAlert.setContentText("Appointment has been successfully created");
+                sAlert.setHeaderText(null);
                 Optional<ButtonType> result = sAlert.showAndWait();
                 if (result.isPresent() && result.get() == ButtonType.OK) {
                     return;
                 }
-
+                  
             default:
                 alert.setTitle("Invalid information input");
                 alert.setContentText("Please check the data input and make sure the fields are not empty");

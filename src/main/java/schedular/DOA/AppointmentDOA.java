@@ -10,6 +10,8 @@ import java.sql.SQLException;
 import java.sql.Statement;
 import java.time.LocalDate;
 import java.time.LocalDateTime;
+import java.time.ZoneId;
+import java.time.ZonedDateTime;
 import java.time.format.DateTimeFormatter;
 import javafx.collections.FXCollections;
 import javafx.collections.ObservableList;
@@ -21,6 +23,8 @@ import schedular.connect.Database;
  * This is the Appointments Data Object Module
  */
 public class AppointmentDOA implements DOA<Appointments> {
+    ZoneId zoneID = ZoneId.systemDefault();
+    DateTimeFormatter formatter = DateTimeFormatter.ofPattern("yyyy-MM-dd HH:mm:ss");
     /**
      * @param id which is the Appointment ID
      * This is to get the single Appointments
@@ -39,8 +43,15 @@ public class AppointmentDOA implements DOA<Appointments> {
             String Description = rs.getString("Description");
             String Location = rs.getString("Location");
             String Type = rs.getString("Type");
-            String Start = rs.getString("Start");
-            String End = rs.getString("End");
+            // String startTime = rs.getString("Start");
+            // ZonedDateTime zdt = ZonedDateTime.parse(startTime);
+            // String Start = zdt.format(DateTimeFormatter.ofPattern("yyyy-MM-dd HH:mm:ss"));
+            LocalDateTime ldt = LocalDateTime.parse(rs.getString("Start"), formatter);
+            ZonedDateTime zdt = ZonedDateTime.of(ldt, zoneID);
+            String Start = zdt.format(DateTimeFormatter.ofPattern("yyyy-MM-dd HH:mm:ss"));
+            LocalDateTime ldt2 = LocalDateTime.parse(rs.getString("End"), formatter);
+            ZonedDateTime zdt2 = ZonedDateTime.of(ldt2, zoneID);
+            String End = zdt2.format(DateTimeFormatter.ofPattern("yy-MM-dd HH:mm:ss"));
             int Customer_ID = rs.getInt("Customer_ID");
             int User_ID = rs.getInt("User_ID");
             int Contact_ID = rs.getInt("Contact_ID");
@@ -65,8 +76,12 @@ public class AppointmentDOA implements DOA<Appointments> {
             String Description = rs.getString("Description");
             String Location = rs.getString("Location");
             String Type = rs.getString("Type");
-            String Start = rs.getString("Start");
-            String End = rs.getString("End");
+            LocalDateTime ldt = LocalDateTime.parse(rs.getString("Start"), formatter);
+            ZonedDateTime zdt = ZonedDateTime.of(ldt, zoneID);
+            String Start = zdt.format(DateTimeFormatter.ofPattern("yyyy-MM-dd HH:mm:ss"));
+            LocalDateTime ldt2 = LocalDateTime.parse(rs.getString("End"), formatter);
+            ZonedDateTime zdt2 = ZonedDateTime.of(ldt2, zoneID);
+            String End = zdt2.format(DateTimeFormatter.ofPattern("yy-MM-dd HH:mm:ss"));
             int Customer_ID = rs.getInt("Customer_ID");
             int User_ID = rs.getInt("User_ID");
             int Contact_ID = rs.getInt("Contact_ID");
@@ -157,8 +172,12 @@ public class AppointmentDOA implements DOA<Appointments> {
             String Description = rs.getString("Description");
             String Location = rs.getString("Location");
             String Type = rs.getString("Type");
-            String Start = rs.getString("Start");
-            String End = rs.getString("End");
+            LocalDateTime ldt = LocalDateTime.parse(rs.getString("Start"), formatter);
+            ZonedDateTime zdt = ZonedDateTime.of(ldt, zoneID);
+            String Start = zdt.format(DateTimeFormatter.ofPattern("yyyy-MM-dd HH:mm:ss"));
+            LocalDateTime ldt2 = LocalDateTime.parse(rs.getString("End"), formatter);
+            ZonedDateTime zdt2 = ZonedDateTime.of(ldt2, zoneID);
+            String End = zdt2.format(DateTimeFormatter.ofPattern("yy-MM-dd HH:mm:ss"));
             int Customer_ID = rs.getInt("Customer_ID");
             int User_ID = rs.getInt("User_ID");
             int Contact_ID = rs.getInt("Contact_ID");
@@ -190,8 +209,12 @@ public class AppointmentDOA implements DOA<Appointments> {
             String Description = rs.getString("Description");
             String Location = rs.getString("Location");
             String Type = rs.getString("Type");
-            String Start = rs.getString("Start");
-            String End = rs.getString("End");
+            LocalDateTime ldt = LocalDateTime.parse(rs.getString("Start"), formatter);
+            ZonedDateTime zdt = ZonedDateTime.of(ldt, zoneID);
+            String Start = zdt.format(DateTimeFormatter.ofPattern("yyyy-MM-dd HH:mm:ss"));
+            LocalDateTime ldt2 = LocalDateTime.parse(rs.getString("End"), formatter);
+            ZonedDateTime zdt2 = ZonedDateTime.of(ldt2, zoneID);
+            String End = zdt2.format(DateTimeFormatter.ofPattern("yy-MM-dd HH:mm:ss"));
             int Customer_ID = rs.getInt("Customer_ID");
             int User_ID = rs.getInt("User_ID");
             int Contact_ID = rs.getInt("Contact_ID");
@@ -220,8 +243,12 @@ public class AppointmentDOA implements DOA<Appointments> {
             String Description = rs.getString("Description");
             String Location = rs.getString("Location");
             String Type = rs.getString("Type");
-            String Start = rs.getString("Start");
-            String End = rs.getString("End");
+            LocalDateTime ldt = LocalDateTime.parse(rs.getString("Start"), formatter);
+            ZonedDateTime zdt = ZonedDateTime.of(ldt, zoneID);
+            String Start = zdt.format(DateTimeFormatter.ofPattern("yyyy-MM-dd HH:mm:ss"));
+            LocalDateTime ldt2 = LocalDateTime.parse(rs.getString("End"), formatter);
+            ZonedDateTime zdt2 = ZonedDateTime.of(ldt2, zoneID);
+            String End = zdt2.format(DateTimeFormatter.ofPattern("yy-MM-dd HH:mm:ss"));
             int Customer_ID = rs.getInt("Customer_ID");
             int User_ID = rs.getInt("User_ID");
             int Contact_ID = rs.getInt("Contact_ID");
