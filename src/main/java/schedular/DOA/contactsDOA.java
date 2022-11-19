@@ -25,7 +25,7 @@ public class ContactsDOA implements DOA<Contacts> {
     public Contacts get(int id) throws SQLException {
         Connection con = Database.getConnection();
         Contacts contact = null;
-        String sql = "Select * WHERE Contact_ID =?";
+        String sql = "Select * FROM CONTACTS WHERE Contact_ID =?";
         PreparedStatement ps = con.prepareStatement(sql);
         ps.setInt(1, id);
         ResultSet rs = ps.executeQuery();

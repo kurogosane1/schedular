@@ -1,3 +1,8 @@
+/**
+ * Future use of NoSQL database connection instead of MysQl Connection
+ * Better layout of tables 
+ * 
+ */
 package schedular.Controllers;
 /**
  * @author Syed Khurshid
@@ -32,119 +37,97 @@ import schedular.DOA.AppointmentDOA;
 import schedular.Model.Appointments;
 
 /**
- * This is the main page point of entry that displays all the appointments as well viewing the appointments by week, month and all.
+ * This is the main page point of entry that displays all the appointments as well viewing the  appointments by week, month and all.
  */
 public class MainPageController implements Initializable {
     /**
      * Add Appointment Button
      */
-    @FXML
-    private Button addApptButton;
+    @FXML private Button addApptButton; 
     /**
      * Appointment ID Table Column
      */
-    @FXML
-    private TableColumn<Appointments, Integer> apptIDColumn;
+    @FXML private TableColumn<Appointments, Integer> apptIDColumn;
     /**
      * Appointment Table View
      */
-    @FXML
-    private TableView<Appointments> apptTable;
+    @FXML private TableView<Appointments> apptTable;
     /**
      * Contact Column of the Table
      */
-    @FXML
-    private TableColumn<Appointments, String> contactCol;
+    @FXML private TableColumn<Appointments, String> contactCol;
     /**
      * Customer Button to view Customers
      */
-    @FXML
-    private Button customerButton;
+    @FXML private Button customerButton;  
     /**
      * Customer ID Table Column
      */
-    @FXML
-    private TableColumn<Appointments, Integer> customerIDCol;
+    @FXML private TableColumn<Appointments, Integer> customerIDCol;
     /**
      * Delete Appointment Button
      */
-    @FXML
-    private Button deleteAppButton;
+    @FXML private Button deleteAppButton;
     /**
      * Appointment Description Table Column
      */
-    @FXML
-    private TableColumn<Appointments, String> descriptionCol;
+    @FXML private TableColumn<Appointments, String> descriptionCol;
     /**
      * Appointment End Time Table Column
      */
-    @FXML
-    private TableColumn<Appointments, Date> endTimeCol;
+    @FXML private TableColumn<Appointments, Date> endTimeCol;
     /**
      * Location Table Column
      */
-    @FXML
-    private TableColumn<Appointments, String> locationCol;
+    @FXML private TableColumn<Appointments, String> locationCol;
     /**
      * Log Out Button Column
      */
-    @FXML
-    private Button logoutButton;
+    @FXML private Button logoutButton;
     /**
      * Modify Appointment Button for the table
      */
-    @FXML
-    private Button modApptButton;
+    @FXML private Button modApptButton;
     /**
      * Report Button to get the Appointment Report
      */
-    @FXML
-    private Button reportButton;
+    @FXML private Button reportButton; 
     /**
      * Start Time table Column
      */
-    @FXML
-    private TableColumn<Appointments, Timestamp> startTimeCol;
+    @FXML private TableColumn<Appointments, Timestamp> startTimeCol;
     /**
      * Appointment Title Column
      */
-    @FXML
-    private TableColumn<Appointments, String> titleCol;
+    @FXML private TableColumn<Appointments, String> titleCol;
     /**
      * Appointment Type TableColumn
      */
-    @FXML
-    private TableColumn<Appointments, String> typeCol;
+    @FXML private TableColumn<Appointments, String> typeCol;  
     /**
      * User ID Table Column
      */
-    @FXML
-    private TableColumn<Appointments, Integer> userIDCol;
+    @FXML private TableColumn<Appointments, Integer> userIDCol;
     /**
      * View All Appointments radio button for Table Column
      */
-    @FXML
-    private RadioButton viewAllRadio;
+    @FXML private RadioButton viewAllRadio;
     /**
      * View Monthly Radio Button
      */
-    @FXML
-    private RadioButton viewMonthRadio;
+    @FXML private RadioButton viewMonthRadio;
     /**
      * View Weekly Radio Button
      */
-    @FXML
-    private RadioButton viewWeeklyRadio;
+    @FXML private RadioButton viewWeeklyRadio;
     /**
      * Toggle Group for Radio Buttons
      */
-    @FXML
-    private ToggleGroup viewsToggle;
+    @FXML private ToggleGroup viewsToggle; 
     /**
      * This is the button for going to Contacts page
      */
-    @FXML
-    private Button contactsButton;
+    @FXML private Button contactsButton; 
     /**
      * This is the Appointments DOA
      */
@@ -153,14 +136,10 @@ public class MainPageController implements Initializable {
      * This is the appointment Schedule Observable List
      */
     private ObservableList<Appointments> aptSchedule = FXCollections.observableArrayList();
-    // /**
-    //  * 
-    //  */
-    // private ObservableList<Appointments> LocalTimeSchedule = FXCollections.observableArrayList();
     /**
      * This is the button to add a new appointment
      * @param event which is the add appointment button
-     * @throws IOException
+     * @throws IOException when Stage is switched
      */
     @FXML
     void addAppoint(ActionEvent event) throws IOException {
@@ -177,21 +156,26 @@ public class MainPageController implements Initializable {
      */
     @FXML
     void deleteApptAction(ActionEvent event) {
-        if (apptTable.getSelectionModel().getSelectedItems() == null) {
-            Alert alert = new Alert(Alert.AlertType.WARNING);
+        Alert alert = new Alert(Alert.AlertType.WARNING);
+        if (apptTable.getSelectionModel().getSelectedItems() == null || !apptTable.getSelectionModel().isEmpty()) {
             alert.setTitle("Warning Dialog");
             alert.setContentText("Please select an appointment to delete");
             alert.showAndWait();
         } else {
-            Alert alert = new Alert(Alert.AlertType.CONFIRMATION,
-                    "This will permanently delete an appointment, are you sure you want to delete this appointment");
+            alert.setTitle("Please check");
+            alert.setContentText("This will permanently delete an appointment, are you sure you want to delete this appointment");
             Optional<ButtonType> result = alert.showAndWait();
             if (result.isPresent() && result.get() == ButtonType.OK) {
                 Appointments appointment = apptTable.getSelectionModel().getSelectedItem();
                 try {
-                    aptSchedule.remove(appointment);
-                    appointments.delete(appointment);
-                    
+                    Boolean success = aptSchedule.remove(appointment);
+                    if (!success) {
+                        alert.setTitle("Failure to delete appointment");
+                        alert.setContentText("SQL issues in deleting appointment. Please check system for issues");
+                        alert.showAndWait();
+                    } else {
+                     appointments.delete(appointment);
+                   }  
                 } catch (SQLException e) {
                   e.printStackTrace();
                 }
@@ -201,7 +185,7 @@ public class MainPageController implements Initializable {
     /**
      * This is to log out the user
      * @param event which is a button press
-     * @throws IOException
+     * @throws IOException from when the stage is switched and an error occurs
      */
     @FXML
     void logOut(ActionEvent event) throws IOException {
@@ -214,10 +198,11 @@ public class MainPageController implements Initializable {
     /**
      * This is to Modify Appointments 
      * @param event with a button press
+     * @IOException from a screen transfer
      */
     @FXML
     void modifyAppt(ActionEvent event) throws IOException {
-        if (apptTable.getSelectionModel().getSelectedItem() != null) {
+        if (apptTable.getSelectionModel().getSelectedItem() != null || !apptTable.getSelectionModel().isEmpty()) {
             FXMLLoader loader = new FXMLLoader(getClass().getResource("/schedular/EditAppointment.fxml"));
             Parent root = loader.load();
             EditAppointmentController mod = loader.getController();
@@ -230,14 +215,16 @@ public class MainPageController implements Initializable {
         }
         else{
             Alert alert = new Alert(Alert.AlertType.WARNING);
-            alert.setTitle("Warning Dialog");
-            alert.setContentText("Please select an Appointment to Modify from the list");
+            alert.setTitle("No Appointment is Selected");
+            alert.setHeaderText(null);
+            alert.setContentText("Please select an Appointment from the List to modify");
             alert.showAndWait();   
         }
     }
     /**
      * This is to get all the Appointments 
      * @param event is a Radio press event
+     * @SQLException if an error occurs
      */
     @FXML
     void radioAll(ActionEvent event) throws SQLException {
@@ -247,10 +234,11 @@ public class MainPageController implements Initializable {
     /**
      * This is to redirect User to Report Page
      * @param event reporting button press
+     * @throws IOException on screen transfer
      */
     @FXML
     void reportGen(ActionEvent event) throws IOException {
-        Parent root = FXMLLoader.load(getClass().getResource("/schedular/ReportsPage.fxml"));
+         Parent root = FXMLLoader.load(getClass().getResource("/schedular/ReportsPage.fxml"));
          Stage stage = (Stage) reportButton.getScene().getWindow();
          stage.setTitle("Reports Page");
          stage.setScene(new Scene(root));
@@ -259,7 +247,7 @@ public class MainPageController implements Initializable {
     /**
      * This is to redirect User to Customer Page
      * @param event Button press action
-     * @throws IOException
+     * @throws IOException if an error occurs with screen change
      */
     @FXML
     void toCustomerPage(ActionEvent event) throws IOException {
@@ -272,7 +260,7 @@ public class MainPageController implements Initializable {
     /**
      * This is view the Schedule Monthly from the current Date
      * @param event is a radio button press
-     * @throws SQLException
+     * @throws SQLException if an error occurs
      */
     @FXML
     void viewMonthly(ActionEvent event) throws SQLException {
@@ -281,7 +269,7 @@ public class MainPageController implements Initializable {
     /**
      * This is to view the Schedule Weekly from the current Date
      * @param event is a radio button press
-     * @throws SQLException
+     * @throws SQLException if an error occurs
      */
     @FXML
     void viewWeekly(ActionEvent event) throws SQLException {
@@ -291,7 +279,7 @@ public class MainPageController implements Initializable {
     /**
      * This is to go to the Contacts Page
      * @param event This is the action from the Contacts Button press
-     * @throws IOException
+     * @throws IOException if an error occurs with Screen transfer
      */
     @FXML
     void toContactsPage(ActionEvent event) throws IOException {
@@ -301,7 +289,6 @@ public class MainPageController implements Initializable {
         stage.setScene(new Scene(root));
         stage.show();
     }
-    
     /**
      * This is to validate if the Appointments are falling within 15minutes of the current time
      */
@@ -309,7 +296,6 @@ public class MainPageController implements Initializable {
         DateTimeFormatter formatter = DateTimeFormatter.ofPattern("yyyy-MM-dd HH:mm:ss");
         ZoneId zoneId = ZoneId.systemDefault();
         for (Appointments appointment : aptSchedule) {
-
             LocalDateTime ldt = LocalDateTime.parse(appointment.getStart(), formatter).plusMinutes(15);
             ZonedDateTime zdt = ZonedDateTime.of(ldt, zoneId);
             LocalDateTime ldtNow = LocalDateTime.now();
@@ -331,7 +317,6 @@ public class MainPageController implements Initializable {
                 } catch (SQLException e) {
                     e.printStackTrace();
                 }
-                
                 apptTable.setItems(aptSchedule);
                 apptIDColumn.setCellValueFactory(new PropertyValueFactory<>("AppointmentID"));
                 titleCol.setCellValueFactory(new PropertyValueFactory<>("Title"));
@@ -351,12 +336,8 @@ public class MainPageController implements Initializable {
      */
     @Override
     public void initialize(URL arg0, ResourceBundle arg1) {
-        System.out.println("Main Page has been initialized");
         initializingTable();
         AppointmentCheck();
-        String zId = ZoneId.systemDefault().toString();
-        System.out.println(zId);
-
     }
   
 }

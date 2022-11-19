@@ -1,17 +1,19 @@
 /**
  * This is the Appointments Data Object Module. 
  * Preference is to reduce the lines of code and move to noSQL database
- * @author Syed Khurshid
  */
 package schedular.DOA;
 
+/**
+ * @author Syed Khurshid
+ */
 import java.sql.Connection;
 import java.sql.PreparedStatement;
 import java.sql.ResultSet;
 import java.sql.SQLException;
 import java.sql.Statement;
+import java.sql.Timestamp;
 import java.time.LocalDate;
-import java.time.LocalDateTime;
 import java.time.ZoneId;
 import java.time.ZoneOffset;
 import java.time.ZonedDateTime;
@@ -28,43 +30,56 @@ import schedular.connect.Database;
 public class AppointmentDOA implements DOA<Appointments> {
     ZoneId zoneID = ZoneId.systemDefault();
     DateTimeFormatter formatter = DateTimeFormatter.ofPattern("yyyy-MM-dd HH:mm:ss");
+    
     /**
      * @param id which is the Appointment ID
      * This is to get the single Appointments
+     * @throws SQLException if an error occurs
      */
     @Override
     public Appointments get(int id) throws SQLException {
         Connection con = Database.getConnection();
-        Appointments appointment = null;
+        Appointments appointments = null;
         String sql = "SELECT Appointment_ID, Title,Description,Location,Type,Start,End,Customer_ID,User_ID,Contact_ID from Appointments WHERE Appointments_ID=?";
         PreparedStatement ps = con.prepareStatement(sql);
         ps.setInt(1, id);
         ResultSet rs = ps.executeQuery();
-        if(rs.next()){
+        if (rs.next()) {
+            // This is to get the Appointment ID
             int Appointment_ID = rs.getInt("Appointment_ID");
+            // This is to get the Title 
             String Title = rs.getString("Title");
+            // This is to get the Description
             String Description = rs.getString("Description");
+            // This is to get the Location of the Appointment
             String Location = rs.getString("Location");
+            // This is to get the Type of the Appointment
             String Type = rs.getString("Type");
-            // String startTime = rs.getString("Start");
-            // ZonedDateTime zdt = ZonedDateTime.parse(startTime);
-            // String Start = zdt.format(DateTimeFormatter.ofPattern("yyyy-MM-dd HH:mm:ss"));
-            LocalDateTime ldt = LocalDateTime.parse(rs.getString("Start"), formatter);
-            ZonedDateTime zdt = ZonedDateTime.of(ldt, zoneID);
-            String Start = zdt.format(DateTimeFormatter.ofPattern("yyyy-MM-dd HH:mm:ss"));
-            LocalDateTime ldt2 = LocalDateTime.parse(rs.getString("End"), formatter);
-            ZonedDateTime zdt2 = ZonedDateTime.of(ldt2, zoneID);
-            String End = zdt2.format(DateTimeFormatter.ofPattern("yyyy-MM-dd HH:mm:ss"));
+            //Getting the time from Database convert to UTC and then get in the Local Time Zone
+            Timestamp startTime = rs.getTimestamp("Start");
+            Timestamp endTime = rs.getTimestamp("End");
+            // Converting the Time from UTC to Local TIme Zone
+            ZonedDateTime startLDT = startTime.toLocalDateTime().atZone(ZoneId.of("UTC")).withZoneSameInstant(zoneID);
+            ZonedDateTime endLDT = endTime.toLocalDateTime().atZone(ZoneId.of("UTC")).withZoneSameInstant(zoneID);
+            // Converting to String the Date Time for Start and End
+            String localdatetimestart = startLDT.format(formatter);
+            String localdatetimeend = endLDT.format(formatter);
+
+            // Getting the Customer ID, User ID and Contact ID
             int Customer_ID = rs.getInt("Customer_ID");
             int User_ID = rs.getInt("User_ID");
             int Contact_ID = rs.getInt("Contact_ID");
-            appointment = new Appointments(Appointment_ID, Title, Description, Location, Type, Start, End, Customer_ID, User_ID, Contact_ID);  
+
+            // Converting to Appointments object
+            appointments = new Appointments(Appointment_ID, Title, Description, Location, Type, localdatetimestart,localdatetimeend, Customer_ID, User_ID, Contact_ID);
         }
-        return appointment;
+        return appointments;
     }
-/**
+    
+    /**
      * Getting All the Countries List from the database
      * No parameter
+     * @throws SQLException if an error occurs
      */
     @Override
     public ObservableList<Appointments> getAll() throws SQLException {
@@ -74,44 +89,69 @@ public class AppointmentDOA implements DOA<Appointments> {
         Statement stmt = con.createStatement();
         ResultSet rs = stmt.executeQuery(sql);
         while (rs.next()) {
-            int Appointment_ID = rs.getInt("Appointment_ID");
+            // This is the Appointments ID
+            Integer Appointment_ID = rs.getInt("Appointment_ID");
+             // This is to get the Title 
             String Title = rs.getString("Title");
+            // This is to get the Description
             String Description = rs.getString("Description");
+            // This is to get the Location of the Appointment
             String Location = rs.getString("Location");
+            // This is to get the Type of the Appointment
             String Type = rs.getString("Type");
-            LocalDateTime ldt = LocalDateTime.parse(rs.getString("Start"), formatter);
-            ZonedDateTime zdt = ZonedDateTime.of(ldt, zoneID);
-            String Start = zdt.format(DateTimeFormatter.ofPattern("yyyy-MM-dd HH:mm:ss"));
-            LocalDateTime ldt2 = LocalDateTime.parse(rs.getString("End"), formatter);
-            ZonedDateTime zdt2 = ZonedDateTime.of(ldt2, zoneID);
-            String End = zdt2.format(DateTimeFormatter.ofPattern("yyyy-MM-dd HH:mm:ss"));
+               //Getting the time from Database convert to UTC and then get in the Local Time Zone
+            Timestamp startTime = rs.getTimestamp("Start");
+            Timestamp endTime = rs.getTimestamp("End");
+            // Converting the Time from UTC to Local TIme Zone
+            ZonedDateTime startLDT = startTime.toLocalDateTime().atZone(ZoneId.of("UTC")).withZoneSameInstant(zoneID);
+            ZonedDateTime endLDT = endTime.toLocalDateTime().atZone(ZoneId.of("UTC")).withZoneSameInstant(zoneID);
+            // Converting to String the Date Time for Start and End
+            String localdatetimestart = startLDT.format(formatter);
+            String localdatetimeend = endLDT.format(formatter);
+
+            // Getting the Customer ID, User ID and Contact ID
             int Customer_ID = rs.getInt("Customer_ID");
             int User_ID = rs.getInt("User_ID");
             int Contact_ID = rs.getInt("Contact_ID");
-            Appointments appointment = new Appointments(Appointment_ID, Title, Description, Location, Type, Start, End,
-                    Customer_ID, User_ID, Contact_ID);
+
+            // Converting to Appointments object
+            Appointments appointment = new Appointments(Appointment_ID, Title, Description, Location, Type,
+                    localdatetimestart, localdatetimeend, Customer_ID, User_ID, Contact_ID);
+            // Adding it in the ObservableList Array
             appointments.add(appointment);
         }
         return appointments;
     }
+    
     /**
      * This is to add a new appointment to the database
      * @param t the Appointments Object
+     * @throws SQLException if an error occurs
      */
     @Override
     public int insert(Appointments t) throws SQLException {
         Connection con = Database.getConnection();
         String sql = "INSERT INTO Appointments (Title, Description,Location, Type, Start, End, Customer_ID, User_ID, Contact_ID,Create_Date, Created_By, Last_Update, Last_Updated_By) VALUES (?,?,?,?,?,?,?,?,?,?,?,?,?)";
         PreparedStatement ps = con.prepareStatement(sql);
+        // This is to insert Appointment Title
         ps.setString(1, t.getTitle());
+        // This is to insert Description
         ps.setString(2, t.getDescription());
+        // This is to insert Location
         ps.setString(3, t.getLocation());
+        // This is to insert Type
         ps.setString(4, t.getType());
-        ps.setString(5, t.getStart());
-        ps.setString(6, t.getEnd());
+           // This is to get the Time zone converting to Timestamp
+        Timestamp startTime = Timestamp.valueOf(t.getStart());
+        Timestamp endTime = Timestamp.valueOf(t.getEnd());
+        // Inserting into the query
+        ps.setTimestamp(5, startTime);
+        ps.setTimestamp(6, endTime);
+        // Getting Customer ID , User ID Contact ID
         ps.setInt(7, t.getCustomer_id());
         ps.setInt(8, t.getUser_id());
         ps.setInt(9, t.getContact_id());
+        // This is to get the created_by, Last Updated Last Updated by
         ps.setString(10, ZonedDateTime.now(ZoneOffset.UTC).format(formatter).toString()); // Create_Date
         ps.setString(11, "test");// Created_By
         ps.setString(12, ZonedDateTime.now(ZoneOffset.UTC).format(formatter).toString());
@@ -123,22 +163,34 @@ public class AppointmentDOA implements DOA<Appointments> {
     /**
      * This is to update the Appointments Object module
      * @param t the Appointments Object
+     * @throws SQLException if an error occurs
      */
     @Override
     public int update(Appointments t) throws SQLException {
         Connection con = Database.getConnection();
         String sql = "UPDATE Appointments SET Appointment_ID=?,Title=?,Description=?,Location=?,Type=?,Start=?,End=?,Customer_ID=?,User_ID=?,Contact_ID=?,Create_Date=?, Created_By=?, Last_Update=?, Last_Updated_By=? WHERE Appointment_ID=?";
         PreparedStatement ps = con.prepareStatement(sql);
+        // This is to get the Appointment ID
         ps.setInt(1, t.getAppointmentID());
+        // This is to get the Title
         ps.setString(2, t.getTitle());
+        // This is to add the Description
         ps.setString(3, t.getDescription());
+        // This is to add the Location
         ps.setString(4, t.getLocation());
+        // This is to add the Type
         ps.setString(5, t.getType());
-        ps.setString(6, t.getStart());
-        ps.setString(7, t.getEnd());
+        // This is to get the Time zone converting to Timestamp
+        Timestamp startTime = Timestamp.valueOf(t.getStart());
+        Timestamp endTime = Timestamp.valueOf(t.getEnd());
+        // Inserting into the query
+        ps.setTimestamp(6, startTime);
+        ps.setTimestamp(7, endTime);
+        // Getting Customer ID , User ID Contact ID
         ps.setInt(8, t.getCustomer_id());
         ps.setInt(9, t.getUser_id());
         ps.setInt(10, t.getContact_id());
+        // This is to get the created_by, Last Updated Last Updated by
         ps.setString(11, ZonedDateTime.now(ZoneOffset.UTC).format(formatter).toString()); // Create_Date
         ps.setString(12, "test");// Created_By
         ps.setString(13, ZonedDateTime.now(ZoneOffset.UTC).format(formatter).toString());
@@ -147,9 +199,11 @@ public class AppointmentDOA implements DOA<Appointments> {
         int result = ps.executeUpdate();
         return result;
     }
+    
     /**
      * This is to delete The Appointment from the database
      * @param t which is the Appointment object
+     * @throws SQLException if an error occurs
      */
     @Override
     public int delete(Appointments t) throws SQLException {
@@ -178,22 +232,31 @@ public class AppointmentDOA implements DOA<Appointments> {
         ps.setString(2, week.toString());
         ResultSet rs = ps.executeQuery();
         while (rs.next()) {
+            // This is to get the Appointment ID
             int Appointment_ID = rs.getInt("Appointment_ID");
+            // This is to get the Title 
             String Title = rs.getString("Title");
+            // This is to get the Description
             String Description = rs.getString("Description");
+            // This is to get the Location of the Appointment
             String Location = rs.getString("Location");
+            // This is to get the Type of the Appointment
             String Type = rs.getString("Type");
-            LocalDateTime ldt = LocalDateTime.parse(rs.getString("Start"), formatter);
-            ZonedDateTime zdt = ZonedDateTime.of(ldt, zoneID);
-            String Start = zdt.format(DateTimeFormatter.ofPattern("yyyy-MM-dd HH:mm:ss"));
-            LocalDateTime ldt2 = LocalDateTime.parse(rs.getString("End"), formatter);
-            ZonedDateTime zdt2 = ZonedDateTime.of(ldt2, zoneID);
-            String End = zdt2.format(DateTimeFormatter.ofPattern("yy-MM-dd HH:mm:ss"));
+            //Getting the time from Database convert to UTC and then get in the Local Time Zone
+            Timestamp startTime = rs.getTimestamp("Start");
+            Timestamp endTime = rs.getTimestamp("End");
+            // Converting the Time from UTC to Local TIme Zone
+            ZonedDateTime startLDT = startTime.toLocalDateTime().atZone(ZoneId.of("UTC")).withZoneSameInstant(zoneID);
+            ZonedDateTime endLDT = endTime.toLocalDateTime().atZone(ZoneId.of("UTC")).withZoneSameInstant(zoneID);
+            // Converting to String the Date Time for Start and End
+            String localdatetimestart = startLDT.format(formatter);
+            String localdatetimeend = endLDT.format(formatter);
+
+            // Getting the Customer ID, User ID and Contact ID
             int Customer_ID = rs.getInt("Customer_ID");
             int User_ID = rs.getInt("User_ID");
             int Contact_ID = rs.getInt("Contact_ID");
-            Appointments appointment = new Appointments(Appointment_ID, Title, Description, Location, Type, Start, End,
-                    Customer_ID, User_ID, Contact_ID);
+            Appointments appointment = new Appointments(Appointment_ID, Title, Description, Location, Type, localdatetimestart, localdatetimeend, Customer_ID, User_ID, Contact_ID);
             weeklyAppointments.add(appointment);
         }
         return weeklyAppointments;
@@ -202,6 +265,7 @@ public class AppointmentDOA implements DOA<Appointments> {
     /**
      * This to get the Monthly Appointments 
      * @return Appointments observableArrayList
+     * @SQLException if an error occurs
      */
     public ObservableList<Appointments> getApptsMonthly() throws SQLException {
         Connection con = Database.getConnection();
@@ -215,22 +279,31 @@ public class AppointmentDOA implements DOA<Appointments> {
         ps.setString(2, week.toString());
         ResultSet rs = ps.executeQuery();
         while (rs.next()) {
+             // This is to get the Appointment ID
             int Appointment_ID = rs.getInt("Appointment_ID");
+            // This is to get the Title 
             String Title = rs.getString("Title");
+            // This is to get the Description
             String Description = rs.getString("Description");
+            // This is to get the Location of the Appointment
             String Location = rs.getString("Location");
+            // This is to get the Type of the Appointment
             String Type = rs.getString("Type");
-            LocalDateTime ldt = LocalDateTime.parse(rs.getString("Start"), formatter);
-            ZonedDateTime zdt = ZonedDateTime.of(ldt, zoneID);
-            String Start = zdt.format(DateTimeFormatter.ofPattern("yyyy-MM-dd HH:mm:ss"));
-            LocalDateTime ldt2 = LocalDateTime.parse(rs.getString("End"), formatter);
-            ZonedDateTime zdt2 = ZonedDateTime.of(ldt2, zoneID);
-            String End = zdt2.format(DateTimeFormatter.ofPattern("yy-MM-dd HH:mm:ss"));
+            //Getting the time from Database convert to UTC and then get in the Local Time Zone
+            Timestamp startTime = rs.getTimestamp("Start");
+            Timestamp endTime = rs.getTimestamp("End");
+            // Converting the Time from UTC to Local TIme Zone
+            ZonedDateTime startLDT = startTime.toLocalDateTime().atZone(ZoneId.of("UTC")).withZoneSameInstant(zoneID);
+            ZonedDateTime endLDT = endTime.toLocalDateTime().atZone(ZoneId.of("UTC")).withZoneSameInstant(zoneID);
+            // Converting to String the Date Time for Start and End
+            String localdatetimestart = startLDT.format(formatter);
+            String localdatetimeend = endLDT.format(formatter);
+
+            // Getting the Customer ID, User ID and Contact ID
             int Customer_ID = rs.getInt("Customer_ID");
             int User_ID = rs.getInt("User_ID");
             int Contact_ID = rs.getInt("Contact_ID");
-            Appointments appointment = new Appointments(Appointment_ID, Title, Description, Location, Type, Start, End,
-                    Customer_ID, User_ID, Contact_ID);
+            Appointments appointment = new Appointments(Appointment_ID, Title, Description, Location, Type, localdatetimestart, localdatetimeend, Customer_ID, User_ID, Contact_ID);
             weeklyAppointments.add(appointment);
         }
         return weeklyAppointments;
@@ -240,34 +313,43 @@ public class AppointmentDOA implements DOA<Appointments> {
      * This is to get all the APpointments by Customer ID
      * @param id which is the Customer ID
      * @return Appointments which is the Observable List
+     * @throws SQLException for an error
      */
-    public ObservableList<Appointments> getByCustomerID(int id) throws SQLException {
+    public ObservableList<Appointments> getByContactID(int id) throws SQLException {
         Connection con = Database.getConnection();
         ObservableList<Appointments> appointments = FXCollections.observableArrayList();
-        String sql = "SELECT Appointment_ID, Title, Description, Location, Type, Start, End, Customer_ID, User_ID, Contact_ID FROM Appointments WHERE Customer_ID =?";
+        String sql = "SELECT Appointment_ID, Title, Description, Location, Type, Start, End, Customer_ID, User_ID, Contact_ID FROM Appointments WHERE Contact_ID =?";
         PreparedStatement ps = con.prepareStatement(sql);
         ps.setInt(1, id);
         ResultSet rs = ps.executeQuery();
         while (rs.next()) {
+             // This is to get the Appointment ID
             int Appointment_ID = rs.getInt("Appointment_ID");
+            // This is to get the Title 
             String Title = rs.getString("Title");
+            // This is to get the Description
             String Description = rs.getString("Description");
+            // This is to get the Location of the Appointment
             String Location = rs.getString("Location");
+            // This is to get the Type of the Appointment
             String Type = rs.getString("Type");
-            LocalDateTime ldt = LocalDateTime.parse(rs.getString("Start"), formatter);
-            ZonedDateTime zdt = ZonedDateTime.of(ldt, zoneID);
-            String Start = zdt.format(DateTimeFormatter.ofPattern("yyyy-MM-dd HH:mm:ss"));
-            LocalDateTime ldt2 = LocalDateTime.parse(rs.getString("End"), formatter);
-            ZonedDateTime zdt2 = ZonedDateTime.of(ldt2, zoneID);
-            String End = zdt2.format(DateTimeFormatter.ofPattern("yy-MM-dd HH:mm:ss"));
+            //Getting the time from Database convert to UTC and then get in the Local Time Zone
+            Timestamp startTime = rs.getTimestamp("Start");
+            Timestamp endTime = rs.getTimestamp("End");
+            // Converting the Time from UTC to Local TIme Zone
+            ZonedDateTime startLDT = startTime.toLocalDateTime().atZone(ZoneId.of("UTC")).withZoneSameInstant(zoneID);
+            ZonedDateTime endLDT = endTime.toLocalDateTime().atZone(ZoneId.of("UTC")).withZoneSameInstant(zoneID);
+            // Converting to String the Date Time for Start and End
+            String localdatetimestart = startLDT.format(formatter);
+            String localdatetimeend = endLDT.format(formatter);
+
+            // Getting the Customer ID, User ID and Contact ID
             int Customer_ID = rs.getInt("Customer_ID");
             int User_ID = rs.getInt("User_ID");
             int Contact_ID = rs.getInt("Contact_ID");
-            Appointments appointment = new Appointments(Appointment_ID, Title, Description, Location, Type, Start, End,
-                    Customer_ID, User_ID, Contact_ID);
+            Appointments appointment = new Appointments(Appointment_ID, Title, Description, Location, Type, localdatetimestart, localdatetimeend, Customer_ID, User_ID, Contact_ID);
             appointments.add(appointment);
         }
-
         return appointments;
     }
     /**
@@ -292,17 +374,14 @@ public class AppointmentDOA implements DOA<Appointments> {
     public ObservableList<Type> getAllAppointmentTypes() throws SQLException {
         Connection con = Database.getConnection();
         ObservableList<Type> result = FXCollections.observableArrayList();
-        String sql = "SELECT Start as Months,Type, count(*) AS AppointmentTotal FROM APPOINTMENTS GROUP BY Start, Type";
+        String sql = "SELECT MONTHNAME(Start) AS MONTHS, Type, count(*) AS AppointmentTotal FROM APPOINTMENTS GROUP BY MONTHS,TYPE;";
         Statement stmt = con.createStatement();
         ResultSet rs = stmt.executeQuery(sql);
-        DateTimeFormatter formatter = DateTimeFormatter.ofPattern("yyyy-MM-dd HH:mm:ss");
-        
         while (rs.next()) {
             String month = rs.getString("Months");
-            LocalDateTime ldt = LocalDateTime.parse(month,formatter);
             String type = rs.getString("Type");
             Integer total = rs.getInt("AppointmentTotal");
-            Type apptType = new Type(ldt.getMonth().toString(), type, total);
+            Type apptType = new Type(month, type, total);
             result.add(apptType);
         }
         return result;

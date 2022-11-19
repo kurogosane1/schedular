@@ -25,8 +25,10 @@ import javafx.scene.control.TableView;
 import javafx.scene.control.cell.PropertyValueFactory;
 import javafx.stage.Stage;
 import schedular.DOA.AppointmentDOA;
+import schedular.DOA.ContactsDOA;
 import schedular.DOA.CustomerDOA;
 import schedular.Model.Appointments;
+import schedular.Model.Contacts;
 import schedular.Model.Customer;
 import schedular.Model.DivisionInfoTable;
 import schedular.Model.Type;
@@ -39,6 +41,11 @@ public class ReportsPageController implements Initializable {
     @FXML
     private TableColumn<Type, String> apptMonthCol;
     /**
+     * This is the Appointment Type Column for the Appointments Table
+     */
+    @FXML
+    private TableColumn<Type, String> apptTypeCol;
+    /**
      * This is the Appointments Total Column
      */
     @FXML
@@ -48,11 +55,7 @@ public class ReportsPageController implements Initializable {
      */
     @FXML
     private TableView<Type> apptTypeTable;
-    /**
-     * This is the Appointment Type Column for the Appointments Table
-     */
-    @FXML
-    private TableColumn<Type, String> apptTypeCol;
+    
     /**
      * This is the Divisions Customer Total Count of the Divisions Table
      */
@@ -154,7 +157,7 @@ public class ReportsPageController implements Initializable {
     /**
      * This is the Customers 
      */
-    private ObservableList<Customer> customers = FXCollections.observableArrayList();
+    private ObservableList<Contacts> contacts = FXCollections.observableArrayList();
     /**
      * This is the types observableArrayList that is for the reports table
      */
@@ -181,7 +184,7 @@ public class ReportsPageController implements Initializable {
              String str = customerChoice.getValue();
              int id = Integer.parseInt(str.substring(0, str.indexOf(".")));
              try {
-                apptTable.setItems(appointments.getByCustomerID(id));
+                apptTable.setItems(appointments.getByContactID(id));
              } catch (SQLException e) {
                 e.printStackTrace();
             }
@@ -192,12 +195,12 @@ public class ReportsPageController implements Initializable {
      * This is to get the Customer Names of the database
      */
     public void choiceBoxSelection() {
-        CustomerDOA customerDOA = new CustomerDOA();
+        ContactsDOA contactDOA = new ContactsDOA();
         ObservableList<String> cus = FXCollections.observableArrayList();
         try {
-            customers = customerDOA.getAll();
-            for (Customer custom : customers) {
-                cus.add(String.valueOf(custom.getCustomerId()) + "." + " " + custom.getCustomerName());
+            contacts = contactDOA.getAll();
+            for (Contacts custom : contacts) {
+                cus.add(String.valueOf(custom.getContact_ID()) + "." + " " + custom.getContactName());
             }
         } catch (SQLException e) {
             e.printStackTrace();
@@ -247,8 +250,8 @@ public class ReportsPageController implements Initializable {
         }
         apptTypeTable.setItems(types);
         apptMonthCol.setCellValueFactory(new PropertyValueFactory<>("Months"));
-        apptTotalCol.setCellValueFactory(new PropertyValueFactory<>("Types"));
-        apptTypeCol.setCellValueFactory(new PropertyValueFactory<>("count"));
+        apptTypeCol.setCellValueFactory(new PropertyValueFactory<>("Types"));
+        apptTotalCol.setCellValueFactory(new PropertyValueFactory<>("count"));
     }
      /**
      * This is to help initialize the Table View

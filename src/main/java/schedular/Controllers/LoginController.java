@@ -1,7 +1,10 @@
-package schedular.Controllers;
 /**
+ * Further username and password enhancement is necessary for making a much more secure system
+ * Validating key entry stroke is required
  * @author Syed Khurshid
  */
+package schedular.Controllers;
+
 import java.io.IOException;
 import java.net.URL;
 import java.sql.SQLException;
@@ -27,8 +30,8 @@ import schedular.DOA.UsersDOA;
 import schedular.utilities.LoginLog;
 
 /**
- * This is the Login Page
- * @author Syed Khurshid
+ * This is the Login Page. Here you will reach the login where you will enter your password
+ * as well as your username
  */
 public class LoginController implements Initializable {
     /**
@@ -67,9 +70,17 @@ public class LoginController implements Initializable {
      * This is the english language
      */
     Locale english = new Locale("en", "EN");
+    /**
+     * This is the File Path
+     */
+    String FILE_PATH = "langSelection/loginPage";
 
     Properties p = new Properties();
-    private ResourceBundle rb = ResourceBundle.getBundle("schedular/langSelection/loginPage", Locale.getDefault()); 
+    private ResourceBundle rb = ResourceBundle.getBundle(FILE_PATH, Locale.getDefault());
+     /**
+     * An array of languageChoices for users to seelect
+     */
+    private String[] langauge = { rb.getString("languageChoice1"), rb.getString("languageChoice2")};
     /**
      * This is an action Button press 
      * @param event Button press action that would check User ID and Password
@@ -142,10 +153,6 @@ public class LoginController implements Initializable {
     @FXML
     public void userIDCheck(ActionEvent event) {}
     /**
-     * An array of languageChoices for users to seelect
-     */
-    private String[] langauge = { rb.getString("languageChoice1"), rb.getString("languageChoice2")};
-    /**
      * Selecting the choices of language
      * @param event which is a selection from a choice drop down
      */
@@ -156,22 +163,19 @@ public class LoginController implements Initializable {
             Locale.setDefault(new Locale("fr", "FR"));
             localizeLabels();
             locationText.setText(myChoice + ": "+ZoneId.systemDefault());
-
         }
         else {
             Locale.setDefault(english);
             localizeLabels();
             locationText.setText(myChoice + ": "+ZoneId.systemDefault());
         }
-        // Locale.setDefault(french);
-        System.out.println(rb.getString("useridlabel"));
     }
     /**
      * This is to set the values based on the properties
      */
     private void localizeLabels() {
         Locale lang = Locale.getDefault();
-        rb = ResourceBundle.getBundle("schedular/langSelection/loginPage", lang);
+        rb = ResourceBundle.getBundle(FILE_PATH, lang);
         userIdLabel.setText(rb.getString("useridlabel"));
         passwordLabel.setText(rb.getString("passwordLabel"));
         LoginButton.setText(rb.getString("LoginButton"));
@@ -193,9 +197,5 @@ public class LoginController implements Initializable {
         locationText.setText(languageChoice.getValue()  + " : "+ZoneId.systemDefault());
         languageChoice.setOnAction(this::getLanguage);
         localizeLabels();
-
-    }
-    
-     
-
+    } 
 }

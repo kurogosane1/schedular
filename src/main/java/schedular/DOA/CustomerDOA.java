@@ -41,6 +41,7 @@ public class CustomerDOA implements DOA<Customer> {
             int Division_ID = rs.getInt("Division_ID");
 
             customer = new Customer(old, Customer_Name, Address, Postal_Code, Phone, Division_ID);
+            System.out.println("This is here at Get: "+customer.getCustomerName());
         }
         return customer;
     }

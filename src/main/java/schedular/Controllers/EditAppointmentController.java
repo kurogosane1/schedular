@@ -1,12 +1,16 @@
 /**
  * Code refactoring to refactor code that is being re-used as much as possible
- * @author Syed Khurshid
+ * Using a no sql database would work better
  */
 package schedular.Controllers;
+/**
+ * @author Syed Khurshid
+ */
 import java.io.IOException;
 import java.net.URL;
 import java.sql.SQLException;
 import java.time.LocalDateTime;
+import java.time.ZonedDateTime;
 import java.time.format.DateTimeFormatter;
 import java.util.ArrayList;
 import java.util.Optional;
@@ -89,6 +93,10 @@ public class EditAppointmentController implements Initializable {
      */
     private TimeConversion timeTools = new TimeConversion();
     /**
+     * Time format layout
+     */
+    DateTimeFormatter formatter = DateTimeFormatter.ofPattern("yyyy-MM-dd HH:mm:ss");
+    /**
      * This is the Cancel Button for exiting from correcting an appointments
      * @param event which is the Button press action
      * @throws IOException from screen transfer error
@@ -111,42 +119,35 @@ public class EditAppointmentController implements Initializable {
     void saveButtonPress(ActionEvent event) throws SQLException, IOException {
         AppointmentDOA appointmentDOA = new AppointmentDOA();
         // Validation of the data first
-        int appointmentID = Integer.parseInt(apptIDTF.getText()); // This is default and will not change
+        int appointmentID = Integer.parseInt(apptIDTF.getText()); // This is default and will not change 
         try {
             String title = titleTF.getText();
-            System.out.println("Title test success");
-          try {
-              String description = descTF.getText();
-              System.out.println("description test success");
-              try {
-                  String location = locationTF.getText();
-                  System.out.println("Location test success");
+             try {
+                 String description = descTF.getText();
+                try {
+                    String location = locationTF.getText();
                     try {
                         String type = typeTF.getText();
-                        System.out.println("Type test success");
                         try {
-                            
-                            // First Getting Start and End DateTime From the Choices
-                            String startTime = TimeConversion.timeStringConversion(startHourSpinner.getValue(),
-                                    startMinSpinner.getValue());
+                             // Getting the Date and Time in string format
+                            String startTime = TimeConversion.timeStringConversion(startHourSpinner.getValue(), startMinSpinner.getValue());
                             String endTime = TimeConversion.timeStringConversion(endHourSpinner.getValue(),
                                     endMinSpinner.getValue());
                             String startDateTime = TimeConversion.convertDateTime(StartDatePicker.getValue(),
                                     startTime);
-                            String endDateTime = TimeConversion.convertDateTime(endDatePicker.getValue(), endTime);
-                            LocalDateTime startD = TimeConversion.convertToLocalDateTime(startDateTime);  
-                            LocalDateTime endD =TimeConversion.convertToLocalDateTime(endDateTime); 
-                            Boolean validBusinessHour = timeTools.compareTimeZomes(startD, endD, startD.toLocalDate(),
-                                    endD.toLocalDate());
-                            Boolean noOverlap = TimeConversion.appointmentOverlapCheck
-                            (startDateTime, endDateTime);
-                            Integer errorCheck = TimeConversion.compareDates(startDateTime, endDateTime);
-                            Boolean timeCheck = TimeConversion.compareTimes(startDateTime, endDateTime);
-                            if (errorCheck == 1 && errorCheck!=0) {
+                            String endDateTime = TimeConversion.convertDateTime(endDatePicker.getValue(), endTime);        
+                            // Converting to ZonedDateTime from the date and time picked
+                            ZonedDateTime zStart = TimeConversion.convertToLocalTimeZone(startDateTime);
+                            ZonedDateTime zEnd = TimeConversion.convertToLocalTimeZone(endDateTime);
+
+                            // Checking if the Dates are correct
+                            Integer errorCheck = TimeConversion.compareDates(zStart.toLocalDateTime().format(formatter).toString(),
+                                    zEnd.toLocalDateTime().format(formatter).toString());
+                            if (errorCheck == 1 && errorCheck != 0) {
                                 displayError(6);
                                 return;
                             }
-                            if (errorCheck == 2&& errorCheck!=0) {
+                            if (errorCheck == 2 && errorCheck != 0) {
                                 displayError(9);
                                 return;
                             }
@@ -154,66 +155,77 @@ public class EditAppointmentController implements Initializable {
                                 displayError(10);
                                 return;
                             }
-                            if (!timeCheck) {
+                            // Performing Time Checks 
+                            Boolean timeCheck = TimeConversion.compareTimes(startDateTime, endDateTime);
+                               if (!timeCheck) {
                                 displayError(11);
                                 return;
                             }
-                            if (!validBusinessHour && errorCheck!=0) {
+                            // Checking if the time selected falls under EST business hours
+                            Boolean validBusinessHour = timeTools.compareTimeZones(zStart, zEnd, zStart.toLocalDate(),
+                                    zEnd.toLocalDate());
+                            if (!validBusinessHour) {
                                 displayError(12);
                                 return;
-                            }    
-                            else {
-                                if (!noOverlap) {
-                                    displayError(13);
-                                    return;
-                                }
-                                else {
-                                    System.out.println("DateTime Test successfully");
-                                    try {
-                                int customerID = custIDChoice.getValue();
-                                int userID = userIDChoice.getValue();
-                                int contactID = contactIDChoice.getValue();
-                                System.out.println("Successfully completed");
-                                String startUTC = TimeConversion.convertTimeToUTC(startDateTime);
-                                String endUTC = TimeConversion.convertTimeToUTC(endDateTime);
-                                Appointments appointments = new Appointments(appointmentID, title, description,
-                                        location, type, startUTC, endUTC, customerID, userID, contactID);
-
-                                appointmentDOA.update(appointments);
-                                goBackAfterSave();
-
-                            } catch (NullPointerException e) {
+                            }
+                            // Check if the business hours are valid
+                            if (!validBusinessHour) {
+                                displayError(12);
+                                return;
+                            }
+                            // Checking for Overlaps
+                            Boolean noOverlaps = TimeConversion.appointmentOverlapCheck(zStart.toLocalDateTime().format(formatter).toString(),
+                                    zEnd.toLocalDateTime().format(formatter).toString());
+                            if (!noOverlaps) {
+                                displayError(13);
+                                return;
+                            }
+                            try {
+                            // Getting Customer ID, User ID and Contact ID
+                            int customerID = custIDChoice.getValue();
+                            int userID = userIDChoice.getValue();
+                            int contactID = contactIDChoice.getValue();
+                            // Convert to UTC format
+                            String startUTC = TimeConversion.convertTimeToUTC(zStart.toLocalDateTime().format(formatter).toString());
+                            String endUTC = TimeConversion.convertTimeToUTC(zEnd.toLocalDateTime().format(formatter).toString());
+                            // Creating the Appointment Object
+                            Appointments appointment = new Appointments(appointmentID, title, description, location,
+                                    type, startUTC, endUTC, customerID, userID, contactID);
+                            int result = appointmentDOA.update(appointment);
+                            if (result == 0) {
+                                System.out.println("Appointments SQL error issue");
+                            }
+                            goBackAfterSave();
+                            } catch (Exception e) {
                                 e.printStackTrace(); // This is for Customer ID, User ID and Contact ID
                                 displayError(8);
                                 return;
                             }
-                                }
-                            }
-                        } catch (NullPointerException e) {
+                        } catch (Exception e) {
                             e.printStackTrace(); // This is for the Start Date and Timestamp
                             displayError(7);
                             return;
-                        }
-                    } catch (NullPointerException e) {
+                        }  
+                    } catch (Exception e) {
                         e.printStackTrace(); // This is for type
                         displayError(4);
                         return;
                     }
-              } catch (NullPointerException e) {
-                  e.printStackTrace();// This is for Location
-                  displayError(3);
-                  return;
-              }
-          } catch (NullPointerException e) {
-              e.printStackTrace(); // This is for Description
+                } catch (Exception e) {
+                   e.printStackTrace();// This is for Location
+                   displayError(3);
+                   return;
+                }
+             } catch (Exception e) {
+                e.printStackTrace(); // This is for Description
               displayError(2);
               return;
-          }  
-        } catch (NullPointerException e) {
+             }
+        } catch (Exception e) {
             e.printStackTrace(); // This is for Title
             displayError(1);
             return;
-        } 
+        }
     }
      /**
      * This is to redirect user to the main page if the save goes through
@@ -436,3 +448,110 @@ public class EditAppointmentController implements Initializable {
         contactIDChoiceBox();
     }
 }
+
+
+//  AppointmentDOA appointmentDOA = new AppointmentDOA();
+//         // Validation of the data first
+//         int appointmentID = Integer.parseInt(apptIDTF.getText()); // This is default and will not change
+//         try {
+//             String title = titleTF.getText();
+//             System.out.println("Title test success");
+//           try {
+//               String description = descTF.getText();
+//               System.out.println("description test success");
+//               try {
+//                   String location = locationTF.getText();
+//                   System.out.println("Location test success");
+//                     try {
+//                         String type = typeTF.getText();
+//                         System.out.println("Type test success");
+//                         try {
+                            
+//                             // // First Getting Start and End DateTime From the Choices
+//                             // String startTime = TimeConversion.timeStringConversion(startHourSpinner.getValue(),
+//                             //         startMinSpinner.getValue());
+//                             // String endTime = TimeConversion.timeStringConversion(endHourSpinner.getValue(),
+//                             //         endMinSpinner.getValue());
+//                             // String startDateTime = TimeConversion.convertDateTime(StartDatePicker.getValue(),
+//                             //         startTime);
+//                             // String endDateTime = TimeConversion.convertDateTime(endDatePicker.getValue(), endTime);
+//                             // ZonedDateTime startD = TimeConversion.convertToLocalDateTime(startDateTime);
+//                             // ZonedDateTime endD = TimeConversion.convertToLocalDateTime(endDateTime);
+//                             // Boolean validBusinessHour = timeTools.compareTimeZones(startD, endD, startD.toLocalDate(),
+//                             //         endD.toLocalDate());
+//                             // Boolean noOverlap = TimeConversion.appointmentOverlapCheck
+//                             // (startDateTime, endDateTime);
+//                             // Integer errorCheck = TimeConversion.compareDates(startDateTime, endDateTime);
+//                             // Boolean timeCheck = TimeConversion.compareTimes(startDateTime, endDateTime);
+//                             // if (errorCheck == 1 && errorCheck!=0) {
+//                             //     displayError(6);
+//                             //     return;
+//                             // }
+//                             // if (errorCheck == 2&& errorCheck!=0) {
+//                             //     displayError(9);
+//                             //     return;
+//                             // }
+//                             // if (errorCheck == 3 && errorCheck != 0) {
+//                             //     displayError(10);
+//                             //     return;
+//                             // }
+//                             // if (!timeCheck) {
+//                             //     displayError(11);
+//                             //     return;
+//                             // }
+//                             // if (!validBusinessHour && errorCheck!=0) {
+//                             //     displayError(12);
+//                             //     return;
+//                             // }    
+//                             // else {
+//                             //     if (!noOverlap) {
+//                             //         displayError(13);
+//                             //         return;
+//                             //     }
+//                             //     else {
+//                             //         System.out.println("DateTime Test successfully");
+//                             //         try {
+//                             //     int customerID = custIDChoice.getValue();
+//                             //     int userID = userIDChoice.getValue();
+//                             //     int contactID = contactIDChoice.getValue();
+//                             //     System.out.println("Successfully completed");
+//                             //     // String startUTC = TimeConversion.convertTimeToUTC(startDateTime);
+//                             //     // String endUTC = TimeConversion.convertTimeToUTC(endDateTime);
+//                             //     // Appointments appointments = new Appointments(appointmentID, title, description,
+//                             //     //         location, type, startUTC, endUTC, customerID, userID, contactID);
+
+//                             //     // appointmentDOA.update(appointments);
+//                             //     goBackAfterSave();
+
+//                             // } catch (NullPointerException e) {
+//                             //     e.printStackTrace(); // This is for Customer ID, User ID and Contact ID
+//                             //     displayError(8);
+//                             //     return;
+//                             // }
+//                         }
+//                             }
+//                         } catch (NullPointerException e) {
+//                             e.printStackTrace(); // This is for the Start Date and Timestamp
+//                             displayError(7);
+//                             return;
+//                         }
+//                     } catch (NullPointerException e) {
+//                         e.printStackTrace(); // This is for type
+//                         displayError(4);
+//                         return;
+//                     }
+//               } catch (NullPointerException e) {
+//                   e.printStackTrace();// This is for Location
+//                   displayError(3);
+//                   return;
+//               }
+//           } catch (NullPointerException e) {
+//               e.printStackTrace(); // This is for Description
+//               displayError(2);
+//               return;
+//           }  
+//         } catch (NullPointerException e) {
+//             e.printStackTrace(); // This is for Title
+//             displayError(1);
+//             return;
+//         } 

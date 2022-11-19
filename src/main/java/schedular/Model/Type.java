@@ -1,3 +1,7 @@
+/**
+ * Another class would be suitable or a subset class would work also
+ * Using SQL to do more of the LocalDate Time work than else where
+ */
 package schedular.Model;
 
 /**

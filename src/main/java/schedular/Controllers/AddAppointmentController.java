@@ -1,13 +1,16 @@
 /**
  * Refactoring code and moving to a noSQL database
- * @author Syed Khurshid
+ * Class Object for time zone conversion is necessary because its being used a lot
  */
 package schedular.Controllers;
-
+/**
+ * @author Syed Khurshid
+ */
 import java.io.IOException;
 import java.net.URL;
 import java.sql.SQLException;
-import java.time.LocalDateTime;
+import java.time.ZonedDateTime;
+import java.time.format.DateTimeFormatter;
 import java.util.ArrayList;
 import java.util.Optional;
 import java.util.ResourceBundle;
@@ -40,10 +43,8 @@ import schedular.Model.User;
 import schedular.utilities.AddObject;
 import schedular.utilities.GoBack;
 import schedular.utilities.TimeConversion;
-
-
 /**
- * This is the Appointments Adding Controllers
+ * This is the Appointments Adding Controllers for the purpose of adding appointments as well as validating the times being input
  */
 public class AddAppointmentController implements Initializable{
     /**
@@ -218,7 +219,10 @@ public class AddAppointmentController implements Initializable{
      * This is a tool to convert time but moved to another class since its being reused over and over again
      */
     private TimeConversion timeTools = new TimeConversion();
-    
+    /**
+     * Time format layout
+     */
+    DateTimeFormatter formatter = DateTimeFormatter.ofPattern("yyyy-MM-dd HH:mm:ss");
     /**
      * This is to cancel Button Function to return user
      * @throws IOException if an error occurs 
@@ -263,21 +267,20 @@ public class AddAppointmentController implements Initializable{
                     try {
                         String type = typeTF.getText();
                         try {
-                            // First Getting the start and End Datetime
-                            String startTime = TimeConversion.timeStringConversion(startHourSpinner.getValue(),
-                                    startMinSpinner.getValue());
+                            // Getting the Date and Time in string format
+                            String startTime = TimeConversion.timeStringConversion(startHourSpinner.getValue(), startMinSpinner.getValue());
                             String endTime = TimeConversion.timeStringConversion(endHourSpinner.getValue(),
                                     endMinSpinner.getValue());
                             String startDateTime = TimeConversion.convertDateTime(StartDatePicker.getValue(),
                                     startTime);
-                            String endDateTime = TimeConversion.convertDateTime(endDatePicker.getValue(), endTime);
-                            LocalDateTime startD = TimeConversion.convertToLocalDateTime(startDateTime);
-                            LocalDateTime endD = TimeConversion.convertToLocalDateTime(endDateTime);
-                            Boolean validBusinessHour = timeTools.compareTimeZomes(startD, endD, startD.toLocalDate(),
-                                    endD.toLocalDate());
-                            Boolean noOverlap = TimeConversion.appointmentOverlapCheck(startDateTime, endDateTime);
-                            Integer errorCheck = TimeConversion.compareDates(startDateTime, endDateTime);
-                            Boolean timeCheck = TimeConversion.compareTimes(startDateTime, endDateTime);
+                            String endDateTime = TimeConversion.convertDateTime(endDatePicker.getValue(), endTime);        
+                            // Converting to ZonedDateTime from the date and time picked
+                            ZonedDateTime zStart = TimeConversion.convertToLocalTimeZone(startDateTime);
+                            ZonedDateTime zEnd = TimeConversion.convertToLocalTimeZone(endDateTime);
+
+                            // Checking if the Dates are correct
+                            Integer errorCheck = TimeConversion.compareDates(zStart.toLocalDateTime().format(formatter).toString(),
+                                    zEnd.toLocalDateTime().format(formatter).toString());
                             if (errorCheck == 1 && errorCheck != 0) {
                                 displayError(6);
                                 return;
@@ -290,41 +293,51 @@ public class AddAppointmentController implements Initializable{
                                 displayError(10);
                                 return;
                             }
-                            if (!timeCheck) {
+                            // Performing Time Checks 
+                            Boolean timeCheck = TimeConversion.compareTimes(startDateTime, endDateTime);
+                               if (!timeCheck) {
                                 displayError(11);
                                 return;
                             }
+                            // Checking if the time selected falls under EST business hours
+                            Boolean validBusinessHour = timeTools.compareTimeZones(zStart, zEnd, zStart.toLocalDate(),
+                                    zEnd.toLocalDate());
                             if (!validBusinessHour) {
                                 displayError(12);
                                 return;
-                            } else {
-                                if (!noOverlap) {
-                                    displayError(13);
-                                    return;
-                                } else {
-                                    try {
-                                        int customerID = custIDChoice.getValue();
-                                        int userID = userIDChoice.getValue();
-                                        int contactID = contactIDChoice.getValue();
-                                        String startUTC = TimeConversion.convertTimeToUTC(startDateTime);
-                                        String endUTC = TimeConversion.convertTimeToUTC(endDateTime);
-                                        // Lambda Express to add all of them
-                                        pushToDatabase.pushToDatabase(appointmentID, title, description, location, type, startUTC, endUTC, customerID,userID,contactID); 
-                                        
-                                        // Appointments appointment = new Appointments(appointmentID, title, description,
-                                        //         location,
-                                        //         type, startUTC, endUTC, customerID, userID, contactID);
-                                        // appointmentDOA.insert(appointment);
-                                        displayError(14);
-                                        switchScreens.switchScreens("/schedular/MainPage.fxml");
-                                    } catch (Exception e) {
-                                        e.printStackTrace(); // This is for Customer ID, User ID and Contact ID
-                                        displayError(8);
-                                        return;
-                                    }
-                                }
                             }
-                            // String startTime = convertTimeDateUTC()
+                            // Check if the business hours are valid
+                            if (!validBusinessHour) {
+                                displayError(12);
+                                return;
+                            }
+                            // Checking for Overlaps
+                            Boolean noOverlaps = TimeConversion.appointmentOverlapCheck(zStart.toLocalDateTime().format(formatter).toString(),
+                                    zEnd.toLocalDateTime().format(formatter).toString());
+                            if (!noOverlaps) {
+                                displayError(13);
+                                return;
+                            }
+                            try{
+                                // Getting Customer ID, User ID and Contact ID
+                            int customerID = custIDChoice.getValue();
+                            int userID = userIDChoice.getValue();
+                            int contactID = contactIDChoice.getValue();
+                            // Convert to UTC format
+                            String startUTC = TimeConversion.convertTimeToUTC(zStart.toLocalDateTime().format(formatter).toString());
+                            String endUTC = TimeConversion.convertTimeToUTC(zEnd.toLocalDateTime().format(formatter).toString());
+                            // Creating the Appointment Object
+                            pushToDatabase.pushToDatabase(appointmentID, title, description, location,
+                                    type, startUTC, endUTC, customerID, userID, contactID);
+                            
+                            // Switching now going back to main screen once done
+                            switchScreens.switchScreens("/schedular/MainPage.fxml");
+                            }
+                            catch (Exception e) {
+                                 e.printStackTrace(); // This is for Customer ID, User ID and Contact ID
+                                 displayError(8);
+                                 return;
+                            }
                         } catch (Exception e) {
                             e.printStackTrace(); // This is for Date
                             displayError(7);
@@ -352,7 +365,6 @@ public class AddAppointmentController implements Initializable{
         }
 
     }
-
     /**
      * Lambda expression to go switch screens.
      * Reason for using Lambda is still not quite the same
@@ -379,13 +391,20 @@ public class AddAppointmentController implements Initializable{
      * @param useID this is the User ID of the appointment
      * @param contactID this is the Contact ID of the appointment
      */
-    AddObject pushToDatabase = (id, title, description, location, type, start, end, cusID, useID, contactID) -> {
+    AddObject pushToDatabase = (Integer id, String title, String description, String location, String type,
+            String start, String end, Integer cusID, Integer useID, Integer contactID) -> 
+    {   
                 AppointmentDOA apptDOA = new AppointmentDOA();
                 Appointments appointment = new Appointments(id, title, description, location, type, start, end, cusID, useID, contactID);                               
                 try {
-                    apptDOA.insert(appointment);
+                int check = apptDOA.insert(appointment);
+                if (check != 0) {
+                    displayError(14);
+                }
                 } catch (SQLException e) {
-                    e.printStackTrace();
+                e.printStackTrace();
+            System.out.println("SQL error inserting into database please check message: " + e.getMessage());
+            return;
             }
     };
     /**
@@ -442,7 +461,6 @@ public class AddAppointmentController implements Initializable{
             e.printStackTrace();
         }
     }
-    
     /**
      * This is for the Hours selection
      */
@@ -452,7 +470,6 @@ public class AddAppointmentController implements Initializable{
         startHourSpinner.setValueFactory(valueFactory);
         endHourSpinner.setValueFactory(endvalueFactory);
     }
-
     /**
      * This is for the Minute for the spinner choices
      */
@@ -548,14 +565,33 @@ public class AddAppointmentController implements Initializable{
                 if (result.isPresent() && result.get() == ButtonType.OK) {
                     return;
                 }
-                  
             default:
                 alert.setTitle("Invalid information input");
                 alert.setContentText("Please check the data input and make sure the fields are not empty");
                 alert.showAndWait();
                 break;
         }
-        
+
+    }
+    
+    public void showContactText(ActionEvent event) {
+        contIDET.setVisible(true);
+        ContactsDOA contactDOA = new ContactsDOA();
+        contIDET.setText("");
+        System.out.println(contactIDChoice.getValue() + " Value");
+        if (contactIDChoice.getValue() !=null) {
+            try{
+                Contacts contact = contactDOA.get(contactIDChoice.getValue());
+            if (contact.getContactName() == null) {
+                contIDET.setText("");
+            } else {
+                
+                contIDET.setText(contact.getContactName());
+            }
+        } catch (SQLException e) {
+            e.printStackTrace();
+            }
+        }
     }
     /**
      * This is to initialize the page
@@ -564,12 +600,12 @@ public class AddAppointmentController implements Initializable{
      */
     @Override
     public void initialize(URL arg0, ResourceBundle arg1) {
-        System.out.println("This is the Add Appointments Controllers Page");
         descET.setText("");
         customerIDChoiceBox();
         userIDChoiceBox();
         contactIDChoiceBox();
         spinnerHourChoice();
         spinnerMinuteChoice();
+        contactIDChoice.setOnAction(this::showContactText);
     }
 }

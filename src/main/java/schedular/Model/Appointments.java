@@ -3,6 +3,8 @@
  * Preference would be to use a NoSQL database like MangoDB
  */
 package schedular.Model;
+// import java.sql.String;
+
 /**
  * This is the Appointments User Object
  */

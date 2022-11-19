@@ -1,10 +1,11 @@
 /**
  * Time conversion on this class can be better refactored to reduce the number of code lines and memory
- * @author Syed Khurshid
+ * NoSQL database like MongoDB would be better suited for this
  */
 package schedular.utilities;
-
-
+/**
+ * @author Syed Khurshid
+ */
 import java.sql.SQLException;
 import java.sql.Timestamp;
 import java.time.LocalDate;
@@ -42,9 +43,7 @@ public class TimeConversion {
      * @return str which is a string
      */
     public static String convertDateTime(LocalDate date, String time) {
-        DateTimeFormatter formatter = DateTimeFormatter.ofPattern("yyyy-MM-dd HH:mm:ss");
         String str = String.valueOf(String.valueOf(date) + " " + time);
-
         return str;
     }
     /**
@@ -52,9 +51,12 @@ public class TimeConversion {
      * @param date which is the string picked up from the picker
      * @return string format of the date
      */
-    public static LocalDateTime convertToLocalDateTime(String date) {
+    public static ZonedDateTime convertToLocalDateTime(String date) {
+        System.out.println("This is the date I get from Database: "+date);
         DateTimeFormatter formatter = DateTimeFormatter.ofPattern("yyyy-MM-dd HH:mm:ss");
-        LocalDateTime result = LocalDateTime.parse(date, formatter);
+        ZonedDateTime dateTimeEffect = LocalDateTime.parse(date, formatter).atZone(ZoneId.of("UTC"));
+        System.out.println("This is me trying: "+dateTimeEffect);
+        ZonedDateTime result = LocalDateTime.parse(date, formatter).atZone(userTimeZone);
         return result;
     }
     /**
@@ -74,8 +76,7 @@ public class TimeConversion {
      }
      System.out.println(hourCheck + " " + minuteCheck);
      String str = hourCheck + ":" + minuteCheck + ":" + "00";
-     return  str;
-        
+     return  str;  
     };
     /**
      * This is to compare Start Time of the Appointments with the End Time of the Appointments
@@ -104,9 +105,15 @@ public class TimeConversion {
      * @return Integer value that will be used to compare values
      */
     public static Integer compareDates(String startDate, String endDate) {
+        System.out.println(startDate + " " + endDate);
+        DateTimeFormatter format = DateTimeFormatter.ISO_INSTANT;
         DateTimeFormatter formatter = DateTimeFormatter.ofPattern("yyyy-MM-dd HH:mm:ss");
+        // ZonedDateTime statDateTime = ZonedDateTime.parse(startDate,formatter);
+        // ZonedDateTime endDateTime = ZonedDateTime.parse(startDate,formatter);
         LocalDate startD = LocalDate.parse(startDate, formatter);
         LocalDate endD = LocalDate.parse(endDate, formatter);
+        // LocalDate startD = statDateTime.toLocalDate();
+        // LocalDate endD = endDateTime.toLocalDate();
         
         if (startD.isAfter(endD)) {
             return 1;
@@ -140,18 +147,18 @@ public class TimeConversion {
      * @param appointmentDate is the Appointment Date
      * @return Boolean to the user to then take action accordingly
      */
-    public Boolean compareTimeZomes(LocalDateTime startDateTime, LocalDateTime endDateTime, LocalDate appointmentDate, LocalDate endAppointmentDate) {
+    public Boolean compareTimeZones(ZonedDateTime startDateTime, ZonedDateTime endDateTime, LocalDate appointmentDate, LocalDate endAppointmentDate) {
         // Checking if they are being selected Appointment Time meets EST standard and is between 8am and 10pm
-        ZonedDateTime zoneStartDateTime = ZonedDateTime.of(startDateTime, userTimeZone);
-        ZonedDateTime zoneEndDateTime = ZonedDateTime.of(endDateTime, userTimeZone);
+        // ZonedDateTime zoneStartDateTime = ZonedDateTime.of(startDateTime, userTimeZone);
+        // ZonedDateTime zoneEndDateTime = ZonedDateTime.of(endDateTime, userTimeZone);
 
         ZonedDateTime startBusinessHour = ZonedDateTime.of(appointmentDate, LocalTime.of(8, 0),
                 ZoneId.of("America/New_York"));
         ZonedDateTime endBusinessHour = ZonedDateTime.of(endAppointmentDate, LocalTime.of(22, 0),
                 ZoneId.of("America/New_York"));
-        if (zoneStartDateTime.isBefore(startBusinessHour) | zoneStartDateTime.isAfter(endBusinessHour)
-                | zoneEndDateTime.isBefore(startBusinessHour) | zoneEndDateTime.isAfter(endBusinessHour)
-                | zoneStartDateTime.isAfter(zoneEndDateTime)) {
+        if (startDateTime.isBefore(startBusinessHour) | startDateTime.isAfter(endBusinessHour)
+                | endDateTime.isBefore(startBusinessHour) | endDateTime.isAfter(endBusinessHour)
+                | startDateTime.isAfter(endDateTime)) {
             return false;
         } else {
             return true;
@@ -162,12 +169,11 @@ public class TimeConversion {
      * @param date is the date in string format
      * @return a string format converted to Local Timezone
      */
-    public static String convertToLocalTimeZone(String date) {
+    public static ZonedDateTime convertToLocalTimeZone(String date) {
         DateTimeFormatter formatter = DateTimeFormatter.ofPattern("yyyy-MM-dd HH:mm:ss");
         LocalDateTime ldt = LocalDateTime.parse(date, formatter);
         ZonedDateTime zone = ZonedDateTime.of(ldt, ZoneId.of(defaultTimeZone));
-        String str = zone.toString();
-        return str;
+        return zone;
     }
     /**
      * This is to check if the Appointment selected falls anywhere in the existing appointments
@@ -190,7 +196,7 @@ public class TimeConversion {
                 LocalDateTime startCheck =LocalDateTime.parse(conflictCheck.getStart(),formatter);
                 LocalDateTime endCheck = LocalDateTime.parse(conflictCheck.getStart(), formatter);
                 
-                //Conflict starts before and Conflict ends any time after new appointment ends - Overlap
+                // Conflict starts before and Conflict ends any time after new appointment ends - Overlap
                 if (startCheck.isBefore(startDateTimeCheck) & endCheck.isAfter(endDateTimeCheck)) {
                     return false;
                 }
