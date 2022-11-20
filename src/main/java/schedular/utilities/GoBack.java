@@ -1,10 +1,12 @@
 /**
  * Better interface layout needs to be implemented
- * @author Syed Khurshid
  * Still do not see the use of lambda but will check
  */
 package schedular.utilities;
 
+/**
+ * @author Syed Khurshid
+ */
 
 import java.io.IOException;
 

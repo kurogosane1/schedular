@@ -1,9 +1,12 @@
 /**
- * This is The Login Log
- * @author Syed Khurshid
+ * This is The Login Log for 
+ * A seperate user logged in database would be better to have with reddis implementation
  */
 package schedular.utilities;
 
+/**
+ * @author Syed Khurshid
+ */
 
 import java.io.IOException;
 import java.io.PrintWriter;
@@ -15,9 +18,27 @@ import java.time.LocalDateTime;
 import java.time.format.DateTimeFormatter;
 
 /**
- * File in which to store the login logs
+ * File in which to store the login logs and user that has logged in
  */
 public class LoginLog {
+    /**
+     * This is to set the User logged in so that when information is requested, can be recieved
+     */
+    private static String userLoggedIn;
+    /**
+     * This is to get the User that has logged in so that when information is requested, can be recieved
+     * @return userLoggedIn which is the name of the user
+     */
+    public static String getUserLoggedIn() {
+        return userLoggedIn;
+    }
+    /**
+     * This is to get the 
+     * @param userLoggedIn
+     */
+    public static void setUserLoggedIn(String user) {
+        userLoggedIn = user;
+    }
     /**
      * This is the file name
      */

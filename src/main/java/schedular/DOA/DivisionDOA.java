@@ -1,8 +1,11 @@
 /**
- * @author Syed Khurshid
+ * Using noSQL datbase
+ * SQL injection protection can further inhance the security of the App
  */
 package schedular.DOA;
-
+/**
+ * @author Syed Khurshid
+ */
 import java.sql.Connection;
 import java.sql.PreparedStatement;
 import java.sql.ResultSet;
@@ -14,13 +17,14 @@ import schedular.Model.FirstLevelDivision;
 import schedular.connect.Database;
 
 /**
- * Divisions DOA for SQL
+ * Divisions DOA for First Level devision for Creation, Read, Update and Delete with SQL database connection
  */
 public class DivisionDOA implements DOA<FirstLevelDivision>{
 /**
  * Get the Division based on ID
  * @param id which is from the Divisions Object
- * @throws SQLException if an error occurs
+ * @throws SQLException if an error occurs on SQL database side
+ * @return FirstLevelDivision which is First Level Devision object
  */
     @Override
     public FirstLevelDivision get(int id) throws SQLException {
@@ -43,7 +47,8 @@ public class DivisionDOA implements DOA<FirstLevelDivision>{
     /**
      * Getting all the Divisions from the database
      * We will be using this to get the Customer information
-     * @throws SQLException if an error occurs
+     * @throws SQLException if an error occurs on SQL database side
+     * @returns FirstLevelDivision which is a ObservableList<FirstLevelDivision> array
      */
     @Override
     public ObservableList<FirstLevelDivision> getAll() throws SQLException {
@@ -65,8 +70,8 @@ public class DivisionDOA implements DOA<FirstLevelDivision>{
     /**
      * This is to add the Division into the database but this will not be used
      * @param t which is a First Level Division Object
-     * @throws SQLException
-     * @return Division
+     * @throws SQLException if an error occurs on the database side
+     * @return Division which is the FirstLevelDivision Object
      */
     @Override
     public int insert(FirstLevelDivision t) throws SQLException {
@@ -75,8 +80,8 @@ public class DivisionDOA implements DOA<FirstLevelDivision>{
     /**
      * This is to update the Division into the database but this will not be used
      * @param t which is a First Level Division Object
-     * @throws SQLException
-     * @return Division
+     * @throws SQLException if an error occurs on the database side
+     * @return Division which is the First Level Divisions Object
      */
     @Override
     public int update(FirstLevelDivision t) throws SQLException {
@@ -85,8 +90,8 @@ public class DivisionDOA implements DOA<FirstLevelDivision>{
     /**
      * This is to delete the Division into the database but this will not be used
      * @param t which is a First Level Division Object
-     * @throws SQLException
-     * @return Division
+     * @throws SQLException if an error occurs on the database side
+     * @return Division which is the First Level Divisions Object
      */
     @Override
     public int delete(FirstLevelDivision t) throws SQLException {

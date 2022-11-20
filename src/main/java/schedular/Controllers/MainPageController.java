@@ -14,6 +14,7 @@ import java.sql.SQLException;
 import java.sql.Timestamp;
 import java.time.*;
 import java.time.format.DateTimeFormatter;
+import java.time.temporal.ChronoUnit;
 import java.util.Optional;
 import java.util.ResourceBundle;
 import javafx.collections.FXCollections;
@@ -34,7 +35,10 @@ import javafx.scene.control.ToggleGroup;
 import javafx.scene.control.cell.PropertyValueFactory;
 import javafx.stage.Stage;
 import schedular.DOA.AppointmentDOA;
+import schedular.DOA.CustomerDOA;
 import schedular.Model.Appointments;
+import schedular.Model.Customer;
+import schedular.utilities.LoginLog;
 
 /**
  * This is the main page point of entry that displays all the appointments as well viewing the  appointments by week, month and all.
@@ -142,7 +146,7 @@ public class MainPageController implements Initializable {
      * @throws IOException when Stage is switched
      */
     @FXML
-    void addAppoint(ActionEvent event) throws IOException {
+    public void addAppoint(ActionEvent event) throws IOException {
         Parent root = FXMLLoader.load(getClass().getResource("/schedular/AddAppointment.fxml"));
         Stage stage = (Stage) addApptButton.getScene().getWindow();
         stage.setTitle("Add Appointment");
@@ -155,13 +159,14 @@ public class MainPageController implements Initializable {
      * 
      */
     @FXML
-    void deleteApptAction(ActionEvent event) {
-        Alert alert = new Alert(Alert.AlertType.WARNING);
+    public void deleteApptAction(ActionEvent event) {
         if (apptTable.getSelectionModel().getSelectedItems() == null || apptTable.getSelectionModel().isEmpty()) {
+            Alert alert = new Alert(Alert.AlertType.WARNING);
             alert.setTitle("Warning Dialog");
             alert.setContentText("Please select an appointment to delete");
             alert.showAndWait();
         } else {
+            Alert alert = new Alert(Alert.AlertType.CONFIRMATION);
             alert.setTitle("Please check");
             alert.setContentText("This will permanently delete an appointment, are you sure you want to delete this appointment");
             Optional<ButtonType> result = alert.showAndWait();
@@ -188,7 +193,7 @@ public class MainPageController implements Initializable {
      * @throws IOException from when the stage is switched and an error occurs
      */
     @FXML
-    void logOut(ActionEvent event) throws IOException {
+    public void logOut(ActionEvent event) throws IOException {
         Parent root = FXMLLoader.load(getClass().getResource("/schedular/Login.fxml"));
         Stage stage = (Stage) logoutButton.getScene().getWindow();
         stage.setTitle("Main Screen");
@@ -201,7 +206,7 @@ public class MainPageController implements Initializable {
      * @IOException from a screen transfer
      */
     @FXML
-    void modifyAppt(ActionEvent event) throws IOException {
+    public void modifyAppt(ActionEvent event) throws IOException {
         if (apptTable.getSelectionModel().getSelectedItem() != null || !apptTable.getSelectionModel().isEmpty()) {
             FXMLLoader loader = new FXMLLoader(getClass().getResource("/schedular/EditAppointment.fxml"));
             Parent root = loader.load();
@@ -227,7 +232,7 @@ public class MainPageController implements Initializable {
      * @SQLException if an error occurs
      */
     @FXML
-    void radioAll(ActionEvent event) throws SQLException {
+    public void radioAll(ActionEvent event) throws SQLException {
             aptSchedule = appointments.getAll();
             apptTable.setItems(aptSchedule);
     }
@@ -237,7 +242,7 @@ public class MainPageController implements Initializable {
      * @throws IOException on screen transfer
      */
     @FXML
-    void reportGen(ActionEvent event) throws IOException {
+    public void reportGen(ActionEvent event) throws IOException {
          Parent root = FXMLLoader.load(getClass().getResource("/schedular/ReportsPage.fxml"));
          Stage stage = (Stage) reportButton.getScene().getWindow();
          stage.setTitle("Reports Page");
@@ -250,7 +255,7 @@ public class MainPageController implements Initializable {
      * @throws IOException if an error occurs with screen change
      */
     @FXML
-    void toCustomerPage(ActionEvent event) throws IOException {
+    public void toCustomerPage(ActionEvent event) throws IOException {
         Parent root = FXMLLoader.load(getClass().getResource("/schedular/CustomerPage.fxml"));
         Stage stage = (Stage) customerButton.getScene().getWindow();
         stage.setTitle("Customer Info");
@@ -263,7 +268,7 @@ public class MainPageController implements Initializable {
      * @throws SQLException if an error occurs
      */
     @FXML
-    void viewMonthly(ActionEvent event) throws SQLException {
+    public void viewMonthly(ActionEvent event) throws SQLException {
         apptTable.setItems(appointments.getApptsMonthly());
     }
     /**
@@ -272,7 +277,7 @@ public class MainPageController implements Initializable {
      * @throws SQLException if an error occurs
      */
     @FXML
-    void viewWeekly(ActionEvent event) throws SQLException {
+    public void viewWeekly(ActionEvent event) throws SQLException {
         aptSchedule = appointments.getApptsWeekly();
         apptTable.setItems(aptSchedule);
     }
@@ -282,7 +287,7 @@ public class MainPageController implements Initializable {
      * @throws IOException if an error occurs with Screen transfer
      */
     @FXML
-    void toContactsPage(ActionEvent event) throws IOException {
+    public void toContactsPage(ActionEvent event) throws IOException {
         Parent root = FXMLLoader.load(getClass().getResource("/schedular/Contact.fxml"));
         Stage stage = (Stage) contactsButton.getScene().getWindow();
         stage.setTitle("Contacts");
@@ -294,40 +299,82 @@ public class MainPageController implements Initializable {
      */
     public void AppointmentCheck() {
         DateTimeFormatter formatter = DateTimeFormatter.ofPattern("yyyy-MM-dd HH:mm:ss");
-        ZoneId zoneId = ZoneId.systemDefault();
+        String apptDescription="";
+        String customerName="";
+        String appointmentTime="";
+        String appointmentDate="";
+        long apptTimeDifference = -1;
         for (Appointments appointment : aptSchedule) {
-            LocalDateTime ldt = LocalDateTime.parse(appointment.getStart(), formatter).plusMinutes(15);
-            ZonedDateTime zdt = ZonedDateTime.of(ldt, zoneId);
-            LocalDateTime ldtNow = LocalDateTime.now();
-            ZonedDateTime zdtnow = ZonedDateTime.of(ldtNow, zoneId);
-            if (zdtnow.equals(zdt)) {
+            LocalDateTime ldt = LocalDateTime.parse(appointment.getStart(), formatter);
+            LocalDateTime currentTime = LocalDateTime.now();
+            long timedifference = ChronoUnit.MINUTES.between(ldt, currentTime) * -1;
+            CustomerDOA customerDOA = new CustomerDOA();
+            Customer customer;
+            try {
+                customer = customerDOA.get(appointment.getCustomer_id());
+                if (timedifference <= 15 || timedifference == 0) {
+                    apptTimeDifference = timedifference;
+                    apptDescription = appointment.getDescription();
+                    customerName = customer.getCustomerName();
+                    appointmentDate = ldt.toLocalDate().toString();
+                    appointmentTime = ldt.toLocalTime().toString();
+                } else {
+                    apptTimeDifference = -1;
+                }
+            } catch (SQLException e) {
+                System.out.println("SQL error");
+                e.printStackTrace();
+            }
+        }
+        if (apptTimeDifference != -1) {
+            Alert alert = new Alert(Alert.AlertType.INFORMATION);
+            alert.setHeaderText(null);
+            alert.setContentText(
+                    "Your Appointment is in 15 minutes for " + apptDescription + " with " + customerName + "On "
+                            + appointmentDate + " at " + appointmentTime);
+            alert.showAndWait();
+        }
+        else {
                 Alert alert = new Alert(Alert.AlertType.INFORMATION);
                 alert.setHeaderText(null);
-                alert.setContentText("Your Appointment is in 15 minutes");
+                alert.setContentText("No Appointment within coming soon");
                 alert.showAndWait();
-            } 
         }
     }
     /**
      * This is to help initialize the Table View
      */
     public void initializingTable() {
-            try {
-                    aptSchedule = appointments.getAll();
-                } catch (SQLException e) {
-                    e.printStackTrace();
-                }
-                apptTable.setItems(aptSchedule);
-                apptIDColumn.setCellValueFactory(new PropertyValueFactory<>("AppointmentID"));
-                titleCol.setCellValueFactory(new PropertyValueFactory<>("Title"));
-                descriptionCol.setCellValueFactory(new PropertyValueFactory<>("Description"));
-                locationCol.setCellValueFactory(new PropertyValueFactory<>("Location"));
-                typeCol.setCellValueFactory(new PropertyValueFactory<>("Type"));
-                startTimeCol.setCellValueFactory(new PropertyValueFactory<>("Start"));
-                endTimeCol.setCellValueFactory(new PropertyValueFactory<>("End"));
-                customerIDCol.setCellValueFactory(new PropertyValueFactory<>("customer_id"));
-                userIDCol.setCellValueFactory(new PropertyValueFactory<>("user_id"));
-                contactCol.setCellValueFactory(new PropertyValueFactory<>("contact_id"));  
+        try {
+            aptSchedule = appointments.getAll();
+        } catch (SQLException e) {
+            e.printStackTrace();
+        }
+        apptTable.setItems(aptSchedule);
+        apptIDColumn.setCellValueFactory(new PropertyValueFactory<>("AppointmentID"));
+        titleCol.setCellValueFactory(new PropertyValueFactory<>("Title"));
+        descriptionCol.setCellValueFactory(new PropertyValueFactory<>("Description"));
+        locationCol.setCellValueFactory(new PropertyValueFactory<>("Location"));
+        typeCol.setCellValueFactory(new PropertyValueFactory<>("Type"));
+        startTimeCol.setCellValueFactory(new PropertyValueFactory<>("Start"));
+        endTimeCol.setCellValueFactory(new PropertyValueFactory<>("End"));
+        customerIDCol.setCellValueFactory(new PropertyValueFactory<>("customer_id"));
+        userIDCol.setCellValueFactory(new PropertyValueFactory<>("user_id"));
+        contactCol.setCellValueFactory(new PropertyValueFactory<>("contact_id"));
+    }
+    /**
+     * user information that has logged in. TO be used for other purposes of getting information for other 
+     * @param user information 
+     */
+    public void userHasLoggedIn(String user) {
+        if (user != null) {
+            //Setting the name of the user logged in
+            LoginLog.setUserLoggedIn(user);
+            // Running the appointment check
+            AppointmentCheck();
+        } else {
+            return;
+        }
     }
     /**
      * Main initializing page function
@@ -337,7 +384,6 @@ public class MainPageController implements Initializable {
     @Override
     public void initialize(URL arg0, ResourceBundle arg1) {
         initializingTable();
-        AppointmentCheck();
     }
   
 }

@@ -1,10 +1,12 @@
 /**
  * Further username and password enhancement is necessary for making a much more secure system
  * Validating key entry stroke is required
- * @author Syed Khurshid
+ * Reddis check and field checks are necessary for a more secure system
  */
 package schedular.Controllers;
-
+/**
+ * @author Syed Khurshid
+ */
 import java.io.IOException;
 import java.net.URL;
 import java.sql.SQLException;
@@ -110,9 +112,12 @@ public class LoginController implements Initializable {
             }
             else {
                 LoginLog.append(userIDText.getText(), true);
-                Parent root = FXMLLoader.load(getClass().getResource("/schedular/MainPage.fxml"));
+                // Parent root = FXMLLoader.load(getClass().getResource("/schedular/MainPage.fxml"));
+                FXMLLoader loader = new FXMLLoader(getClass().getResource("/schedular/MainPage.fxml"));
+                Parent root = loader.load();
+                MainPageController mod = loader.getController();
+                mod.userHasLoggedIn(userIDText.getText());
                 Stage stage = (Stage) LoginButton.getScene().getWindow();
-                // stage.setTitle(rb.getString("title"));
                 stage.setTitle("Main Appointments");
                 stage.setScene(new Scene(root));
                 stage.show();
@@ -191,7 +196,6 @@ public class LoginController implements Initializable {
      */
     @Override
     public void initialize(URL arg0, ResourceBundle arg1) {
-        System.out.println("This has been initialized");
         languageChoice.getItems().addAll(langauge);
         languageChoice.getSelectionModel().select(0);
         locationText.setText(languageChoice.getValue()  + " : "+ZoneId.systemDefault());

@@ -38,6 +38,7 @@ public class UsersDOA {
         }
         return null;
     }
+    
     /**
      * This is to get the User based on the ID
      * @param id this is the User ID given
@@ -62,7 +63,7 @@ public class UsersDOA {
     /**
      * This is to get all Users
      * @return users which is an ObservableList of User
-     * @throws SQLException of not being able to process
+     * @throws SQLException if an error occurs on the database side
      */
     public ObservableList<User> getAllUsers() throws SQLException {
         Connection con = Database.getConnection();
@@ -84,7 +85,7 @@ public class UsersDOA {
      * @param username which is received from the form
      * @param password which is received from the form
      * @return boolean which is true if the user exists
-     * @throws SQLException if an error occurs
+     * @throws SQLException if an error occurs on the database side
      */
     public Boolean checkUser(String username, String password) throws SQLException {
         Connection con = Database.getConnection();

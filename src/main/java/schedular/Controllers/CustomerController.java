@@ -1,9 +1,12 @@
 /**
  * Possibly better customization of code can be done. Placing more object orientated format of the code where we can reutilize the code
- * @author Syed Khurshid
+ * Using a noSQL database would be better and faster
+ * being able to download the reports in excel as some users do require them
  */
 package schedular.Controllers;
-
+/**
+ * @author Syed Khurshid
+ */
 import java.io.IOException;
 import java.net.URL;
 import java.sql.SQLException;

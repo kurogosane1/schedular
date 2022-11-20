@@ -1,3 +1,8 @@
+/**
+ * This is the Reports page Controller
+ * Excel report download would be a nice to have feature
+ * No SQL database would be better or further detail SQL data table joins would be a good choice
+ */
 package schedular.Controllers;
 /**
  * @author Syed Khurshid
@@ -29,12 +34,11 @@ import schedular.DOA.ContactsDOA;
 import schedular.DOA.CustomerDOA;
 import schedular.Model.Appointments;
 import schedular.Model.Contacts;
-import schedular.Model.Customer;
 import schedular.Model.DivisionInfoTable;
 import schedular.Model.Type;
 
 /**
- * This is the Report's page for the Appointments
+ * This is the Report's page for the Appointments and other detailed information
  */
 public class ReportsPageController implements Initializable {
     // This is the Appointment's month Column
@@ -211,7 +215,7 @@ public class ReportsPageController implements Initializable {
     /**
      * This is to go back to the main page
      * @param event Button click press
-     * @throws IOException 
+     * @throws IOException when an error on stage change is encountered
      */
     @FXML
     void gobacktoMainPage(ActionEvent event) throws IOException {

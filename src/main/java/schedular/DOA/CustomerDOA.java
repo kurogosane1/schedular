@@ -1,9 +1,12 @@
 /**
  * refactoring code that is being used again and again
- * @author Syed Khurshid
+ * Using a NoSQL database would be ideal and faster
  */
 package schedular.DOA;
 
+/**
+ * @author Syed Khurshid
+ */
 import java.sql.Connection;
 import java.sql.PreparedStatement;
 import java.sql.ResultSet;
@@ -41,7 +44,6 @@ public class CustomerDOA implements DOA<Customer> {
             int Division_ID = rs.getInt("Division_ID");
 
             customer = new Customer(old, Customer_Name, Address, Postal_Code, Phone, Division_ID);
-            System.out.println("This is here at Get: "+customer.getCustomerName());
         }
         return customer;
     }
@@ -72,7 +74,7 @@ public class CustomerDOA implements DOA<Customer> {
     
     /**This is to add a Customer to the database
      * @param t which is a Customer Object
-     * @throws SQLException if an error occurs
+     * @throws SQLException if an error occurs on SQL database side
      */
     @Override
     public int insert(Customer t) throws SQLException {
@@ -95,7 +97,7 @@ public class CustomerDOA implements DOA<Customer> {
     /**
      * This is to update Customer in the Customer Database
      * @param t which is the Customer Object
-     * @throws SQLException if an error occurs
+     * @throws SQLException if an error occurs on SQL database side
      */
     @Override
     public int update(Customer t) throws SQLException {
@@ -120,7 +122,7 @@ public class CustomerDOA implements DOA<Customer> {
     /**
      * Deleting the Customer Data from the database
      * @param t which is the Customer Object
-     * @throws SQLException if an error occurs
+     * @throws SQLException if an error occurs on SQL database side
      */
     @Override
     public int delete(Customer t) throws SQLException {

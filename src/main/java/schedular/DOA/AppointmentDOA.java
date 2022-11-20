@@ -23,18 +23,24 @@ import javafx.collections.ObservableList;
 import schedular.Model.Appointments;
 import schedular.Model.Type;
 import schedular.connect.Database;
+import schedular.utilities.LoginLog;
 
 /**
  * This is the Appointments Data Object Module
  */
 public class AppointmentDOA implements DOA<Appointments> {
+    /**
+     * Zone ID of the current users location
+     */
     ZoneId zoneID = ZoneId.systemDefault();
+    /**
+     * This is the format layout preferred for converting Zone Date and Times
+     */
     DateTimeFormatter formatter = DateTimeFormatter.ofPattern("yyyy-MM-dd HH:mm:ss");
-    
     /**
      * @param id which is the Appointment ID
      * This is to get the single Appointments
-     * @throws SQLException if an error occurs
+     * @throws SQLException if an error occurs with the SQL database
      */
     @Override
     public Appointments get(int id) throws SQLException {
@@ -153,9 +159,9 @@ public class AppointmentDOA implements DOA<Appointments> {
         ps.setInt(9, t.getContact_id());
         // This is to get the created_by, Last Updated Last Updated by
         ps.setString(10, ZonedDateTime.now(ZoneOffset.UTC).format(formatter).toString()); // Create_Date
-        ps.setString(11, "test");// Created_By
+        ps.setString(11, LoginLog.getUserLoggedIn());// Created_By
         ps.setString(12, ZonedDateTime.now(ZoneOffset.UTC).format(formatter).toString());
-        ps.setString(13, "test");
+        ps.setString(13, LoginLog.getUserLoggedIn());
         int result = ps.executeUpdate();
         return result;
     }
@@ -192,9 +198,9 @@ public class AppointmentDOA implements DOA<Appointments> {
         ps.setInt(10, t.getContact_id());
         // This is to get the created_by, Last Updated Last Updated by
         ps.setString(11, ZonedDateTime.now(ZoneOffset.UTC).format(formatter).toString()); // Create_Date
-        ps.setString(12, "test");// Created_By
+        ps.setString(12, LoginLog.getUserLoggedIn());// Created_By
         ps.setString(13, ZonedDateTime.now(ZoneOffset.UTC).format(formatter).toString());
-        ps.setString(14, "test");
+        ps.setString(14, LoginLog.getUserLoggedIn());
         ps.setInt(15, t.getAppointmentID());
         int result = ps.executeUpdate();
         return result;

@@ -1,10 +1,13 @@
 /**
  * This is the Countries Database Object Module
  * Refactoring code especially that are being reused again and again
- * @author Syed Khurshid
+ * 
  */
 package schedular.DOA;
 
+/**
+ * @author Syed Khurshid
+ */
 import java.sql.Connection;
 import java.sql.PreparedStatement;
 import java.sql.ResultSet;
@@ -24,6 +27,7 @@ public class CountriesDOA implements DOA<Countries>{
     /** 
      * @see schedular.DOA.DOA#get(int)
      * @param id which is the ID of the country
+     * @throws SQLException which in case of SQL database error side
      * This is to see if the requested Country exists or not in the database based on the ID
      */
     @Override
@@ -47,7 +51,7 @@ public class CountriesDOA implements DOA<Countries>{
     /**
      * Getting all the countries list from the database.
      * No parameter
-     * @throws SQLException if an error occurs
+     * @throws SQLException if an error occurs on SQL database side 
      */
     @Override
     public ObservableList<Countries> getAll() throws SQLException {

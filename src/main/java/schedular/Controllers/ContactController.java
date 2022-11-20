@@ -1,9 +1,11 @@
 /**
  * Refactoring code to be used separately especially that are being used again and again
- * @author Syed Khurshid
+ * NoSQL database would be better for this transaction
  */
 package schedular.Controllers;
-
+/**
+ * @author Syed Khurshid
+ */
 import java.io.IOException;
 import java.net.URL;
 import java.sql.SQLException;
@@ -74,7 +76,7 @@ public class ContactController implements Initializable{
     /**
      * This is the action to go Contacts Form 
      * @param event Button press action
-     * @throws IOException
+     * @throws IOException on stage changes error occurs
      */
     @FXML void addContactAction(ActionEvent event) throws IOException {
         Parent root = FXMLLoader.load(getClass().getResource("/schedular/AddContact.fxml"));

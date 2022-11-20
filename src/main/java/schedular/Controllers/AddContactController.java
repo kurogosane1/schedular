@@ -1,3 +1,8 @@
+/**
+ * Using a no SQL database would be a better outcome
+ * Better relationshops with forms
+ * Less Code with More centralized Class methods
+ */
 package schedular.Controllers;
 /**
  * @author Syed Khurshid

@@ -1,3 +1,7 @@
+/**
+ * A a further detail customer form can be required
+ * Form and state changes depending on the country that is selected
+ */
 package schedular.Controllers;
 /**
  * @author Syed Khurshid
@@ -115,7 +119,7 @@ public class AddCustomerController implements Initializable {
     /**
      * This is to cancel current Action and redirect user to the Customer Page
      * @param event is the Button press
-     * @throws IOException 
+     * @throws IOException when an error on screen change is encountered
      */
     @FXML
     void cancelAddCusAction(ActionEvent event) throws IOException {
@@ -128,7 +132,7 @@ public class AddCustomerController implements Initializable {
     /**
      * This is to add the Customer when the form is filled
      * @param event which is from the Save Button Press
-     * @throws SQLException
+     * @throws SQLException when error with the SQL database occurs
      */
     @FXML
     public void saveCusAction(ActionEvent event) throws SQLException {
@@ -199,7 +203,7 @@ public class AddCustomerController implements Initializable {
     }
      /**
      * This is to return to the customer page if successfully processed
-     * @throws IOException
+     * @throws IOException for errors when the stage changes
      */
      public void goBackAfterSave() throws IOException {
          Parent root = FXMLLoader.load(getClass().getResource("/schedular/CustomerPage.fxml"));
@@ -256,8 +260,10 @@ public class AddCustomerController implements Initializable {
                  break;
          }
      }
+     
      /**
       * This is for when the user decides on the Division and then selections lead to a drop down list to be visible
+      @param event which is a choicebox options
       */
      public void changeDivision(ActionEvent event) {
          int choice = divisionChoice.getValue();
@@ -275,7 +281,6 @@ public class AddCustomerController implements Initializable {
      */
     @Override
     public void initialize(URL arg0, ResourceBundle arg1) {
-        System.out.println("Add Customers Page has been initialized");
         choiceboxFill();
         divisionChoice.setOnAction(this::changeDivision);
     }

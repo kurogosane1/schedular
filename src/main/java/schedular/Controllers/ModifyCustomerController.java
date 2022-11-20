@@ -1,3 +1,8 @@
+/**
+ * This is the modify Customers Controller section for editing Existin Customers
+ * Form input validation can be necessary for any SQL injections and inconsistant values
+ * NoSQL database would be better than relationship databases
+ */
 package schedular.Controllers;
 /**
  * @author Syed Khurshid
@@ -118,7 +123,7 @@ public class ModifyCustomerController implements Initializable {
     /**
      * This is to cancel and redirect user to the Customer page if no change or modifications are being carried out
      * @param event which is a button press
-     * @throws IOException 
+     * @throws IOException when a screen change error occurs
      */
     @FXML
     void cancelAddCusAction(ActionEvent event) throws IOException {
@@ -155,7 +160,7 @@ public class ModifyCustomerController implements Initializable {
       /**
      * This is to add the Customer when the form is filled
      * @param event which is from the Save Button Press
-     * @throws SQLException
+     * @throws SQLException when a error in SQL database is encountered
      */
     @FXML
     public void saveCusAction(ActionEvent event) throws SQLException {
@@ -208,7 +213,7 @@ public class ModifyCustomerController implements Initializable {
     }
      /**
      * This is to return to the customer page if successfully processed
-     * @throws IOException
+     * @throws IOException on screen change occurs
      */
      public void goBackAfterSave() throws IOException {
          System.out.println("Added customer");

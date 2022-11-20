@@ -1,3 +1,7 @@
+/**
+ * Contacts database can have a connection with the Customers and if so a field should be added
+ * NoSQL database would be a better choice
+ */
 package schedular.DOA;
 /**
  * @author Syed Khurshid
@@ -39,7 +43,7 @@ public class ContactsDOA implements DOA<Contacts> {
     }
     /**
      * This is to get All the Contacts
-     * @throws SQLException if an error occurs
+     * @throws SQLException if an error occurs with SQL database
      */
     @Override
     public ObservableList<Contacts> getAll() throws SQLException {
@@ -61,7 +65,7 @@ public class ContactsDOA implements DOA<Contacts> {
     /**
      * This is to insert a new contact into the Contacts Database
      * @param t which is the Contact object
-     * @throws SQLException if an error occurs
+     * @throws SQLException if an error occurs with SQL database connection
      */
     @Override
     public int insert(Contacts t) throws SQLException {
@@ -77,7 +81,7 @@ public class ContactsDOA implements DOA<Contacts> {
     /**
      * This is to update a contact with new information in the database
      * @param t which is the Contact object
-     * @throws SQLException if an error occurs
+     * @throws SQLException if an error occurs with SQL database
      */
     @Override
     public int update(Contacts t) throws SQLException {
@@ -93,7 +97,7 @@ public class ContactsDOA implements DOA<Contacts> {
     /**
      * This is to delete a contact from the database
      * @param t which is the Contact object
-     * @throws SQLException if an error occurs
+     * @throws SQLException if an error occurs on SQL database side
      */
     @Override
     public int delete(Contacts t) throws SQLException {
