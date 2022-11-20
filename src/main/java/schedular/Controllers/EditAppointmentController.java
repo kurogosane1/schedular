@@ -173,10 +173,13 @@ public class EditAppointmentController implements Initializable {
                                 displayError(12);
                                 return;
                             }
+                            // Testing new overlap functions
+                            Boolean overlapping=TimeConversion.checkOverlap(zStart.toLocalDateTime().format(formatter).toString(),
+                                    zEnd.toLocalDateTime().format(formatter).toString(), appointmentID);
                             // Checking for Overlaps
-                            Boolean noOverlaps = TimeConversion.appointmentOverlapCheck(zStart.toLocalDateTime().format(formatter).toString(),
-                                    zEnd.toLocalDateTime().format(formatter).toString());
-                            if (!noOverlaps) {
+                            // Boolean noOverlaps = TimeConversion.appointmentOverlapCheck(zStart.toLocalDateTime().format(formatter).toString(),
+                            //         zEnd.toLocalDateTime().format(formatter).toString());
+                            if (overlapping) {
                                 displayError(13);
                                 return;
                             }
@@ -414,7 +417,7 @@ public class EditAppointmentController implements Initializable {
      * This function is used to carry the Appointment object to the modify page for editing
      * @param t Appointment object
      */
-    public void modifyAppointment(Appointments t){
+    public void modifyAppointment(Appointments t) {
         apptIDTF.setText(String.valueOf(t.getAppointmentID()));
         titleTF.setText(t.getTitle());
         descTF.setText(t.getDescription());
@@ -435,6 +438,66 @@ public class EditAppointmentController implements Initializable {
         custIDChoice.setValue(t.getCustomer_id());
         userIDChoice.setValue(t.getUser_id());
         contactIDChoice.setValue(t.getContact_id());
+    }
+     /**
+     * This is to show the Contact Name from the choicebox
+     * @param event this is from the Contact Choice Box
+     */
+    public void showContactText(ActionEvent event) {
+        contIDET.setVisible(true);
+        ContactsDOA contactDOA = new ContactsDOA();
+        if (contactIDChoice.getValue() != null) {
+            try {
+                Contacts contact = contactDOA.get(contactIDChoice.getValue());
+                if (contact.getContactName() == null) {
+                    contIDET.setText("");
+                } else {
+
+                    contIDET.setText(contact.getContactName());
+                }
+            } catch (SQLException e) {
+                e.printStackTrace();
+            }
+        }
+    }
+     /**
+     * This is to get the Customer Name when the Customer ID choice is selected
+     * @param event is from the ChoiceBox option
+     */
+     public void showCustomerChoice(ActionEvent event) {
+         cusIDET.setVisible(true);
+         if (custIDChoice.getValue() != null) {
+             try {
+                 Customer customer = customerDOA.get(custIDChoice.getValue());
+                 if (customer.getCustomerName() == null) {
+                     cusIDET.setText("");
+                 } else {
+                     cusIDET.setText(customer.getCustomerName());
+                 }
+             } catch (SQLException e) {
+                 e.printStackTrace();
+             }
+         }
+     }
+     /**
+      * This is to get the User name from the choices selected from the User ID choicebox
+      * @param event is from the choicebox selection
+      */
+     public void showUserChoice(ActionEvent event) {
+         userIDET.setVisible(true);
+         if (userIDChoice.getValue() != null) {
+            try {
+                User user = userDOA.getID(userIDChoice.getValue());
+                if (user.getUserName() != null) {
+                    userIDET.setText(user.getUserName());
+                }
+                else {
+                    userIDET.setText("");
+                }
+            } catch (SQLException e) {
+                e.printStackTrace();
+            }
+         }
     }   
     /**
      * This is to initialize the page
@@ -446,112 +509,8 @@ public class EditAppointmentController implements Initializable {
         customerIDChoiceBox();
         userIDChoiceBox();
         contactIDChoiceBox();
+        contactIDChoice.setOnAction(this::showContactText);
+        custIDChoice.setOnAction(this::showCustomerChoice);
+        userIDChoice.setOnAction(this::showUserChoice);
     }
 }
-
-
-//  AppointmentDOA appointmentDOA = new AppointmentDOA();
-//         // Validation of the data first
-//         int appointmentID = Integer.parseInt(apptIDTF.getText()); // This is default and will not change
-//         try {
-//             String title = titleTF.getText();
-//             System.out.println("Title test success");
-//           try {
-//               String description = descTF.getText();
-//               System.out.println("description test success");
-//               try {
-//                   String location = locationTF.getText();
-//                   System.out.println("Location test success");
-//                     try {
-//                         String type = typeTF.getText();
-//                         System.out.println("Type test success");
-//                         try {
-                            
-//                             // // First Getting Start and End DateTime From the Choices
-//                             // String startTime = TimeConversion.timeStringConversion(startHourSpinner.getValue(),
-//                             //         startMinSpinner.getValue());
-//                             // String endTime = TimeConversion.timeStringConversion(endHourSpinner.getValue(),
-//                             //         endMinSpinner.getValue());
-//                             // String startDateTime = TimeConversion.convertDateTime(StartDatePicker.getValue(),
-//                             //         startTime);
-//                             // String endDateTime = TimeConversion.convertDateTime(endDatePicker.getValue(), endTime);
-//                             // ZonedDateTime startD = TimeConversion.convertToLocalDateTime(startDateTime);
-//                             // ZonedDateTime endD = TimeConversion.convertToLocalDateTime(endDateTime);
-//                             // Boolean validBusinessHour = timeTools.compareTimeZones(startD, endD, startD.toLocalDate(),
-//                             //         endD.toLocalDate());
-//                             // Boolean noOverlap = TimeConversion.appointmentOverlapCheck
-//                             // (startDateTime, endDateTime);
-//                             // Integer errorCheck = TimeConversion.compareDates(startDateTime, endDateTime);
-//                             // Boolean timeCheck = TimeConversion.compareTimes(startDateTime, endDateTime);
-//                             // if (errorCheck == 1 && errorCheck!=0) {
-//                             //     displayError(6);
-//                             //     return;
-//                             // }
-//                             // if (errorCheck == 2&& errorCheck!=0) {
-//                             //     displayError(9);
-//                             //     return;
-//                             // }
-//                             // if (errorCheck == 3 && errorCheck != 0) {
-//                             //     displayError(10);
-//                             //     return;
-//                             // }
-//                             // if (!timeCheck) {
-//                             //     displayError(11);
-//                             //     return;
-//                             // }
-//                             // if (!validBusinessHour && errorCheck!=0) {
-//                             //     displayError(12);
-//                             //     return;
-//                             // }    
-//                             // else {
-//                             //     if (!noOverlap) {
-//                             //         displayError(13);
-//                             //         return;
-//                             //     }
-//                             //     else {
-//                             //         System.out.println("DateTime Test successfully");
-//                             //         try {
-//                             //     int customerID = custIDChoice.getValue();
-//                             //     int userID = userIDChoice.getValue();
-//                             //     int contactID = contactIDChoice.getValue();
-//                             //     System.out.println("Successfully completed");
-//                             //     // String startUTC = TimeConversion.convertTimeToUTC(startDateTime);
-//                             //     // String endUTC = TimeConversion.convertTimeToUTC(endDateTime);
-//                             //     // Appointments appointments = new Appointments(appointmentID, title, description,
-//                             //     //         location, type, startUTC, endUTC, customerID, userID, contactID);
-
-//                             //     // appointmentDOA.update(appointments);
-//                             //     goBackAfterSave();
-
-//                             // } catch (NullPointerException e) {
-//                             //     e.printStackTrace(); // This is for Customer ID, User ID and Contact ID
-//                             //     displayError(8);
-//                             //     return;
-//                             // }
-//                         }
-//                             }
-//                         } catch (NullPointerException e) {
-//                             e.printStackTrace(); // This is for the Start Date and Timestamp
-//                             displayError(7);
-//                             return;
-//                         }
-//                     } catch (NullPointerException e) {
-//                         e.printStackTrace(); // This is for type
-//                         displayError(4);
-//                         return;
-//                     }
-//               } catch (NullPointerException e) {
-//                   e.printStackTrace();// This is for Location
-//                   displayError(3);
-//                   return;
-//               }
-//           } catch (NullPointerException e) {
-//               e.printStackTrace(); // This is for Description
-//               displayError(2);
-//               return;
-//           }  
-//         } catch (NullPointerException e) {
-//             e.printStackTrace(); // This is for Title
-//             displayError(1);
-//             return;
-//         } 

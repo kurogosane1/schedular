@@ -52,10 +52,8 @@ public class TimeConversion {
      * @return string format of the date
      */
     public static ZonedDateTime convertToLocalDateTime(String date) {
-        System.out.println("This is the date I get from Database: "+date);
         DateTimeFormatter formatter = DateTimeFormatter.ofPattern("yyyy-MM-dd HH:mm:ss");
-        ZonedDateTime dateTimeEffect = LocalDateTime.parse(date, formatter).atZone(ZoneId.of("UTC"));
-        System.out.println("This is me trying: "+dateTimeEffect);
+        // ZonedDateTime dateTimeEffect = LocalDateTime.parse(date, formatter).atZone(ZoneId.of("UTC"));
         ZonedDateTime result = LocalDateTime.parse(date, formatter).atZone(userTimeZone);
         return result;
     }
@@ -74,7 +72,7 @@ public class TimeConversion {
      if (minuteCheck.length() == 1) {
          minuteCheck = "0" + minuteCheck;
      }
-     System.out.println(hourCheck + " " + minuteCheck);
+
      String str = hourCheck + ":" + minuteCheck + ":" + "00";
      return  str;  
     };
@@ -96,6 +94,9 @@ public class TimeConversion {
         if (endT.isBefore(startT)) {
             return false;
         }
+        if (startT.equals(endT)) {
+            return false;
+        }
         return true; // IF everything is OK
     }
     /**
@@ -105,8 +106,6 @@ public class TimeConversion {
      * @return Integer value that will be used to compare values
      */
     public static Integer compareDates(String startDate, String endDate) {
-        System.out.println(startDate + " " + endDate);
-        DateTimeFormatter format = DateTimeFormatter.ISO_INSTANT;
         DateTimeFormatter formatter = DateTimeFormatter.ofPattern("yyyy-MM-dd HH:mm:ss");
         // ZonedDateTime statDateTime = ZonedDateTime.parse(startDate,formatter);
         // ZonedDateTime endDateTime = ZonedDateTime.parse(startDate,formatter);
@@ -187,31 +186,79 @@ public class TimeConversion {
         ObservableList<Appointments> appointmentList = aptDOA.getAll();
         if (appointmentList.isEmpty()) {
             return true;
-        }
-        else {
+        } else {
             for (Appointments conflictCheck : appointmentList) {
                 DateTimeFormatter formatter = DateTimeFormatter.ofPattern("yyyy-MM-dd HH:mm:ss");
-                LocalDateTime startDateTimeCheck = LocalDateTime.parse(startDateTime,formatter);
-                LocalDateTime endDateTimeCheck = LocalDateTime.parse(endDateTime,formatter);
-                LocalDateTime startCheck =LocalDateTime.parse(conflictCheck.getStart(),formatter);
-                LocalDateTime endCheck = LocalDateTime.parse(conflictCheck.getStart(), formatter);
-                
+                LocalDateTime startDateTimeCheck = LocalDateTime.parse(startDateTime, formatter);
+                LocalDateTime endDateTimeCheck = LocalDateTime.parse(endDateTime, formatter);
+                LocalDateTime startCheck = LocalDateTime.parse(conflictCheck.getStart(), formatter);
+                LocalDateTime endCheck = LocalDateTime.parse(conflictCheck.getEnd(), formatter);
+
                 // Conflict starts before and Conflict ends any time after new appointment ends - Overlap
-                if (startCheck.isBefore(startDateTimeCheck) & endCheck.isAfter(endDateTimeCheck)) {
+                if (startCheck.isBefore(startDateTimeCheck) && endCheck.isAfter(endDateTimeCheck)) {
                     return false;
                 }
                 // Start time falls anywhere in the new appointment
-                if (startCheck.isBefore(endDateTimeCheck) & startCheck.isAfter(startDateTimeCheck)) {
+                if (startCheck.isBefore(endDateTimeCheck) && startCheck.isAfter(startDateTimeCheck)) {
                     return false;
                 }
                 // End Time conflict falls anywhere in the new appointment
-                if (endCheck.isBefore(endDateTimeCheck) & endCheck.isAfter(startDateTimeCheck)) {
+                if (endCheck.isBefore(endDateTimeCheck) && endCheck.isAfter(startDateTimeCheck)) {
                     return false;
                 }
-                else{
+                else {
                     return true;
                 }
             }
+        }
+        return true;
+    }
+
+    public static Boolean checkOverlap(String startDateTime, String endDateTime, Integer apptId) throws SQLException {
+        // Getting all the appointments to check
+        AppointmentDOA aptDOA = new AppointmentDOA();
+        int matches = 0;
+        int noMatch = 0;
+        ObservableList<Appointments> appointmentList = aptDOA.getAll();
+        if (appointmentList.isEmpty()) {
+            // If the appointment lists are all empty then it is automatically has a open slot
+            return false;
+        }
+        else {
+            // Formatting layout
+            DateTimeFormatter formatter = DateTimeFormatter.ofPattern("yyyy-MM-dd HH:mm:ss");
+            // Converting Date Time to LocalDateTime format for comparison
+            LocalDateTime apptStartLDT = LocalDateTime.parse(startDateTime, formatter);
+            LocalDateTime apptEndLDT = LocalDateTime.parse(endDateTime, formatter);
+
+            // Now comparing with all the appointment schedules available
+            // Looping over all the appointments to compare with the selected dates
+            for (Appointments conflict : appointmentList) {
+                // Converting the existing appointments into LocalDateTime
+                LocalDateTime conflictStart = LocalDateTime.parse(conflict.getStart(), formatter);
+                LocalDateTime conflictEnd = LocalDateTime.parse(conflict.getEnd(), formatter);
+                // Now checking if the appointment is conflicting
+                // Check One when the Start is in the Window
+                if (conflictStart.isAfter(apptStartLDT)
+                        || apptStartLDT.isEqual(apptStartLDT) && conflictStart.isBefore(apptEndLDT) && apptId != conflict.getAppointmentID()) {
+                    matches++;
+                }
+                // Check Two When the end is in the Window
+                if (conflictEnd.isAfter(apptStartLDT)
+                        && (conflictEnd.isBefore(apptEndLDT) || conflictEnd.isEqual(apptEndLDT)) && apptId != conflict.getAppointmentID()) {
+                    matches++;
+                }
+                // Check Three When Start and End are outside of the Window Appointment
+                if ((conflictStart.isBefore(apptStartLDT) || conflictStart.isEqual(apptStartLDT) && apptId != conflict.getAppointmentID())
+                        && (conflictEnd.isAfter(apptEndLDT) || conflictEnd.isEqual(apptEndLDT))) {
+                    matches++;
+                } else {
+                    noMatch++;
+                }
+            }
+        }
+        if (matches > noMatch) {
+            return true;
         }
         return false;
     }

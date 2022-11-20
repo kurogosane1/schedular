@@ -39,6 +39,27 @@ public class UsersDOA {
         return null;
     }
     /**
+     * This is to get the User based on the ID
+     * @param id this is the User ID given
+     * @return User object from the database
+     * @throws SQLException which in case of SQL error
+     */
+    public User getID(int id) throws SQLException {
+        Connection con = Database.getConnection();
+        User user = null;
+        String sql = "SELECT User_ID, User_Name, Password FROM USERS WHERE User_ID=?";
+        PreparedStatement ps = con.prepareStatement(sql);
+        ps.setInt(1, id);
+        ResultSet rs = ps.executeQuery();
+        if (rs.next()) {
+            int userid = rs.getInt("User_ID");
+            String username = rs.getString("User_Name");
+            String Password = rs.getString("Password");
+            user = new User(userid, username, Password);
+        }
+        return user;
+    }
+    /**
      * This is to get all Users
      * @return users which is an ObservableList of User
      * @throws SQLException of not being able to process

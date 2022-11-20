@@ -157,7 +157,7 @@ public class MainPageController implements Initializable {
     @FXML
     void deleteApptAction(ActionEvent event) {
         Alert alert = new Alert(Alert.AlertType.WARNING);
-        if (apptTable.getSelectionModel().getSelectedItems() == null || !apptTable.getSelectionModel().isEmpty()) {
+        if (apptTable.getSelectionModel().getSelectedItems() == null || apptTable.getSelectionModel().isEmpty()) {
             alert.setTitle("Warning Dialog");
             alert.setContentText("Please select an appointment to delete");
             alert.showAndWait();

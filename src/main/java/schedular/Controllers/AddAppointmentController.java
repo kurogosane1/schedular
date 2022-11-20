@@ -50,83 +50,67 @@ public class AddAppointmentController implements Initializable{
     /**
      * Date Start Date DatePicker
      */
-    @FXML
-    private DatePicker StartDatePicker;
+    @FXML private DatePicker StartDatePicker;
     /**
      * Appointment ID Error Message Text
      */
-    @FXML
-    private Text apptIDET;
+    @FXML private Text apptIDET;
     /**
      * appointment ID Label
      */
-    @FXML
-    private Label apptIDLabel;
+    @FXML private Label apptIDLabel;
     /**
      * Appointment ID Text Field
      */
-    @FXML
-    private TextField apptIDTF;
+    @FXML private TextField apptIDTF;
     /**
      * Cancel Button for cancelling for adding any appointment
      */
-    @FXML
-    private Button cancelButton;
+    @FXML private Button cancelButton;
     /**
      * Contact ID Error Text Field
      */
-    @FXML
-    private Text contIDET;
+    @FXML private Text contIDET;
     /**
      * Customer ID Error Text
      */
-    @FXML
-    private Text cusIDET;
+    @FXML private Text cusIDET;
     /**
      * Customer ID Label
      */
-    @FXML
-    private Label customerIDLabel;
+    @FXML private Label customerIDLabel;
     /**
      * Date Error Text
      */
-    @FXML
-    private Text dateET;
+    @FXML private Text dateET;
     /**
      * Text Error for Description 
      */
-    @FXML
-    private Text descET;
+    @FXML private Text descET;
     /**
      * Description label field
      */
-    @FXML
-    private Label descLabel;
+    @FXML private Label descLabel;
     /**
      * This is the Description Text Field
      */
-    @FXML
-    private TextField descTF;
+    @FXML private TextField descTF;
     /**
      * This is the end Date Label
      */
-    @FXML
-    private Label endDateLabel;
+    @FXML private Label endDateLabel;
     /**
      * This is the end Date Picker
      */
-    @FXML
-    private DatePicker endDatePicker;
+    @FXML private DatePicker endDatePicker;
     /**
      * This is the end Hour Spinner
      */
-    @FXML
-    private Spinner<Integer> endHourSpinner;
+    @FXML private Spinner<Integer> endHourSpinner;
     /**
      * This is the minutes to get the end of time of appointment in Minutes
      */
-    @FXML
-    private Spinner<Integer> endMinSpinner;
+    @FXML private Spinner<Integer> endMinSpinner;
     /**
      * This is the end of Time Label
      */
@@ -204,10 +188,6 @@ public class AddAppointmentController implements Initializable{
      */
     @FXML private Label userIDLabel;
     /**
-     * This is the Appointments DOA
-     */
-    private AppointmentDOA appointmentDOA = new AppointmentDOA();
-    /**
      * This is the Customer DOA
      */
     private CustomerDOA customerDOA = new CustomerDOA();
@@ -257,7 +237,7 @@ public class AddAppointmentController implements Initializable{
     @FXML
     void saveButtonPress(ActionEvent event) throws SQLException, IOException {
         // Getting the Appointment ID which will be automatically added
-        int appointmentID = appointmentDOA.getAll().size();
+        int appointmentID = 0;
         try {
             String title = titleTF.getText();
             try {
@@ -311,10 +291,10 @@ public class AddAppointmentController implements Initializable{
                                 displayError(12);
                                 return;
                             }
-                            // Checking for Overlaps
-                            Boolean noOverlaps = TimeConversion.appointmentOverlapCheck(zStart.toLocalDateTime().format(formatter).toString(),
-                                    zEnd.toLocalDateTime().format(formatter).toString());
-                            if (!noOverlaps) {
+                            // Testing new overlap functions
+                            Boolean overlapping=TimeConversion.checkOverlap(zStart.toLocalDateTime().format(formatter).toString(),
+                                    zEnd.toLocalDateTime().format(formatter).toString(), appointmentID);
+                            if (overlapping) {
                                 displayError(13);
                                 return;
                             }
@@ -365,8 +345,10 @@ public class AddAppointmentController implements Initializable{
         }
 
     }
+    
     /**
      * Lambda expression to go switch screens.
+     * The interface is located in the Utitlities Folder under GoBack interface
      * Reason for using Lambda is still not quite the same
      * @param s which is the String
      */
@@ -379,6 +361,7 @@ public class AddAppointmentController implements Initializable{
     };
     /**
      * Using lambda expression to push to database. With this I can reduce the number of code lines in a function
+     * The interface is located in the utitlies folder under AddObject interface
      * By placing these outside is helping to reduce the line of codes in a function
      * @param id this is the appointment id
      * @param title this is the name of the appointment
@@ -573,25 +556,65 @@ public class AddAppointmentController implements Initializable{
         }
 
     }
-    
+    /**
+     * This is to show the Contact Name from the choicebox
+     * @param event this is from the Contact Choice Box
+     */
     public void showContactText(ActionEvent event) {
         contIDET.setVisible(true);
         ContactsDOA contactDOA = new ContactsDOA();
-        contIDET.setText("");
-        System.out.println(contactIDChoice.getValue() + " Value");
-        if (contactIDChoice.getValue() !=null) {
-            try{
+        if (contactIDChoice.getValue() != null) {
+            try {
                 Contacts contact = contactDOA.get(contactIDChoice.getValue());
-            if (contact.getContactName() == null) {
-                contIDET.setText("");
-            } else {
-                
-                contIDET.setText(contact.getContactName());
-            }
-        } catch (SQLException e) {
-            e.printStackTrace();
+                if (contact.getContactName() == null) {
+                    contIDET.setText("");
+                } else {
+
+                    contIDET.setText(contact.getContactName());
+                }
+            } catch (SQLException e) {
+                e.printStackTrace();
             }
         }
+    }
+     /**
+     * This is to get the Customer Name when the Customer ID choice is selected
+     * @param event is from the ChoiceBox option
+     */
+     public void showCustomerChoice(ActionEvent event) {
+         cusIDET.setVisible(true);
+         if (custIDChoice.getValue() != null) {
+             try {
+                 Customer customer = customerDOA.get(custIDChoice.getValue());
+                 if (customer.getCustomerName() == null) {
+                     cusIDET.setText("");
+                 } else {
+                     cusIDET.setText(customer.getCustomerName());
+                 }
+             } catch (SQLException e) {
+                 e.printStackTrace();
+             }
+         }
+     }
+     /**
+      * This is to get the User name from the choices selected from the User ID choicebox
+      * @param event is from the choicebox selection
+      */
+     public void showUserChoice(ActionEvent event) {
+         userIDET.setVisible(true);
+         if (userIDChoice.getValue() != null) {
+            try {
+                User user = userDOA.getID(userIDChoice.getValue());
+                if (user.getUserName() != null) {
+                    userIDET.setText(user.getUserName());
+                }
+                else {
+                    userIDET.setText("");
+                }
+            } catch (SQLException e) {
+                e.printStackTrace();
+            }
+         }
     }
     /**
      * This is to initialize the page
@@ -607,5 +630,7 @@ public class AddAppointmentController implements Initializable{
         spinnerHourChoice();
         spinnerMinuteChoice();
         contactIDChoice.setOnAction(this::showContactText);
+        custIDChoice.setOnAction(this::showCustomerChoice);
+        userIDChoice.setOnAction(this::showUserChoice);
     }
 }
