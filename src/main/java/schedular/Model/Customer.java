@@ -15,12 +15,12 @@ public class Customer {
     public int division_id;
     /**
      * Default Constructor
-     * @param customerId
-     * @param customerName
-     * @param customerAddress
-     * @param postalCode
-     * @param phoneNumber
-     * @param division_id
+     * @param customerId default customer ID
+     * @param customerName default constructor Customer Name
+     * @param customerAddress default customer address
+     * @param postalCode default customer postal code
+     * @param phoneNumber default customer phone number
+     * @param division_id default customer division ID
      */
     public Customer(int customerId, String customerName, String customerAddress, String postalCode, String phoneNumber,
             int division_id) {
@@ -33,21 +33,21 @@ public class Customer {
     }
     /**
      * This is to get the Customer ID from the database
-     * @return
+     * @return customerId which is the Customer ID
      */
     public int getCustomerId() {
         return customerId;
     }
     /**
      * This is to set the Customer ID in the database
-     * @param customerId
+     * @param customerId which is the customer ID
      */
     public void setCustomerId(int customerId) {
         this.customerId = customerId;
     }
     /**
      * This is to get the Customer name from the database
-     * @return
+     * @return customerName  which is the customer name
      */
     public String getCustomerName() {
         return customerName;
@@ -62,6 +62,7 @@ public class Customer {
     
     /**
      * This is to return the Customer address
+     * @return customerAddress which is the customer address
      */
     public String getCustomerAddress() {
         return customerAddress;

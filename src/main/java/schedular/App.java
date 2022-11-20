@@ -14,7 +14,6 @@ import javafx.scene.Scene;
 import javafx.stage.Stage;
 import schedular.connect.Database;
 import java.io.IOException;
-import java.sql.SQLException;
 /**
  * JavaFX App
  */

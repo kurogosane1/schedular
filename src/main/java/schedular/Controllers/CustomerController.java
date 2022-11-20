@@ -136,7 +136,7 @@ public class CustomerController implements Initializable {
     /**
      * This is to take user out of the Customers page
      * @param event Button press action
-     * @throws IOException
+     * @throws IOException an error from screen change
      */
     @FXML
     public void goBackAction(ActionEvent event) throws IOException {
@@ -149,7 +149,7 @@ public class CustomerController implements Initializable {
     /**
      * This is the modify Button Press to take the User to the Form to modify input
      * @param event Button press action
-     * @throws IOException
+     * @throws IOException on a screen change
      */
     @FXML
     public void modCustomerAction(ActionEvent event) throws IOException {

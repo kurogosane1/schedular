@@ -34,7 +34,7 @@ public class LoginLog {
     }
     /**
      * This is to get the 
-     * @param userLoggedIn
+     * @param user in which is the user logged in name
      */
     public static void setUserLoggedIn(String user) {
         userLoggedIn = user;

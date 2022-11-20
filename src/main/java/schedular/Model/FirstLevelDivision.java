@@ -21,9 +21,9 @@ public class FirstLevelDivision {
     public int countryID;
     /**
      * Default Constructor
-     * @param divisionID
-     * @param division
-     * @param countryID
+     * @param divisionID default division ID
+     * @param division default division name
+     * @param countryID default country ID
      */
     public FirstLevelDivision(int divisionID, String division, int countryID) {
         this.divisionID = divisionID;
@@ -31,7 +31,7 @@ public class FirstLevelDivision {
         this.countryID = countryID;
     }
     /**
-     * @return DivisioniD which is the Division ID
+     * @return divisionID which is the Division ID
      */
     public int getDivisionID() {
         return divisionID;

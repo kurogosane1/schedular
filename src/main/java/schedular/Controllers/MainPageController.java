@@ -203,7 +203,7 @@ public class MainPageController implements Initializable {
     /**
      * This is to Modify Appointments 
      * @param event with a button press
-     * @IOException from a screen transfer
+     * @throws IOException from a screen transfer
      */
     @FXML
     public void modifyAppt(ActionEvent event) throws IOException {
@@ -229,7 +229,7 @@ public class MainPageController implements Initializable {
     /**
      * This is to get all the Appointments 
      * @param event is a Radio press event
-     * @SQLException if an error occurs
+     * @throws SQLException if an error occurs
      */
     @FXML
     public void radioAll(ActionEvent event) throws SQLException {

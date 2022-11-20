@@ -271,7 +271,7 @@ public class AppointmentDOA implements DOA<Appointments> {
     /**
      * This to get the Monthly Appointments 
      * @return Appointments observableArrayList
-     * @SQLException if an error occurs
+     * @throws SQLException if an error occurs
      */
     public ObservableList<Appointments> getApptsMonthly() throws SQLException {
         Connection con = Database.getConnection();

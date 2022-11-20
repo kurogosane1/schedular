@@ -12,9 +12,9 @@ public class Contacts {
     private String emailAddress;
     /**
      * Default Constructor
-     * @param contact_ID
-     * @param contactName
-     * @param emailAddress
+     * @param contact_ID this is the default contact ID
+     * @param contactName default contact Name
+     * @param emailAddress default contact email address
      */
     public Contacts(int contact_ID, String contactName, String emailAddress) {
         this.contact_ID = contact_ID;

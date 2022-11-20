@@ -48,7 +48,7 @@ public class DivisionDOA implements DOA<FirstLevelDivision>{
      * Getting all the Divisions from the database
      * We will be using this to get the Customer information
      * @throws SQLException if an error occurs on SQL database side
-     * @returns FirstLevelDivision which is a ObservableList<FirstLevelDivision> array
+     * @return divisions which is a ObservableList FirstLevelDivision array
      */
     @Override
     public ObservableList<FirstLevelDivision> getAll() throws SQLException {

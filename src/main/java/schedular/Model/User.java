@@ -47,6 +47,7 @@ public class User {
     }
     /**
      * This is simply to return the username
+     * @return username name of the User
      */
     public String getUserName() {
         return userName;

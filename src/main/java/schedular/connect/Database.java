@@ -27,6 +27,12 @@ public abstract class Database {
     public static Connection connection;
     
     /**
+     * Default constructor
+     */
+    public Database() {
+    }
+
+    /**
      * Tgus us ti Establish a connection to the database
      */
     public static void openConnection() {

@@ -9,40 +9,70 @@ package schedular.Model;
  * This is the Appointments User Object
  */
 public class Appointments {
+    /**
+     * This is the default Appointments ID
+     */
     private int AppointmentID;
+    /**
+     * This is the default Title of the Appointments
+     */
     private String Title;
+    /**
+     * This is the default Description of the Appointments
+     */
     private String Description;
+    /**
+     * This is the default location of the Appointments
+     */
     private String Location;
+    /**
+     * This is the type of the Appointments
+     */
     private String Type;
+    /**
+     * This is the start date and time of the Appointments
+     */
     private String Start;
+    /**
+     * This is the end date and time of the Appointments
+     */
     private String End;
+    /**
+     * This is the customer id of the appointments
+     */
     public int customer_id;
+    /**
+     * This is the user id linking to the Users table
+     */
     public int user_id;
+    /**
+     * This is the Contact ID that is linking with the Contacts table
+     */
     public int contact_id;
 
     /**
      * Default Constructor
-     * @param appointmentID
-     * @param title
-     * @param description
-     * @param location
-     * @param type
-     * @param start
-     * @param end
-     * @param customer_id
-     * @param user_id
-     * @param contact_id
+     * @param appointmentID the default appointment id
+     * @param title the default title of the appointment
+     * @param description the default description of the appointment
+     * @param location the default location of the appointment
+     * @param type the default type of the appointment
+     * @param start the default start of the appointment
+     * @param end the default end of the appointment
+     * @param customer_id the default customer_id of the appointment
+     * @param user_id the default user_id of the appointment 
+     * @param contact_id the default contact_id of the appointment
      */
     public Appointments(int appointmentID, String title, String description, String location, String type,
             String start, String end, int customer_id, int user_id, int contact_id)
             {
-        AppointmentID = appointmentID;
-        Title = title;
-        Description = description;
-        Location = location;
-        Type = type;
-        Start = start;
-        End = end;
+        this.AppointmentID = appointmentID;
+        this.Title = title;
+        this.Description = description;
+        this.Location = location;
+        this.Type = type;
+        this.Start = start;
+        this.End = end;
         this.customer_id = customer_id;
         this.user_id = user_id;
         this.contact_id = contact_id;

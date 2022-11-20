@@ -139,10 +139,12 @@ public class TimeConversion {
         String utcOUT = localOUT.format(DateTimeFormatter.ofPattern("yyy-MM-dd HH:mm:ss"));
         return utcOUT;
     }
+    
     /**
      * THis is to Compare if the Time Zone is not met
      * @param startDateTime is the starting Date Time for the Appointment
      * @param endDateTime is the end Date Time for the Appointment
+     * @param endAppointmentDate is the end Date Time for the Appointment
      * @param appointmentDate is the Appointment Date
      * @return Boolean to the user to then take action accordingly
      */
@@ -213,7 +215,14 @@ public class TimeConversion {
         }
         return true;
     }
-
+    /**
+     * This is to check if there is an overlap between the dates and time of meetings
+     * @param startDateTime this is the start Date and Time of the Appointments
+     * @param endDateTime this is the end Date and Time of the Appointments
+     * @param apptId this is the Appointments ID to check if an existing Appointment is not already considered
+     * @return boolean which is a true or false Boolean indicating if an existing appointment exists
+     * @throws SQLException if an error occurs on the database side
+     */
     public static Boolean checkOverlap(String startDateTime, String endDateTime, Integer apptId) throws SQLException {
         // Getting all the appointments to check
         AppointmentDOA aptDOA = new AppointmentDOA();

@@ -5,12 +5,18 @@ package schedular.Model;
 
 // class is user to store the current countries in the database
 public class Countries {
+    /**
+     * This is the default Country ID
+     */
     private int countryID;
+    /**
+     * This is the default Country Name
+     */
     private String country;
     /**
-     * Countructor 
-     * @param countryID
-     * @param country
+     * default Constructor
+     * @param countryID default country ID
+     * @param country default Country name
      */
     public Countries(int countryID, String country) {
         this.countryID = countryID;

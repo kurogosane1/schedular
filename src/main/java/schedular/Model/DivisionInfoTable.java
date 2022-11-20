@@ -33,7 +33,7 @@ public class DivisionInfoTable {
     }
     /**
      * This is to Get the Total Customers we have
-     * @return Integer of the total customers under each Division
+     * @return customerTotal of the total customers under each Division
      */
     public Integer getCustomerTotal() {
         return customerTotal;
@@ -41,6 +41,7 @@ public class DivisionInfoTable {
     
     /**
      * This is to set the Customer Totals under each division
+     * @param customerTotal which is the total number of customers under a category found in the Database
      */
     public void setCustomerTotal(Integer customerTotal) {
         this.customerTotal = customerTotal;
