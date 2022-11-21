@@ -312,7 +312,7 @@ public class MainPageController implements Initializable {
             Customer customer;
             try {
                 customer = customerDOA.get(appointment.getCustomer_id());
-                if (timedifference <= 15 && timedifference == 0) {
+                if (timedifference <= 15 && timedifference >= 0) {
                     apptTimeDifference = timedifference;
                     apptDescription = appointment.getDescription();
                     customerName = customer.getCustomerName();
