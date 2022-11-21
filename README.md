@@ -14,8 +14,7 @@ You've been working for a software company that has been contracted to develop a
 Visual Studio Code: Version: 1.73.1 and IntelliJ IDEA 2021.1 (Community Edition)
 JDK: JavaSE-11
 Java version 18
-JavaFX-SDK-19
-mysql connector: mysql-connector-java-8.0.31
+JavaFX-SDK-19mysql connector: mysql-connector-java-8.0.31
 
 ### Directions to Run the App
 

@@ -312,7 +312,7 @@ public class MainPageController implements Initializable {
             Customer customer;
             try {
                 customer = customerDOA.get(appointment.getCustomer_id());
-                if (timedifference <= 15 || timedifference == 0) {
+                if (timedifference <= 15 && timedifference == 0) {
                     apptTimeDifference = timedifference;
                     apptDescription = appointment.getDescription();
                     customerName = customer.getCustomerName();
@@ -330,7 +330,7 @@ public class MainPageController implements Initializable {
             Alert alert = new Alert(Alert.AlertType.INFORMATION);
             alert.setHeaderText(null);
             alert.setContentText(
-                    "Your Appointment is in 15 minutes for " + apptDescription + " with " + customerName + "On "
+                    "Your Appointment is in "+ apptTimeDifference+" minutes for " + apptDescription + " with " + customerName + "On "
                             + appointmentDate + " at " + appointmentTime);
             alert.showAndWait();
         }
