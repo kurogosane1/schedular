@@ -11,6 +11,8 @@ import java.net.URL;
 import java.sql.SQLException;
 import java.util.ArrayList;
 import java.util.ResourceBundle;
+
+import javafx.collections.FXCollections;
 import javafx.collections.ObservableList;
 import javafx.event.ActionEvent;
 import javafx.fxml.FXML;
@@ -24,8 +26,10 @@ import javafx.scene.control.ChoiceBox;
 import javafx.scene.control.Label;
 import javafx.scene.control.TextField;
 import javafx.stage.Stage;
+import schedular.DOA.CountriesDOA;
 import schedular.DOA.CustomerDOA;
 import schedular.DOA.DivisionDOA;
+import schedular.Model.Countries;
 import schedular.Model.Customer;
 import schedular.Model.FirstLevelDivision;
 import javafx.scene.text.Text;
@@ -34,80 +38,89 @@ import javafx.scene.text.Text;
  */
 public class AddCustomerController implements Initializable {
     /**
-     * These are the errors texts for Customer Name, Address, Phone, Postal Code
+     * This is the add error Text 
      */
-    @FXML
-    private Text addErrorT,nameErrorT, divisionIDError, phoneErrorT, postalErrorT;
+    @FXML private Text addErrorT;
     /**
      * This is the Cancel button
      */
-    @FXML
-    private Button canceblButton;
+    @FXML private Button canceblButton;
+    /**
+     * This is the Country Choicebox
+     */
+    @FXML private ChoiceBox<String> countryChoice;
+    /**
+     * This is the Country Label
+     */
+    @FXML private Label countryLabel;
     /**
      * This is the Customer Address Text Field
      */
-    @FXML
-    private TextField cusAddrTF;
+    @FXML private TextField cusAddrTF;
     /**
      * This is the Customer Address Label
      */
-    @FXML
-    private Label cusAddressLabel;
+    @FXML private Label cusAddressLabel;
     /**
      * This is the Customer ID Label
      */
-    @FXML
-    private Label cusIDLabel;
+    @FXML private Label cusIDLabel;
     /**
-     * This is the Customer ID Text Field
+     * This is the Customer ID TextField
      */
-    @FXML
-    private TextField cusIDTextField;
+    @FXML private TextField cusIDTextField;
     /**
      * This is the Customer Name Label
      */
-    @FXML
-    private Label cusNameLabel;
+    @FXML private Label cusNameLabel;
     /**
-     * This is the Customer Name Text Field
+     * This is the Customer Name TF
      */
-    @FXML
-    private TextField cusNameTF;
+    @FXML private TextField cusNameTF;
     /**
-     * This is the Customer Phone Label
+     * This is the Customer Phone Number label
      */
-    @FXML
-    private Label cusPhoneLabel;
+    @FXML private Label cusPhoneLabel;
     /**
-     * This is the customer Postal Label
+     * This is the Customer Postal Label
      */
-    @FXML
-    private Label cusPostalLabel;
+    @FXML private Label cusPostalLabel;
     /**
-     * This is the Customer Postal TextField
+     * This is the Customer Postal Code Text Field
      */
-    @FXML
-    private TextField cusPostalTF;
+    @FXML private TextField cusPostalTF;
     /**
-     * This is the Division name Text Field
+     * This is the Division ID error Text Field
      */
-    @FXML
-    private TextField divNameTF;
+    @FXML private Text divisionIDError;
     /**
-     * This is the Division Choice box
+     * This is the name error text field
      */
-    @FXML
-    private ChoiceBox<Integer> divisionChoice;
+    @FXML private Text nameErrorT;
     /**
-     * This is the Phone Text Field
+     * This is the Phone Error Text Field
      */
-    @FXML
-    private TextField phoneTF;
+    @FXML private Text phoneErrorT;
     /**
-     * This is to Save Customer Button
+     * This is the Phone Text Field that the user will fill
      */
-    @FXML
-    private Button saveCusButton;
+    @FXML private TextField phoneTF;
+    /**
+     * This is the postal error code text field
+     */
+    @FXML private Text postalErrorT;
+    /**
+     * This is the save button 
+     */
+    @FXML private Button saveCusButton;
+    /**
+     * This is the state choicebox that the user will select
+     */
+    @FXML private ChoiceBox<String> stateChoice;
+    /**
+     * This is the State or Province reference label
+     */
+    @FXML private Label stateLabel;
     /** 
      * This is the First Level Division Object
      */ 
@@ -116,6 +129,14 @@ public class AddCustomerController implements Initializable {
      * This is the Division DOA
      */
     private DivisionDOA divDOA = new DivisionDOA();
+    /**
+     * This is the Countries DOA to get country information
+     */
+    private CountriesDOA countriesDOA = new CountriesDOA();
+    /**
+     * This is all the countries observableArrayList
+     */
+    private ObservableList<Countries> countries = FXCollections.observableArrayList();
     /**
      * This is to cancel current Action and redirect user to the Customer Page
      * @param event is the Button press
@@ -137,7 +158,8 @@ public class AddCustomerController implements Initializable {
     @FXML
     public void saveCusAction(ActionEvent event) throws SQLException {
         CustomerDOA customerDOA = new CustomerDOA();
-        ObservableList<Customer> customers = customerDOA.getAll();
+        Integer customer_id = 0;
+        // ObservableList<Customer> customers = customerDOA.getAll();
             try {// This is for empty Customer Name
             String customerName = cusNameTF.getText();
             try {// This is for empty Customer Address
@@ -145,13 +167,16 @@ public class AddCustomerController implements Initializable {
                 try {// This is for Empty Postal Code
                     String postalCode = cusPostalTF.getText();
                     try {// This is for Phone Number
-                        int phone = Integer.parseInt(phoneTF.getText());
+                        String phone = phoneTF.getText();
                         try {
-                            int selection = divisionChoice.getValue();
-                            Customer customer = new Customer(customers.size(), customerName, address, postalCode,
-                                    String.valueOf(phone), selection);
+                            // This is the Country selected
+                            String sSelection = stateChoice.getValue(); 
+                            int divID = divDOA.getDivisionID(sSelection);
+                            int country_id = divDOA.getCountryID(sSelection);
+                            Customer customer = new Customer(customer_id,customerName,address,postalCode,phone,divID, country_id);
                             customerDOA.insert(customer);
                             try {
+                                // This is to go back to the main page
                                 goBackAfterSave();
                             } catch (IOException e) {
                                 e.printStackTrace();
@@ -179,27 +204,30 @@ public class AddCustomerController implements Initializable {
                 displayError(2);
                 return;
             }
-        } catch (NullPointerException e) {
+        }catch(
+
+    NullPointerException e)
+    {
             displayError(1);
             return;
         }  
     }
     /**
      * This is to fill the choice box for the user to select the divisions
+     * @throws SQLException if an error occurs in the SQL database
      */
     public void choiceboxFill() {
-        DivisionDOA divisions = new DivisionDOA();
-        ArrayList<Integer> choices = new ArrayList<Integer>();
-        try {
-            ObservableList<FirstLevelDivision> div = divisions.getAll();
-            for (FirstLevelDivision first : div) {
-                System.out.println(first.getDivision());
-                choices.add(first.getCountryID());
-            }
-            divisionChoice.getItems().addAll(choices);
-        } catch (SQLException e) {
+        ArrayList<String> choices = new ArrayList<String>();
+           try{
+               countries = countriesDOA.getAll();
+               for (Countries country : countries) {
+                   choices.add(country.getCountry());
+               }
+               countryChoice.getItems().addAll(choices);
+           }
+           catch (SQLException e) {
             e.printStackTrace();
-        }
+           }
     }
      /**
      * This is to return to the customer page if successfully processed
@@ -259,20 +287,40 @@ public class AddCustomerController implements Initializable {
                  alert.showAndWait();
                  break;
          }
-     }
-     
+     }  
      /**
       * This is for when the user decides on the Division and then selections lead to a drop down list to be visible
       @param event which is a choicebox options
       */
      public void changeDivision(ActionEvent event) {
-         int choice = divisionChoice.getValue();
-        try {
-            fDivision = divDOA.get(choice);
-            divNameTF.setText(fDivision.getDivision());
-        } catch (Exception e) {
-          e.printStackTrace();
+        ArrayList<String> stateChoices = new ArrayList<String>();
+        ObservableList<FirstLevelDivision> div = FXCollections.observableArrayList();
+        Countries country;
+      try {
+          country = countriesDOA.getIdByCountryName(countryChoice.getValue());
+        // Getting the Country ID value from the name of the Ccountry
+        Integer countryID = country.getCountryID();
+         // Clearing out in case the User decides to choose something else
+        stateChoice.getItems().clear();
+        DivisionDOA divisions = new DivisionDOA();
+        if (countryID != 0) {
+            try {
+                div = divisions.getAllByID(countryID);
+                for (FirstLevelDivision first : div) {
+                    stateChoices.add(first.getDivision());
+                }
+                stateChoice.getItems().addAll(stateChoices);
+            } catch (SQLException e) {
+                e.printStackTrace();
+            }
         }
+        else {
+            // It will fill with empty state
+            stateChoice.getItems().addAll(stateChoices);
+        }
+    } catch (SQLException e1) {
+        e1.printStackTrace();
+    } 
     }
     /**
      * Main initializing page function
@@ -282,7 +330,7 @@ public class AddCustomerController implements Initializable {
     @Override
     public void initialize(URL arg0, ResourceBundle arg1) {
         choiceboxFill();
-        divisionChoice.setOnAction(this::changeDivision);
+        countryChoice.setOnAction(this::changeDivision);
     }
 }
    

@@ -61,6 +61,11 @@ public class CustomerController implements Initializable {
     @FXML
     private Button delCusColumn;
     /**
+     * This is the Country ID column of the Customer
+     */
+    @FXML
+    private TableColumn<Customer, Integer> countryIDColumn;
+    /**
      * Division that was selected to be added
      */
     @FXML
@@ -180,13 +185,12 @@ public class CustomerController implements Initializable {
      */
     @Override
     public void initialize(URL arg0, ResourceBundle arg1) {
-        System.out.println("Customer Page was initialized");
         CustomerDOA customer = new CustomerDOA();
-        
         try {
             ObservableList<Customer> customers = customer.getAll();
             customerTableView.setItems(customers);
             customerIDColumn.setCellValueFactory(new PropertyValueFactory<>("customerId"));
+            countryIDColumn.setCellValueFactory(new PropertyValueFactory<>("country_id"));
             nameColumn.setCellValueFactory(new PropertyValueFactory<>("customerName"));
             addressColumn.setCellValueFactory(new PropertyValueFactory<>("customerAddress"));
             postalColumn.setCellValueFactory(new PropertyValueFactory<>("postalCode"));

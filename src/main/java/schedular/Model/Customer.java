@@ -12,7 +12,9 @@ public class Customer {
     private String customerAddress;
     private String postalCode;
     private String phoneNumber;
-    public int division_id;
+    private int country_id;
+    private int division_id;
+    
     /**
      * Default Constructor
      * @param customerId default customer ID
@@ -21,15 +23,17 @@ public class Customer {
      * @param postalCode default customer postal code
      * @param phoneNumber default customer phone number
      * @param division_id default customer division ID
+     * @param country_id this is to retrieve from the First Level Divisions table
      */
     public Customer(int customerId, String customerName, String customerAddress, String postalCode, String phoneNumber,
-            int division_id) {
+            int division_id, int country_id) {
         this.customerId = customerId;
         this.customerName = customerName;
         this.customerAddress = customerAddress;
         this.postalCode = postalCode;
         this.phoneNumber = phoneNumber;
         this.division_id = division_id;
+        this.country_id = country_id;
     }
     /**
      * This is to get the Customer ID from the database
@@ -76,7 +80,7 @@ public class Customer {
     }
     /**
      * This is to get the postalCode from the database
-     * @return postal cost from the database
+     * @return postalCode code from the database
      */
     public String getPostalCode() {
         return postalCode;
@@ -90,7 +94,7 @@ public class Customer {
     }
     /**
      * This is to get the Customer phoneNumber
-     * @return phone number of the customer from the database
+     * @return phoneNumber of the customer from the database
      */
     public String getPhoneNumber() {
         return phoneNumber;
@@ -108,6 +112,20 @@ public class Customer {
      */
     public int getDivision_id() {
         return division_id;
+    }
+    /**
+     * This is to get the Country ID
+     * @return country_id is returned but this is from the devision class
+     */
+    public int getCountry_id() {
+        return country_id;
+    }
+    /**
+     * This is to set the country_id into the database
+     * @param country_id which is the integer ID of the country and search under country database
+     */
+    public void setCountry_id(int country_id) {
+        this.country_id = country_id;
     }
     
 }

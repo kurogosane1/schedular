@@ -23,12 +23,12 @@
                   <Font name="Arial" size="13.0" />
                </font>
             </Label>
-            <Label fx:id="cusPostalLabel" contentDisplay="CENTER" layoutY="140.0" text="Postal Code" textAlignment="CENTER">
+            <Label fx:id="cusPostalLabel" contentDisplay="CENTER" layoutY="220.0" text="Postal Code" textAlignment="CENTER">
                <font>
                   <Font name="Arial" size="13.0" />
                </font>
             </Label>
-            <Label fx:id="cusPhoneLabel" contentDisplay="CENTER" layoutY="180.0" text="Phone Number" textAlignment="CENTER">
+            <Label fx:id="cusPhoneLabel" contentDisplay="CENTER" layoutY="260.0" text="Phone Number" textAlignment="CENTER">
                <font>
                   <Font name="Arial" size="13.0" />
                </font>
@@ -38,23 +38,17 @@
                   <Font name="Arial" size="13.0" />
                </font>
             </Label>
-            <Label layoutY="220.0" text="Division ID">
-               <font>
-                  <Font name="Arial" size="13.0" />
-               </font>
-            </Label>
-            <Label layoutY="260.0" text="Division Name" />
+            <Label fx:id="countryLabel" layoutY="140.0" text="Country" />
+            <Label fx:id="stateLabel" layoutY="180.0" text="State / Province" />
          </children>
       </Group>
       <TextField fx:id="cusIDTextField" disable="true" layoutX="383.0" layoutY="94.0" prefHeight="25.0" prefWidth="276.0" promptText="Auto Generated ID" />
       <TextField fx:id="cusNameTF" layoutX="383.0" layoutY="131.0" prefHeight="25.0" prefWidth="276.0" promptText="John Doe" />
       <TextField fx:id="cusAddrTF" layoutX="383.0" layoutY="169.0" prefHeight="25.0" prefWidth="276.0" promptText="123 ABC St, City, State if Any, Country" />
-      <TextField fx:id="cusPostalTF" layoutX="383.0" layoutY="210.0" prefHeight="25.0" prefWidth="276.0" promptText="77777" />
-      <TextField fx:id="phoneTF" layoutX="383.0" layoutY="247.0" prefHeight="25.0" prefWidth="276.0" promptText="888-888-8888" />
-      <ChoiceBox fx:id="divisionChoice" layoutX="383.0" layoutY="288.0" prefHeight="25.0" prefWidth="276.0" />
-      <TextField fx:id="divNameTF" disable="true" layoutX="383.0" layoutY="326.0" prefHeight="25.0" prefWidth="276.0" promptText="Auto filled after selection of Diviison ID" />
-      <Button fx:id="saveCusButton" layoutX="383.0" layoutY="385.0" mnemonicParsing="false" onAction="#saveCusAction" prefHeight="25.0" prefWidth="120.0" text="Save" />
-      <Button fx:id="canceblButton" layoutX="540.0" layoutY="385.0" mnemonicParsing="false" onAction="#cancelAddCusAction" prefHeight="25.0" prefWidth="120.0" text="Cancel" />
+      <TextField fx:id="cusPostalTF" layoutX="383.0" layoutY="288.0" prefHeight="25.0" prefWidth="276.0" promptText="77777" />
+      <TextField fx:id="phoneTF" layoutX="383.0" layoutY="333.0" prefHeight="25.0" prefWidth="276.0" promptText="888-888-8888" />
+      <Button fx:id="saveCusButton" layoutX="383.0" layoutY="472.0" mnemonicParsing="false" onAction="#saveCusAction" prefHeight="25.0" prefWidth="120.0" text="Save" />
+      <Button fx:id="canceblButton" layoutX="540.0" layoutY="472.0" mnemonicParsing="false" onAction="#cancelAddCusAction" prefHeight="25.0" prefWidth="120.0" text="Cancel" />
       <Label layoutX="147.0" layoutY="50.0" text="Add New Customer">
          <font>
             <Font name="Arial Bold" size="18.0" />
@@ -62,8 +56,10 @@
       </Label>
       <Text fx:id="nameErrorT" layoutX="703.0" layoutY="148.0" strokeType="OUTSIDE" strokeWidth="0.0" />
       <Text fx:id="addErrorT" layoutX="703.0" layoutY="186.0" strokeType="OUTSIDE" strokeWidth="0.0" />
-      <Text fx:id="postalErrorT" layoutX="703.0" layoutY="227.0" strokeType="OUTSIDE" strokeWidth="0.0" />
-      <Text fx:id="phoneErrorT" layoutX="703.0" layoutY="264.0" strokeType="OUTSIDE" strokeWidth="0.0" />
-      <Text fx:id="divisionIDError" layoutX="703.0" layoutY="343.0" strokeType="OUTSIDE" strokeWidth="0.0" />
+      <Text fx:id="postalErrorT" layoutX="683.0" layoutY="350.0" strokeType="OUTSIDE" strokeWidth="0.0" />
+      <Text fx:id="phoneErrorT" layoutX="686.0" layoutY="389.0" strokeType="OUTSIDE" strokeWidth="0.0" />
+      <Text fx:id="divisionIDError" layoutX="703.0" layoutY="429.0" strokeType="OUTSIDE" strokeWidth="0.0" />
+      <ChoiceBox fx:id="countryChoice" layoutX="383.0" layoutY="210.0" prefWidth="276.0" />
+      <ChoiceBox fx:id="stateChoice" layoutX="383.0" layoutY="247.0" prefWidth="276.0" />
    </children>
 </AnchorPane>

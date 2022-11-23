@@ -121,4 +121,26 @@ public class CountriesDOA implements DOA<Countries>{
         int result = ps.executeUpdate();
         return result;
     }
+    /**
+     * This is to get the Country Object by its name
+     * @param countries is the Country name
+     * @return country which is a Country Object
+     * @throws SQLException which in case of SQL error occurs
+     */
+    public Countries getIdByCountryName(String name) throws SQLException {
+        Connection con = Database.getConnection();
+        Countries country = null;
+        String sql = "SELECT Country_ID, Country from COUNTRIES WHERE Country=?";
+        PreparedStatement ps = con.prepareStatement(sql);
+        ps.setString(1, name);
+        ResultSet rs = ps.executeQuery();
+        if (rs.next()) {
+            int count_id = rs.getInt("Country_ID");
+            String Country = rs.getString("Country");
+            country = new Countries(count_id, Country);
+        }
+        Database.closePreparedStatement(ps);
+        Database.closeResultSet(rs);
+        return country;
+    };
 }

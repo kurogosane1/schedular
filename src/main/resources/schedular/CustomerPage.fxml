@@ -6,17 +6,17 @@
 <?import javafx.scene.layout.AnchorPane?>
 <?import javafx.scene.text.Font?>
 
-
 <AnchorPane maxHeight="-Infinity" maxWidth="-Infinity" minHeight="-Infinity" minWidth="-Infinity" prefHeight="600.0" prefWidth="1200.0" xmlns="http://javafx.com/javafx/18" xmlns:fx="http://javafx.com/fxml/1" fx:controller="schedular.Controllers.CustomerController">
    <children>
       <TableView fx:id="customerTableView" layoutX="14.0" layoutY="36.0" prefHeight="552.0" prefWidth="964.0">
         <columns>
           <TableColumn fx:id="customerIDColumn" prefWidth="88.0" text="Customer_ID" />
           <TableColumn fx:id="nameColumn" prefWidth="172.0" text="Customer Name" />
-            <TableColumn fx:id="addressColumn" prefWidth="394.0" text="Address" />
-            <TableColumn fx:id="postalColumn" prefWidth="112.0" text="Postal Code" />
-            <TableColumn fx:id="phoneColumn" prefWidth="92.0" text="Phone" />
-            <TableColumn fx:id="divisionIDColumn" prefWidth="105.0" text="Division ID" />
+            <TableColumn fx:id="addressColumn" prefWidth="221.0" text="Address" />
+            <TableColumn fx:id="postalColumn" prefWidth="134.0" text="Postal Code" />
+            <TableColumn fx:id="phoneColumn" prefWidth="137.0" text="Phone" />
+            <TableColumn fx:id="countryIDColumn" prefWidth="113.0" text="Country_ID" />
+            <TableColumn fx:id="divisionIDColumn" prefWidth="98.0" text="Division ID" />
         </columns>
       </TableView>
       <Button fx:id="addCustButton" layoutX="1003.0" layoutY="120.0" mnemonicParsing="false" onAction="#addCustomerAction" prefHeight="25.0" prefWidth="170.0" text="Add Customer" />

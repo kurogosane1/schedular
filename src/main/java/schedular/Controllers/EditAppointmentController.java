@@ -118,18 +118,58 @@ public class EditAppointmentController implements Initializable {
     @FXML
     void saveButtonPress(ActionEvent event) throws SQLException, IOException {
         AppointmentDOA appointmentDOA = new AppointmentDOA();
-        // Validation of the data first
         int appointmentID = Integer.parseInt(apptIDTF.getText()); // This is default and will not change 
-        try {
+        // Checking if these fields are empty
+        if (titleTF.getText().isEmpty() && descTF.getText().isEmpty() && locationTF.getText().isEmpty()
+                && typeTF.getText().isEmpty()
+                || titleTF.getText().isEmpty() && descTF.getText().isEmpty()
+                || descTF.getText().isEmpty() && locationTF.getText().isEmpty()
+                || titleTF.getText().isEmpty() && locationTF.getText().isEmpty()
+                || typeTF.getText().isEmpty() && descTF.getText().isEmpty()
+                || typeTF.getText().isEmpty() && locationTF.getText().isEmpty()
+                || typeTF.getText().isEmpty() && titleTF.getText().isEmpty()
+                ) {
+            displayError(20);
+            return;
+        } else {
+            if (titleTF.getText().isEmpty()) {
+                displayError(1);
+                return;
+            }
+            if (descTF.getText().isEmpty()) {
+                displayError(2);
+                return;
+            }
+            if (locationTF.getText().isEmpty()) {
+                displayError(3);
+                return;
+            }
+            if (typeTF.getText().isEmpty()) {
+                displayError(4);
+                return;
+            }
             String title = titleTF.getText();
-             try {
-                 String description = descTF.getText();
-                try {
-                    String location = locationTF.getText();
-                    try {
-                        String type = typeTF.getText();
-                        try {
-                             // Getting the Date and Time in string format
+            String description = descTF.getText();
+            String location = locationTF.getText();
+            String type = typeTF.getText();
+            // Value check to see if the User Choicebox is selected for Customer ID, User ID and Contact ID
+            if (custIDChoice.getValue() == null || userIDChoice.getValue() == null || contactIDChoice.getValue() == null
+                    || custIDChoice.getValue() == null && userIDChoice.getValue() == null
+                    || custIDChoice.getValue() == null && contactIDChoice.getValue() == null
+                    || custIDChoice.getValue() == null && contactIDChoice.getValue() == null
+                            && userIDChoice.getValue() == null) {
+                displayError(15);
+                return;
+            }
+            // Value check to see if the datepicker is selected and not left blank
+            if (StartDatePicker.getValue() ==null && endDatePicker.getValue()==null
+                    || StartDatePicker.getValue()==null
+                    || endDatePicker.getValue() == null) {
+                displayError(7);
+                return;
+            }
+            try {
+                // Getting the Date and Time in string format
                             String startTime = TimeConversion.timeStringConversion(startHourSpinner.getValue(), startMinSpinner.getValue());
                             String endTime = TimeConversion.timeStringConversion(endHourSpinner.getValue(),
                                     endMinSpinner.getValue());
@@ -199,7 +239,7 @@ public class EditAppointmentController implements Initializable {
                                 System.out.println("Appointments SQL error issue");
                             }
                             goBackAfterSave();
-                            } catch (Exception e) {
+                            } catch (NullPointerException e) {
                                 e.printStackTrace(); // This is for Customer ID, User ID and Contact ID
                                 displayError(8);
                                 return;
@@ -209,25 +249,6 @@ public class EditAppointmentController implements Initializable {
                             displayError(7);
                             return;
                         }  
-                    } catch (Exception e) {
-                        e.printStackTrace(); // This is for type
-                        displayError(4);
-                        return;
-                    }
-                } catch (Exception e) {
-                   e.printStackTrace();// This is for Location
-                   displayError(3);
-                   return;
-                }
-             } catch (Exception e) {
-                e.printStackTrace(); // This is for Description
-              displayError(2);
-              return;
-             }
-        } catch (Exception e) {
-            e.printStackTrace(); // This is for Title
-            displayError(1);
-            return;
         }
     }
      /**
@@ -405,6 +426,12 @@ public class EditAppointmentController implements Initializable {
                 if (result.isPresent() && result.get() == ButtonType.OK) {
                     return;
                 }
+            case 15: // This is incase the Contact ID or Customer ID or User ID or all are empty
+                alert.setTitle("Missing selection of ID's");
+                alert.setContentText(
+                        "Please be sure to select Contact ID, Customer ID and User ID. \n Please no leave any of them unselected");
+                alert.showAndWait();
+                break;
             default:
                 alert.setTitle("Invalid information input");
                 alert.setContentText("Please check the data input and make sure the fields are not empty");
@@ -514,3 +541,129 @@ public class EditAppointmentController implements Initializable {
         userIDChoice.setOnAction(this::showUserChoice);
     }
 }
+
+
+// if (titleTF.getText().isEmpty() && descTF.getText().isEmpty() && locationTF.getText().isEmpty() && typeTF.getText().isEmpty()) {
+//             displayError(20);
+//             return;
+//         }
+//         else {
+//             // Validation of the data first
+//         int appointmentID = Integer.parseInt(apptIDTF.getText()); // This is default and will not change 
+//         try {
+//             String title = titleTF.getText();
+//             System.out.println("this is line 130: "+title);
+//              try {
+//                  String description = descTF.getText();
+//                  System.out.println("This is line 133: " + description);
+//                 try {
+//                     String location = locationTF.getText();
+//                     System.out.println("this is line 136: "+location);
+//                     try {
+//                         String type = typeTF.getText();
+//                         System.out.println("this is line 139");
+//                         System.out.println(type.isEmpty());
+//                         try {
+//                              // Getting the Date and Time in string format
+//                             String startTime = TimeConversion.timeStringConversion(startHourSpinner.getValue(), startMinSpinner.getValue());
+//                             String endTime = TimeConversion.timeStringConversion(endHourSpinner.getValue(),
+//                                     endMinSpinner.getValue());
+//                             String startDateTime = TimeConversion.convertDateTime(StartDatePicker.getValue(),
+//                                     startTime);
+//                             String endDateTime = TimeConversion.convertDateTime(endDatePicker.getValue(), endTime);        
+//                             // Converting to ZonedDateTime from the date and time picked
+//                             ZonedDateTime zStart = TimeConversion.convertToLocalTimeZone(startDateTime);
+//                             ZonedDateTime zEnd = TimeConversion.convertToLocalTimeZone(endDateTime);
+
+//                             // Checking if the Dates are correct
+//                             Integer errorCheck = TimeConversion.compareDates(zStart.toLocalDateTime().format(formatter).toString(),
+//                                     zEnd.toLocalDateTime().format(formatter).toString());
+//                             if (errorCheck == 1 && errorCheck != 0) {
+//                                 displayError(6);
+//                                 return;
+//                             }
+//                             if (errorCheck == 2 && errorCheck != 0) {
+//                                 displayError(9);
+//                                 return;
+//                             }
+//                             if (errorCheck == 3 && errorCheck != 0) {
+//                                 displayError(10);
+//                                 return;
+//                             }
+//                             // Performing Time Checks 
+//                             Boolean timeCheck = TimeConversion.compareTimes(startDateTime, endDateTime);
+//                                if (!timeCheck) {
+//                                 displayError(11);
+//                                 return;
+//                             }
+//                             // Checking if the time selected falls under EST business hours
+//                             Boolean validBusinessHour = timeTools.compareTimeZones(zStart, zEnd, zStart.toLocalDate(),
+//                                     zEnd.toLocalDate());
+//                             if (!validBusinessHour) {
+//                                 displayError(12);
+//                                 return;
+//                             }
+//                             // Check if the business hours are valid
+//                             if (!validBusinessHour) {
+//                                 displayError(12);
+//                                 return;
+//                             }
+//                             // Testing new overlap functions
+//                             Boolean overlapping=TimeConversion.checkOverlap(zStart.toLocalDateTime().format(formatter).toString(),
+//                                     zEnd.toLocalDateTime().format(formatter).toString(), appointmentID);
+//                             // Checking for Overlaps
+//                             // Boolean noOverlaps = TimeConversion.appointmentOverlapCheck(zStart.toLocalDateTime().format(formatter).toString(),
+//                             //         zEnd.toLocalDateTime().format(formatter).toString());
+//                             if (overlapping) {
+//                                 displayError(13);
+//                                 return;
+//                             }
+//                             try {
+//                             // Getting Customer ID, User ID and Contact ID
+//                             int customerID = custIDChoice.getValue();
+//                             int userID = userIDChoice.getValue();
+//                             int contactID = contactIDChoice.getValue();
+//                             // Convert to UTC format
+//                             String startUTC = TimeConversion.convertTimeToUTC(zStart.toLocalDateTime().format(formatter).toString());
+//                             String endUTC = TimeConversion.convertTimeToUTC(zEnd.toLocalDateTime().format(formatter).toString());
+//                             // Creating the Appointment Object
+//                             Appointments appointment = new Appointments(appointmentID, title, description, location,
+//                                     type, startUTC, endUTC, customerID, userID, contactID);
+//                             int result = appointmentDOA.update(appointment);
+//                             if (result == 0) {
+//                                 System.out.println("Appointments SQL error issue");
+//                             }
+//                             goBackAfterSave();
+//                             } catch (NullPointerException e) {
+//                                 e.printStackTrace(); // This is for Customer ID, User ID and Contact ID
+//                                 displayError(8);
+//                                 return;
+//                             }
+//                         } catch (Exception e) {
+//                             e.printStackTrace(); // This is for the Start Date and Timestamp
+//                             displayError(7);
+//                             return;
+//                         }  
+//                     } catch (Exception e) {
+//                         e.printStackTrace(); // This is for type
+//                         displayError(4);
+//                         return;
+//                     }
+//                 } catch (Exception e) {
+//                     System.out.println("This ran here");
+//                    e.printStackTrace();// This is for Location
+//                    displayError(3);
+//                    return;
+//                 }
+//              } catch (Exception e) {
+//                 e.printStackTrace(); // This is for Description
+//                 displayError(2);
+//                 return;
+//              }
+//          } catch (Exception e) {
+//             System.out.println("This ran for Title");
+//             e.printStackTrace(); // This is for Title
+//             displayError(1);
+//             return;
+//         }
+//         }

@@ -31,7 +31,7 @@ public class CustomerDOA implements DOA<Customer> {
     public Customer get(int id) throws SQLException {
         Connection con = Database.getConnection();
         Customer customer = null;
-        String sql = "SELECT Customer_ID, Customer_Name, Address, Postal_Code, Phone, Division_ID FROM CUSTOMERS Where Customer_ID = ?";
+        String sql = "SELECT customers.Customer_ID, customers.Customer_Name, customers.Address, customers.Postal_Code, customers.Phone, customers.Division_ID, first_level_divisions.Country_ID FROM CUSTOMERS INNER JOIN FIRST_LEVEL_DIVISIONS ON customers.Division_ID=first_level_divisions.Division_ID WHERE Customer_ID=?";
         PreparedStatement ps = con.prepareStatement(sql);
         ps.setInt(1, id);
         ResultSet rs = ps.executeQuery();
@@ -42,8 +42,8 @@ public class CustomerDOA implements DOA<Customer> {
             String Postal_Code = rs.getString("Postal_Code");
             String Phone = rs.getString("Phone");
             int Division_ID = rs.getInt("Division_ID");
-
-            customer = new Customer(old, Customer_Name, Address, Postal_Code, Phone, Division_ID);
+            int country_id = rs.getInt("Country_ID");
+            customer = new Customer(old, Customer_Name, Address, Postal_Code, Phone, Division_ID, country_id);
         }
         return customer;
     }
@@ -56,7 +56,7 @@ public class CustomerDOA implements DOA<Customer> {
     public ObservableList<Customer> getAll() throws SQLException {
         Connection con = Database.getConnection();
         ObservableList<Customer> customers = FXCollections.observableArrayList();
-        String sql = "SELECT Customer_ID, Customer_Name, Address, Postal_Code, Phone, Division_ID FROM CUSTOMERS";
+        String sql = "SELECT customers.Customer_ID, customers.Customer_Name, customers.Address, customers.Postal_Code, customers.Phone, customers.Division_ID, first_level_divisions.Country_ID FROM CUSTOMERS INNER JOIN FIRST_LEVEL_DIVISIONS ON customers.Division_ID=first_level_divisions.Division_ID";
         Statement stmt = con.createStatement();
         ResultSet rs = stmt.executeQuery(sql);
         while (rs.next()) {
@@ -66,7 +66,8 @@ public class CustomerDOA implements DOA<Customer> {
             String Postal_Code = rs.getString("Postal_Code");
             String Phone = rs.getString("Phone");
             int Division_ID = rs.getInt("Division_ID");
-            Customer customer = new Customer(Customer_ID, Customer_Name, Address, Postal_Code, Phone, Division_ID);
+            int country_id = rs.getInt("Country_ID");
+            Customer customer = new Customer(Customer_ID, Customer_Name, Address, Postal_Code, Phone, Division_ID, country_id);
             customers.add(customer);
         }
         return customers;

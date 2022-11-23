@@ -22,8 +22,10 @@ public class Countries {
         this.countryID = countryID;
         this.country = country;
     }
+    
     /**
      * This is to return the Country ID
+     * @return countryID which is the ID of the country
      */
     public int getCountryID() {
         return countryID;

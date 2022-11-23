@@ -54,7 +54,7 @@ public class DivisionDOA implements DOA<FirstLevelDivision>{
     public ObservableList<FirstLevelDivision> getAll() throws SQLException {
         Connection con = Database.getConnection();
         ObservableList<FirstLevelDivision> divisions = FXCollections.observableArrayList();
-        String sql = "SELECT Division_ID,Division,Country_ID  FROM FIRST_LEVEL_DIVISIONS";
+        String sql = "SELECT Division_ID,Division,Country_ID FROM FIRST_LEVEL_DIVISIONS";
         Statement stmt = con.createStatement();
         ResultSet rs = stmt.executeQuery(sql);
         while (rs.next()) {
@@ -98,4 +98,61 @@ public class DivisionDOA implements DOA<FirstLevelDivision>{
         return 0;
     }
     
+    /**
+     * This is to get all the divisions that Match the ID
+     * @param id which is the Country ID 
+     * @return divisions which is the First Level Divisions Object array in an observableArrayList
+     */
+    public ObservableList<FirstLevelDivision> getAllByID(int id) throws SQLException {
+        Connection con = Database.getConnection();
+        ObservableList<FirstLevelDivision> divisions = FXCollections.observableArrayList();
+        String sql = "SELECT Division_ID, Division, Country_ID FROM FIRST_LEVEL_DIVISIONS WHERE Country_ID=?";
+        PreparedStatement ps = con.prepareStatement(sql);
+        ps.setInt(1, id);
+        ResultSet rs = ps.executeQuery();
+        while (rs.next()) {
+            int ids = rs.getInt("Division_ID");
+            String divname = rs.getString("Division");
+            int country_id = rs.getInt("Country_ID");
+            FirstLevelDivision div = new FirstLevelDivision(ids, divname, country_id);
+            divisions.add(div);
+        }
+        return divisions;
+    }
+    /**
+     * This is to get the Division ID From the database
+     * @param name this is name of the Division
+     * @return id this is the Division ID that is returned
+     * @throws SQLException in case of an error on the SQL side
+     */
+    public int getDivisionID(String name) throws SQLException {
+        Connection con = Database.getConnection();
+        int id = 0;
+        String sql = "SELECT Division_ID FROM FIRST_LEVEL_DIVISIONS WHERE Division=?";
+        PreparedStatement ps = con.prepareStatement(sql);
+        ps.setString(1, name);
+        ResultSet rs = ps.executeQuery();
+        if (rs.next()) {
+            id = rs.getInt("Division_ID");
+        }
+        return id;
+    }
+    /**
+     * This is to get the Country ID for the divisions
+     * @param name this is the Division name passed
+     * @return id which is the COuntry ID
+     * @throws SQLException if an error occurs
+     */
+     public int getCountryID(String name) throws SQLException {
+        Connection con = Database.getConnection();
+        int id=0;
+        String sql = "SELECT Country_ID FROM FIRST_LEVEL_DIVISIONS WHERE Division=?";
+        PreparedStatement ps = con.prepareStatement(sql);
+        ps.setString(1, name);
+        ResultSet rs = ps.executeQuery();
+        if (rs.next()) {
+            id = rs.getInt("Country_ID");
+        }
+        return id;
+    }
 }
