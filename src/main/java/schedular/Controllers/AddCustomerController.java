@@ -214,7 +214,8 @@ public class AddCustomerController implements Initializable {
     }
     /**
      * This is to fill the choice box for the user to select the divisions
-     * @throws SQLException if an error occurs in the SQL database
+     * It also carries out an SQL exception that the function handles within itself than throwing it to the main
+     * function
      */
     public void choiceboxFill() {
         ArrayList<String> choices = new ArrayList<String>();

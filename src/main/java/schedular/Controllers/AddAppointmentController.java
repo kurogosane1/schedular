@@ -231,14 +231,15 @@ public class AddAppointmentController implements Initializable{
     
     /**
      * This is to save the Appointment information to the database
-     * @lambda pushToDatabase is used to save the Appointment to the database while reducing the line of code and allowing re-usability of function
-     * @lambda switchScreens is used to transfer to main screen after data was success added to database. Having this allows flexibility to use the function elsewhere also saving tons of code lines and repeat creation of functions or class objects
+     * LAMBDA FUNCTION pushToDatabase is used to save the Appointment to the database while reducing the line of code
+     * and allowing re-usability of function
+     * LAMBDA FUNCTION switchScreens is used to transfer to main screen after data was success added to database. Having this allows flexibility to use the function elsewhere also saving tons of code lines and repeat creation of functions or class objects
      * @param event button when the save button is clicked
      * @throws SQLException in case of a SQL error
      * @throws IOException in case of a screen change error
      */
     @FXML
-    void saveButtonPress(ActionEvent event) throws SQLException, IOException {
+    public void saveButtonPress(ActionEvent event) throws SQLException, IOException {
         // Getting the Appointment ID which will be automatically added
         int appointmentID = 0;
         // Checking if these fields are empty

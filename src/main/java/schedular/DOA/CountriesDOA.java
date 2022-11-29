@@ -123,7 +123,7 @@ public class CountriesDOA implements DOA<Countries>{
     }
     /**
      * This is to get the Country Object by its name
-     * @param countries is the Country name
+     * @param name is the Country name
      * @return country which is a Country Object
      * @throws SQLException which in case of SQL error occurs
      */

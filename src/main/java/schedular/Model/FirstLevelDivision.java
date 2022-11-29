@@ -30,7 +30,9 @@ public class FirstLevelDivision {
         Division = division;
         this.countryID = countryID;
     }
+    
     /**
+     * This is to get the division ID
      * @return divisionID which is the Division ID
      */
     public int getDivisionID() {
