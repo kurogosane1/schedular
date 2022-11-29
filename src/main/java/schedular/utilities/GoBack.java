@@ -19,5 +19,5 @@ public interface GoBack {
      * @param s this is the path in string format
      * @throws IOException if an error occurs between switching screens
      */
-    void switchScreens(String s) throws IOException;
+    void switchScreens(String s, String pageDescription) throws IOException;
 }

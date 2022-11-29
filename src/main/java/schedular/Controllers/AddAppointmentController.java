@@ -228,8 +228,11 @@ public class AddAppointmentController implements Initializable{
             return;
         }
     }
+    
     /**
      * This is to save the Appointment information to the database
+     * @lambda pushToDatabase is used to save the Appointment to the database while reducing the line of code and allowing re-usability of function
+     * @lambda switchScreens is used to transfer to main screen after data was success added to database. Having this allows flexibility to use the function elsewhere also saving tons of code lines and repeat creation of functions or class objects
      * @param event button when the save button is clicked
      * @throws SQLException in case of a SQL error
      * @throws IOException in case of a screen change error
@@ -356,7 +359,7 @@ public class AddAppointmentController implements Initializable{
                             type, startUTC, endUTC, customerID, userID, contactID);
 
                     // Switching now going back to main screen once done
-                    switchScreens.switchScreens("/schedular/MainPage.fxml");
+                    switchScreens.switchScreens("/schedular/MainPage.fxml","Main Appointment");
                 } catch (NullPointerException e) {
                     e.printStackTrace(); // This is for Customer ID, User ID and Contact ID
                     displayError(8);
@@ -376,12 +379,12 @@ public class AddAppointmentController implements Initializable{
      * Justification is to reduce code repeated. With this. The Interface can help re-use code else where in the project instead of creating new functions each time
      * The interface is located in the Utitlities Folder under GoBack interface
      * Reason for using Lambda is still not quite the same
-     * @param s which is the String
+     * @param s which is the String for location address
      */
-    GoBack switchScreens =(s)->{
+    GoBack switchScreens =(s, pagedescription)->{
         Parent root = FXMLLoader.load(getClass().getResource(s));
          Stage stage = (Stage) saveButton.getScene().getWindow();
-         stage.setTitle("Main Appointment");
+         stage.setTitle(pagedescription);
          stage.setScene(new Scene(root));
          stage.show();
     };
