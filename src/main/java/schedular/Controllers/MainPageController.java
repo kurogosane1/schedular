@@ -294,52 +294,49 @@ public class MainPageController implements Initializable {
         stage.setScene(new Scene(root));
         stage.show();
     }
+    
     /**
      * This is to validate if the Appointments are falling within 15minutes of the current time
+     * @throws SQLException if an error occurs
      */
-    public void AppointmentCheck() {
+    public void AppointmentCheck() throws SQLException {
         DateTimeFormatter formatter = DateTimeFormatter.ofPattern("yyyy-MM-dd HH:mm:ss");
         String apptDescription="";
         String customerName="";
         String appointmentTime="";
-        String appointmentDate="";
+        String appointmentDate = "";
+        // This is just a validation test value to trigger
         long apptTimeDifference = -1;
+        Customer customer = null;
         for (Appointments appointment : aptSchedule) {
             LocalDateTime ldt = LocalDateTime.parse(appointment.getStart(), formatter);
             LocalDateTime currentTime = LocalDateTime.now();
             long timedifference = ChronoUnit.MINUTES.between(ldt, currentTime) * -1;
             CustomerDOA customerDOA = new CustomerDOA();
-            Customer customer;
-            try {
-                customer = customerDOA.get(appointment.getCustomer_id());
-                if (timedifference <= 15 && timedifference >= 0) {
-                    apptTimeDifference = timedifference;
-                    apptDescription = appointment.getDescription();
-                    customerName = customer.getCustomerName();
-                    appointmentDate = ldt.toLocalDate().toString();
-                    appointmentTime = ldt.toLocalTime().toString();
-                } else {
-                    apptTimeDifference = -1;
-                }
-            } catch (SQLException e) {
-                System.out.println("SQL error");
-                e.printStackTrace();
+            customer = customerDOA.get(appointment.getCustomer_id());
+            if (timedifference <= 15 && timedifference >= 0) {
+                apptTimeDifference = timedifference;
+                apptDescription = appointment.getDescription();
+                customerName = customer.getCustomerName();
+                System.out.println("Customer name is found to be :" + customerName);
+                appointmentDate = ldt.toLocalDate().toString();
+                appointmentTime = ldt.toLocalTime().toString();
             }
+
         }
         if (apptTimeDifference != -1) {
             Alert alert = new Alert(Alert.AlertType.INFORMATION);
             alert.setHeaderText(null);
-            alert.setContentText(
-                    "Your Appointment is in "+ apptTimeDifference+" minutes for " + apptDescription + " with " + customerName + "On "
-                            + appointmentDate + " at " + appointmentTime);
+            alert.setContentText("Your Appointment is in " + apptTimeDifference + " minutes for " + apptDescription
+                    + " with " + customerName + " On Date of " + appointmentDate + " at " + appointmentTime);
             alert.showAndWait();
         }
         else {
-                Alert alert = new Alert(Alert.AlertType.INFORMATION);
-                alert.setHeaderText(null);
-                alert.setContentText("No Appointment within coming soon");
-                alert.showAndWait();
-        }
+            Alert alert = new Alert(Alert.AlertType.INFORMATION);
+            alert.setHeaderText(null);
+            alert.setContentText("No Appointment coming soon");
+            alert.showAndWait();
+        }        
     }
     /**
      * This is to help initialize the Table View
@@ -371,7 +368,11 @@ public class MainPageController implements Initializable {
             //Setting the name of the user logged in
             LoginLog.setUserLoggedIn(user);
             // Running the appointment check
-            AppointmentCheck();
+            try {
+                AppointmentCheck();
+            } catch (SQLException e) {
+                e.printStackTrace();
+            }
         } else {
             return;
         }
