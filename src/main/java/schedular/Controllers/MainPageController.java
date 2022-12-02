@@ -310,11 +310,11 @@ public class MainPageController implements Initializable {
         Customer customer = null;
         for (Appointments appointment : aptSchedule) {
             LocalDateTime ldt = LocalDateTime.parse(appointment.getStart(), formatter);
-            LocalDateTime currentTime = LocalDateTime.now();
-            long timedifference = ChronoUnit.MINUTES.between(ldt, currentTime) * -1;
+            LocalDateTime currentTime = LocalDateTime.now().truncatedTo(ChronoUnit.MINUTES);
+            long timedifference = ChronoUnit.MINUTES.between(currentTime, ldt);
             CustomerDOA customerDOA = new CustomerDOA();
             customer = customerDOA.get(appointment.getCustomer_id());
-            if (timedifference <= 15 && timedifference >= 0) {
+            if (timedifference <= 15 && timedifference >= 1) {
                 apptTimeDifference = timedifference;
                 apptDescription = appointment.getDescription();
                 customerName = customer.getCustomerName();
